@@ -1,3 +1,32 @@
 #!/bin/bash
 
-echo "info: git hook invoked on client: $0 $@"
+gc_git_hook_client_pre_commit() {
+    GITCID_DIR=${GITCID_DIR:-"./.gc/"}
+    GITCID_DEPS_DIR=${GITCID_DEPS_DIR:-"${GITCID_DIR}.gc-deps/"}
+    GITCID_GIT_HOOKS_CLIENT_DIR=${GITCID_GIT_HOOKS_CLIENT_DIR:-"${GITCID_DIR}.gc-git-hooks-client/"}
+    GITCID_UTIL_DIR=${GITCID_UTIL_DIR:-"${GITCID_DIR}.gc-util/"}
+    GITCID_UTIL_LOG=${GITCID_UTIL_LOG:-"${GITCID_UTIL_DIR}log.env"}
+
+    echo "info: git hook invoked on client: $0 $@"
+
+    echo "$(date -Ins)  info: Running script: $PWD/${GITCID_DIR:2}$(basename "$0") $@"
+
+    echo "$(date -Ins)  info: Importing GitCid log utils: ${GITCID_UTIL_LOG}"
+    source "${GITCID_UTIL_LOG}"
+    res_import_util_log=$?
+    if [ $res_import_util_log -ne 0 ]; then
+        echo "$(date -Ins)  error: Failed importing GitCid log utils. I guess it's not going to work, sorry!"
+        return $res_import_util_log
+    fi
+
+    res=res_import_util_log
+
+    if [ $res -ne 0 ]; then
+        gc_log_err "The client git hook failed: $0 $@"
+        return $res
+    fi
+
+    gc_log_info "The git hook finished successfully."
+}
+
+gc_git_hook_client_pre_commit $@
