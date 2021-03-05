@@ -63,13 +63,13 @@ dependencies installed:"
 }
 
 gitcid_deps() {
+    echo "$(date -Ins)  info: Running script: $0 $@"
+
     GITCID_DIR=${GITCID_DIR:-"./.gc/"}
     GITCID_DEPS_DIR=${GITCID_DEPS_DIR:-"${GITCID_DIR}.gc-deps/"}
     GITCID_GIT_HOOKS_CLIENT_DIR=${GITCID_GIT_HOOKS_CLIENT_DIR:-"${GITCID_DIR}.gc-git-hooks-client"}
     GITCID_UTIL_DIR=${GITCID_UTIL_DIR:-"${GITCID_DIR}.gc-util/"}
     GITCID_UTIL_LOG=${GITCID_UTIL_LOG:-"${GITCID_UTIL_DIR}log.env"}
-
-    echo "$(date -Ins)  info: Running script: $0 $@"
 
     echo "$(date -Ins)  info: Importing GitCid log utils: ${GITCID_UTIL_LOG}"
     source "${GITCID_UTIL_LOG}"
