@@ -1,9 +1,36 @@
-# gitcid
--------------------
-
-## Usage
-
-1. Run this command once inside the git repo directory after cloning this project:
+# GitCid  
+--------  
+  
+## Download this project  
+  
+1. Make sure you've installed git first.
+2. Run the following command:
     ```shell
-    git config core.hooksPath ./git-hooks-client
+    git clone https://github.com/defcronyke/gitcid.git; \
+    cd gitcid
     ```
+  
+## Requisites  
+  
+### Linux  
+  
+1. Run this command once inside this git repo after cloning this project:
+    ```shell
+    ./deps.sh
+    ```
+  
+### Other OS (Windows, macOS)  
+  
+1. Run this command once inside this git repo after cloning this project:
+   * Windows
+        ```powershell
+        git config core.hooksPath .\git-hooks-client
+        ```
+    * macOS
+        ```shell
+        git config core.hooksPath ./git-hooks-client
+        ```
+  
+## Usage  
+  
+1. Check back later...
