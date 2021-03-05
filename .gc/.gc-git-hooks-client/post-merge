@@ -1,7 +1,7 @@
 #!/bin/bash
-# This git hook will run on the client before a commit is made.
+# This git hook will run on the client after a merge or a pull.
 
-gc_git_hook_client_pre_commit() {
+gc_git_hook_client_post_merge() {
     echo "$(date -Ins)  info: Invoked client git hook: $0 $@"
 
     GITCID_DIR=${GITCID_DIR:-"./.gc/"}
@@ -22,4 +22,4 @@ gc_git_hook_client_pre_commit() {
     gc_log_info "The client git hook finished successfully: $0 $@"
 }
 
-gc_git_hook_client_pre_commit $@
+gc_git_hook_client_post_merge $@
