@@ -2,25 +2,18 @@
 # This git hook will run on the client before a commit is made.
 
 gc_git_hook_client_pre_commit() {
-    GITCID_DIR=${GITCID_DIR:-"./.gc/"}
-    GITCID_DEPS_DIR=${GITCID_DEPS_DIR:-"${GITCID_DIR}.gc-deps/"}
-    GITCID_GIT_HOOKS_CLIENT_DIR=${GITCID_GIT_HOOKS_CLIENT_DIR:-"${GITCID_DIR}.gc-git-hooks-client"}
-    GITCID_UTIL_DIR=${GITCID_UTIL_DIR:-"${GITCID_DIR}.gc-util/"}
-    GITCID_UTIL_LOG=${GITCID_UTIL_LOG:-"${GITCID_UTIL_DIR}log.env"}
-
     echo "$(date -Ins)  info: git hook invoked on client: $0 $@"
 
-    echo "$(date -Ins)  info: Running script: $PWD/${GITCID_DIR:2}$(basename "$0") $@"
+    GITCID_DIR=${GITCID_DIR:-"./.gc/"}
 
-    echo "$(date -Ins)  info: Importing GitCid log utils: ${GITCID_UTIL_LOG}"
-    source "${GITCID_UTIL_LOG}"
-    res_import_util_log=$?
-    if [ $res_import_util_log -ne 0 ]; then
-        echo "$(date -Ins)  error: Failed importing GitCid log utils. I guess it's not going to work, sorry!"
-        return $res_import_util_log
+    source "${GITCID_DIR}deps.sh"
+    res_import_deps=$?
+    if [ $res_import_deps -ne 0 ]; then
+        gc_log_err "Failed importing GitCid log utils. I guess it's not going to work, sorry!"
+        return $res_import_deps
     fi
 
-    res=$res_import_util_log
+    res=$res_import_deps
     if [ $res -ne 0 ]; then
         gc_log_err "The client git hook failed: $0 $@"
         return $res
