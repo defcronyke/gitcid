@@ -6,8 +6,7 @@
 1. Make sure you've installed git first.
 2. Run the following command:
     ```shell
-    git clone https://github.com/defcronyke/gitcid.git; \
-    cd gitcid
+    git clone https://github.com/defcronyke/gitcid.git && cd gitcid
     ```
   
 ## Requisites  
@@ -16,19 +15,23 @@
   
 1. Run this command once inside this git repo after cloning this project:
     ```shell
-    ./deps.sh
+    .gc/deps.sh
     ```
   
-### Other OS (Windows, macOS)  
-  
-1. Run this command once inside this git repo after cloning this project:
+### Other OS (Windows, macOS, other)  
+
+1. Make sure you have the following dependencies installed first:
+    ```shell
+    git python3 python3-pip
+    ```
+2. Run this command once inside this git repo after cloning this project:
    * Windows
         ```powershell
-        git config core.hooksPath .\git-hooks-client
+        git config core.hooksPath .\.gc\.gc-git-hooks-client\
         ```
     * macOS
         ```shell
-        git config core.hooksPath ./git-hooks-client
+        git config core.hooksPath ./.gc/.gc-git-hooks-client/
         ```
   
 ## Usage  
