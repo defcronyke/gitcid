@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "git hook invoked on client: $0 $@"
