@@ -8,7 +8,7 @@ gc_git_hook_client_pre_commit() {
     GITCID_UTIL_DIR=${GITCID_UTIL_DIR:-"${GITCID_DIR}.gc-util/"}
     GITCID_UTIL_LOG=${GITCID_UTIL_LOG:-"${GITCID_UTIL_DIR}log.env"}
 
-    echo "info: git hook invoked on client: $0 $@"
+    echo "$(date -Ins)  info: git hook invoked on client: $0 $@"
 
     echo "$(date -Ins)  info: Running script: $PWD/${GITCID_DIR:2}$(basename "$0") $@"
 
@@ -20,8 +20,7 @@ gc_git_hook_client_pre_commit() {
         return $res_import_util_log
     fi
 
-    res=res_import_util_log
-
+    res=$res_import_util_log
     if [ $res -ne 0 ]; then
         gc_log_err "The client git hook failed: $0 $@"
         return $res
