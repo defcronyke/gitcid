@@ -2,7 +2,7 @@
 # This git hook will run on the client before a commit is made.
 
 gc_git_hook_client_pre_commit() {
-    echo "$(date -Ins)  info: git hook invoked on client: $0 $@"
+    echo "$(date -Ins)  info: Git hook invoked on client: $0 $@"
 
     GITCID_DIR=${GITCID_DIR:-"./.gc/"}
 
