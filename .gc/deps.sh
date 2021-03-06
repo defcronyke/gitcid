@@ -63,7 +63,7 @@ dependencies installed:"
 }
 
 gitcid_deps() {
-	echo "$(date -Ins) [${BASH_SOURCE[0]} - line: $LINENO]	info: Running script: ${BASH_SOURCE[0]} $@"
+	echo "$(date -Ins) [${BASH_SOURCE[0]}  line: $LINENO]	info: Running script: ${BASH_SOURCE[0]} $@"
 
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
 	GITCID_DEPS_DIR=${GITCID_DEPS_DIR:-"${GITCID_DIR}.gc-deps/"}
@@ -71,11 +71,11 @@ gitcid_deps() {
 	GITCID_UTIL_DIR=${GITCID_UTIL_DIR:-"${GITCID_DIR}.gc-util/"}
 	GITCID_UTIL_LOG=${GITCID_UTIL_LOG:-"${GITCID_UTIL_DIR}log.env"}
 
-	echo "$(date -Ins) [${BASH_SOURCE[0]} - line: $LINENO]	import: Importing GitCid log utils: ${GITCID_UTIL_LOG}"
+	echo "$(date -Ins) [${BASH_SOURCE[0]}  line: $LINENO]	import: Importing GitCid log utils: ${GITCID_UTIL_LOG}"
 	source "${GITCID_UTIL_LOG}"
 	res_import_util_log=$?
 	if [ $res_import_util_log -ne 0 ]; then
-		echo "$(date -Ins) [${BASH_SOURCE[0]} - line: $LINENO]	error: Failed importing GitCid log utils. I guess it's not going to work, sorry!"
+		echo "$(date -Ins) [${BASH_SOURCE[0]}  line: $LINENO]	error: Failed importing GitCid log utils. I guess it's not going to work, sorry!"
 		return $res_import_util_log
 	fi
 

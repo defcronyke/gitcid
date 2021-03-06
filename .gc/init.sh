@@ -175,7 +175,7 @@ gitcid_init() {
 	echo ""
 	echo "Logs"
 	echo "----"
-	echo "$(date -Ins) [${BASH_SOURCE[0]} - line: $LINENO]	info: Running script: ${BASH_SOURCE[0]} $@"
+	echo "$(date -Ins) [${BASH_SOURCE[0]}  line: $LINENO]	info: Running script: ${BASH_SOURCE[0]} $@"
 
 	source "${GITCID_DIR}deps.sh"
 	res_import_deps=$?
