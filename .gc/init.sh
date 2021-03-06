@@ -73,7 +73,7 @@ gitcid_get_init_usage() {
 }
 
 gitcid_make_new_git_repo() {
-	GITCID_NEW_REPO_PATH=${1:-"${GITCID_NEW_REPO_PATH_DEFAULT}/${GITCID_NEW_REPO_NAME_DEFAULT}"}
+	GITCID_NEW_REPO_PATH=${1:-"${GITCID_NEW_REPO_PATH_DEFAULT}"}
 	GITCID_NEW_REPO_PATHS=("${GITCID_NEW_REPO_PATH}")
 	GITCID_GIT_INIT_SHARED_DOCS_URL="https://git-scm.com/docs/git-init#Documentation/git-init.txt---sharedfalsetrueumaskgroupallworldeverybody0xxx"
 
@@ -149,8 +149,8 @@ gitcid_init() {
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
 	GITCID_NEW_REPO_BARE=${GITCID_NEW_REPO_BARE:-$(if [ -z ${GITCID_NEW_REPO_NOT_BARE+x} ]; then echo "--bare"; else echo ""; fi)}
 	GITCID_NEW_REPO_PERMISSIONS=${GITCID_NEW_REPO_PERMISSIONS:-"0640"}
-	GITCID_NEW_REPO_PATH_DEFAULT=${GITCID_NEW_REPO_PATH_DEFAULT:-"."}
 	GITCID_NEW_REPO_NAME_DEFAULT=${GITCID_NEW_REPO_NAME_DEFAULT:-"repo.git"}
+	GITCID_NEW_REPO_PATH_DEFAULT=${GITCID_NEW_REPO_PATH_DEFAULT:-"./${GITCID_NEW_REPO_NAME_DEFAULT}"}
 
 	if [[ $# -ge 1 && ("$1" == "-h" || "$1" == "--help") ]]; then
 		shift
