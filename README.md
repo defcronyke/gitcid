@@ -16,7 +16,7 @@
 
 * Always run the GitCid commands from the top-level directory of this project's git repo.
 
-### "`.gc/init.sh`" - Make new bare git repositories, suitable for hosting as git remotes
+### `.gc/init.sh` - Make new bare git repositories, suitable for hosting as git remotes
 
 1. Run this command for usage info:
     ```shell
