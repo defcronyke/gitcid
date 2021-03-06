@@ -39,7 +39,7 @@ gitcid_get_init_header() {
 	echo "Summary: ${BASH_SOURCE[0]} [-h | --help] [./repo[.git] ...] [[user@]remote:~/repo[.git] ...]"
 	echo ""
 	echo "You can override the following environment variables if you want:"
-	echo "GITCID_NEW_REPO_BARE=\"${GITCID_NEW_REPO_BARE}\""
+	echo "GITCID_NEW_REPO_NOT_BARE=\"${GITCID_NEW_REPO_NOT_BARE}\""
 	echo "GITCID_NEW_REPO_PERMISSIONS=\"${GITCID_NEW_REPO_PERMISSIONS}\""
 	echo "GITCID_NEW_REPO_PATH_DEFAULT=\"${GITCID_NEW_REPO_PATH_DEFAULT}\""
 	echo "GITCID_DIR=\"${GITCID_DIR}\""
@@ -96,7 +96,7 @@ gitcid_make_new_git_repo() {
 		GITCID_NEW_REPO_SUFFIX=${GITCID_NEW_REPO_SUFFIX:-".git"}
 
 		echo "$GITCID_NEW_REPO_NAME" | grep -P "^.+\\${GITCID_NEW_REPO_SUFFIX}$" >/dev/null
-		if [ $? -ne 0 ]; then
+		if [ $? -ne 0 ] && [ -z ${GITCID_NEW_REPO_NOT_BARE+x} ]; then
 			GITCID_NEW_REPO_NAME="${GITCID_NEW_REPO_NAME}${GITCID_NEW_REPO_SUFFIX}"
 			gitcid_log_info ${BASH_SOURCE[0]} $LINENO "Adding \"${GITCID_NEW_REPO_SUFFIX}\" to the end of the new repo name: ${GITCID_NEW_REPO_NAME}"
 		fi
@@ -145,7 +145,7 @@ gitcid_make_new_git_repo() {
 
 gitcid_init() {
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
-	GITCID_NEW_REPO_BARE=${GITCID_NEW_REPO_BARE:-"--bare"}
+	GITCID_NEW_REPO_BARE=${GITCID_NEW_REPO_BARE:-$(if [ -z ${GITCID_NEW_REPO_NOT_BARE+x} ]; then echo "--bare"; else echo ""; fi)}
 	GITCID_NEW_REPO_PERMISSIONS=${GITCID_NEW_REPO_PERMISSIONS:-"0640"}
 	GITCID_NEW_REPO_PATH_DEFAULT=${GITCID_NEW_REPO_PATH_DEFAULT:-"."}
 	GITCID_NEW_REPO_NAME_DEFAULT=${GITCID_NEW_REPO_NAME_DEFAULT:-"repo.git"}
