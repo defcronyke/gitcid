@@ -24,7 +24,7 @@
   
 ## Usage Examples  
   
-### Make new bare git repos, suitable for hosting as git remotes
+### Make new bare git repositories, suitable for hosting as git remotes
 
 #### Use the "`.gc/init.sh`" script to do it, and always run it from the top-level directory of this project's git repo.
 
