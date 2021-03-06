@@ -69,7 +69,6 @@ gitcid_get_init_usage() {
 	echo "[ /abs/path/to/new/local/repo[.git] ... ]"
 	echo "[ user@host:~/rel/ssh/path/to/new/remote/repo[.git] ... ]"
 	echo "[ user@host:/abs/ssh/path/to/new/remote/repo[.git] ... ]"
-	return 1
 }
 
 gitcid_make_new_git_repo() {
@@ -155,19 +154,19 @@ gitcid_init() {
 	if [[ $# -ge 1 && ("$1" == "-h" || "$1" == "--help") ]]; then
 		shift
 		gitcid_get_init_usage $@
-		return $?
+		return 1
 	fi
 
 	if [[ $# -ge 1 && ("$1" == "-V" || "$1" == "--version") ]]; then
 		shift
 		gitcid_get_project_version $@
-		return $?
+		return 2
 	fi
 
 	if [[ $# -ge 1 && ("$1" == "-n" || "$1" == "--name") ]]; then
 		shift
 		gitcid_get_init_name $@
-		return $?
+		return 3
 	fi
 
 	gitcid_get_init_header

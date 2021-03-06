@@ -112,7 +112,7 @@ so you'll need to run this script as root. It will probably fail now if you aren
 
 			if [ $res -ne 0 ]; then
 				gitcid_log_err ${BASH_SOURCE[0]} $LINENO "Failed installing dependencies. You'll need to install them manually then I guess."
-				return 2
+				return 5
 			fi
 		else
 			gitcid_log_err ${BASH_SOURCE[0]} $LINENO "You are missing some dependencies and your OS isn't supported. \
@@ -122,7 +122,7 @@ please our system, if you know the correct values for your unsupported OS:"
 			echo "GITCID_DEPS_INSTALL_CMD=${GITCID_DEPS_INSTALL_CMD[@]}"
 			echo "GITCID_DEPS=${GITCID_DEPS[@]}"
 			echo "GITCID_DEPS_CMDS=${GITCID_DEPS_CMDS[@]}"
-			return 1
+			return 4
 		fi
 	fi
 
