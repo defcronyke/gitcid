@@ -144,6 +144,42 @@ gitcid_make_new_git_repo() {
 	done
 }
 
+gitcit_begin_logs() {
+	echo ""
+	echo "Logs"
+	echo "----"
+}
+
+gitcid_handle_args() {
+	if [[ $# -ge 1 && ("$1" == "-h" || "$1" == "--help") ]]; then
+		shift
+		gitcid_get_init_usage $@
+		return 1
+
+	elif [[ $# -ge 1 && ("$1" == "-V" || "$1" == "--version") ]]; then
+		shift
+		gitcid_get_project_version $@
+		return 2
+
+	elif [[ $# -ge 1 && ("$1" == "-n" || "$1" == "--name") ]]; then
+		shift
+		gitcid_get_init_name $@
+		return 3
+	
+	elif [[ $# -ge 1 && "${1:0:1}" == "-" ]]; then
+		gitcid_get_init_header
+		gitcit_begin_logs
+		echo "$(date -Ins) [${BASH_SOURCE[0]} ($LINENO)]	error: Invalid option: \"$1\""
+		shift
+		return 4
+
+	else
+		gitcid_get_init_header
+		gitcit_begin_logs
+		return 0
+	fi
+}
+
 gitcid_init() {
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
 	GITCID_NEW_REPO_BARE=${GITCID_NEW_REPO_BARE:-$(if [ -z ${GITCID_NEW_REPO_NOT_BARE+x} ]; then echo "--bare"; else echo ""; fi)}
@@ -151,29 +187,15 @@ gitcid_init() {
 	GITCID_NEW_REPO_NAME_DEFAULT=${GITCID_NEW_REPO_NAME_DEFAULT:-"repo.git"}
 	GITCID_NEW_REPO_PATH_DEFAULT=${GITCID_NEW_REPO_PATH_DEFAULT:-"./${GITCID_NEW_REPO_NAME_DEFAULT}"}
 
-	if [[ $# -ge 1 && ("$1" == "-h" || "$1" == "--help") ]]; then
-		shift
-		gitcid_get_init_usage $@
-		return 1
+	gitcid_handle_args $@
+	res_gitcid_handle_args=$?
+	if [ $res_gitcid_handle_args -gt 3 ]; then
+		echo "$(date -Ins) [${BASH_SOURCE[0]} ($LINENO)]	error: There was a problem with the supplied command's options or arguments."
+		return $res_gitcid_handle_args
+	elif [ $res_gitcid_handle_args -ne 0 ]; then
+		return $res_gitcid_handle_args
 	fi
 
-	if [[ $# -ge 1 && ("$1" == "-V" || "$1" == "--version") ]]; then
-		shift
-		gitcid_get_project_version $@
-		return 2
-	fi
-
-	if [[ $# -ge 1 && ("$1" == "-n" || "$1" == "--name") ]]; then
-		shift
-		gitcid_get_init_name $@
-		return 3
-	fi
-
-	gitcid_get_init_header
-
-	echo ""
-	echo "Logs"
-	echo "----"
 	echo "$(date -Ins) [${BASH_SOURCE[0]} ($LINENO)]	info: Running script: ${BASH_SOURCE[0]} $@"
 
 	source "${GITCID_DIR}deps.sh"
