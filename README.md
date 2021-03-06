@@ -4,9 +4,13 @@
 ## Download this project  
   
 1. Make sure you've installed git first.
-2. Run the following command:
+1. Run the following command:
     ```shell
     git clone https://github.com/defcronyke/gitcid.git && cd gitcid
+    ```
+1. Or if you prefer, you can run this command instead:
+    ```shell
+    source <(curl -sL https://tinyurl.com/gitcid)
     ```
   
 ## Requisites  
