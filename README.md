@@ -22,11 +22,11 @@
 
 * Not currently supported.
   
-## Usage  
+## Usage Examples  
   
 ### Make new bare git repos, suitable for hosting as git remotes
 
-#### Use the `.gc/init.sh` script to do it, and always run it from the top-level directory of this project's git repo.
+#### Use the "`.gc/init.sh`" script to do it, and always run it from the top-level directory of this project's git repo.
 
 1. Run this command for usage info:
     ```shell
