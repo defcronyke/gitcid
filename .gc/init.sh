@@ -50,7 +50,7 @@ gitcid_get_init_header() {
 gitcid_get_init_usage() {
 	echo "$(gitcid_get_init_header)"
 	echo ""
-	echo "Usage: ${BASH_SOURCE[0]} [ OPTION ... ] [ ARGUMENT ... ]"
+	echo "Usage: ${BASH_SOURCE[0]} [ OPTION ] [ ARGUMENT ... ]"
 	echo ""
 	echo "Example: ${BASH_SOURCE[0]} ./new-local-repo.git user@some-ssh-server:~/new-remote-repo.git"
 	echo ""
@@ -59,6 +59,8 @@ gitcid_get_init_usage() {
 	echo "OPTIONS"
 	echo "-------"
 	echo "[ -h | --help ]"
+	echo "[ -V | --version ]"
+	echo "[ -n | --name ]"
 	echo ""
 	echo "ARGUMENT EXAMPLES"
 	echo "-----------------"
