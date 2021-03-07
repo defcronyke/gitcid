@@ -4,7 +4,7 @@
 gc_git_hook_client_post_merge() {
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
 
-	source "${GITCID_DIR}deps.sh"
+	source "${GITCID_DIR}deps.sh" $@
 	res_import_deps=$?
 	if [ $res_import_deps -ne 0 ]; then
 		gitcid_log_warn ${BASH_SOURCE[0]} $LINENO "Failed importing GitCid dependencies. Things might not work properly, so you might want to address the issue."
