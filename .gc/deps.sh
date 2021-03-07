@@ -74,6 +74,8 @@ gitcid_enable_verbose() {
 			
 			export GITCID_VERBOSE_OUTPUT="y"
 			export GITCID_LOG_TIMESTAMP_CMD="date -Ins"
+			echo "Early Logs"
+			echo "----------"
 			echo "$(${GITCID_LOG_TIMESTAMP_CMD}) [${BASH_SOURCE[0]} ($LINENO)]	info-verbose: Activating verbose output because of the command line option: \"$reason\""
 		fi
 	done
@@ -150,7 +152,8 @@ please our system, if you know the correct values for your unsupported OS:"
 		return $git_config_res
 	fi
 
-	gitcid_log_info_verbose ${BASH_SOURCE[0]} $LINENO "All GitCid dependencies are installed."
+	gitcid_log_info_verbose ${BASH_SOURCE[0]} $LINENO "All GitCid dependencies are installed.\n\
+----------\n"
 }
 
 gitcid_deps $@

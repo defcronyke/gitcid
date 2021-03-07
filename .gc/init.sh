@@ -36,7 +36,7 @@ gitcid_get_init_header() {
 	echo ""
 	echo "Description: ${BASH_SOURCE[0]} - Initialize a new git repository (or several), either locally or at an ssh server path. Defaults to making a bare repo suitable for hosting a git remote."
 	echo ""
-	echo "Summary: ${BASH_SOURCE[0]} [[-h | --help] ...] [./repo[.git] ...] [[user@]remote:~/repo[.git] ...]"
+	echo "Summary: ${BASH_SOURCE[0]} [-h|--help|-i|-n|-V] [-v|--verbose] [./repo[.git] ...] [[user@]remote:~/repo[.git] ...]"
 	echo ""
 	echo "You can override the following environment variables if you want:"
 	echo "GITCID_NEW_REPO_NON_BARE=\"${GITCID_NEW_REPO_NON_BARE}\""
@@ -50,9 +50,9 @@ gitcid_get_init_header() {
 gitcid_get_init_usage() {
 	echo "$(gitcid_get_init_header)"
 	echo ""
-	echo "Usage: ${BASH_SOURCE[0]} [ OPTION ... ] [ ARGUMENT ... ]"
+	echo "Usage: ${BASH_SOURCE[0]} [OPTION] [-v|--verbose] [ARGUMENT ...]"
 	echo ""
-	echo "Example: ${BASH_SOURCE[0]} ./new-local-repo.git user@some-ssh-server:~/new-remote-repo.git"
+	echo "Example: ${BASH_SOURCE[0]} -v ./new-local-repo.git user@some-ssh-server:~/new-remote-repo.git"
 	echo ""
 	echo "With no arguments provided, it defaults to this command: ${BASH_SOURCE[0]} ${GITCID_NEW_REPO_PATH_DEFAULT}"
 	echo ""
@@ -61,8 +61,8 @@ gitcid_get_init_usage() {
 	echo "[ -h | --help ]		- Print this help message, and exit."
 	echo "[ -i | --info ]		- Print the name and some other info about this command, and exit."
 	echo "[ -n | --non-bare ]	- Make regular non-bare git repositories instead of bare ones."
-	echo "[ -v | --verbose ]	- Activate a more verbose style of output."
 	echo "[ -V | --version ]	- Print the version of this command, and exit."
+	echo "[ -v | --verbose ]	- Activate a more verbose style of output."
 	echo ""
 	echo "ARGUMENT EXAMPLES"
 	echo "-----------------"
@@ -80,6 +80,7 @@ gitcid_make_new_git_repo() {
 
 	if [ $# -le 0 ]; then
 		gitcid_log_info ${BASH_SOURCE[0]} $LINENO "No path argument provided for the new git repo. Using default local path: \"$GITCID_NEW_REPO_PATH\""
+	
 	else
 		GITCID_NEW_REPO_PATHS=("$@")
 	fi
@@ -122,12 +123,15 @@ gitcid_make_new_git_repo() {
 			if [ $res_git_init -ne 0 ]; then
 				gitcid_log_err ${BASH_SOURCE[0]} $LINENO "$output_git_init"
 				gitcid_log_err ${BASH_SOURCE[0]} $LINENO "Failed initializing new remote git repo: ${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}"
+				
 				return $res_git_init
+			
 			else
 				gitcid_log_info ${BASH_SOURCE[0]} $LINENO "$output_git_init"
 			fi
 
 			gitcid_log_info ${BASH_SOURCE[0]} $LINENO "New git repo initialized at remote destination: ${GITCID_NEW_REPO_PATH_HOST}:${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}"
+		
 		else
 			gitcid_log_info ${BASH_SOURCE[0]} $LINENO "Initializing new git repo at local destination: ${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}"
 
@@ -136,13 +140,16 @@ gitcid_make_new_git_repo() {
 			if [ $res_git_init -ne 0 ]; then
 				gitcid_log_err ${BASH_SOURCE[0]} $LINENO "$output_git_init"
 				gitcid_log_err ${BASH_SOURCE[0]} $LINENO "Failed initializing new local git repo: ${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}"
+				
 				return $res_git_init
+			
 			else
 				gitcid_log_info ${BASH_SOURCE[0]} $LINENO "$output_git_init"
 			fi
 
 			gitcid_log_info ${BASH_SOURCE[0]} $LINENO "New git repo initialized at local destination: ${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}"
 		fi
+
 	done
 }
 
@@ -156,19 +163,28 @@ gitcid_handle_args() {
 	if [[ $# -ge 1 && ("$1" == "-h" || "$1" == "--help") ]]; then
 		shift
 		gitcid_get_init_usage $@
+		HANDLED_ARGS=("$@")
+
 		return 1
 
 	elif [[ $# -ge 1 && ("$1" == "-i" || "$1" == "--info") ]]; then
 		shift
 		gitcid_get_init_info $@
+		HANDLED_ARGS=("$@")
+
 		return 2
 
 	elif [[ $# -ge 1 && ("$1" == "-V" || "$1" == "--version") ]]; then
 		shift
 		gitcid_get_project_version $@
+		HANDLED_ARGS=("$@")
+
 		return 3
 	
 	elif [[ $# -ge 1 && ("$1" == "-n" || "$1" == "--non-bare") ]]; then
+		gitcid_get_init_header
+		gitcit_begin_logs
+
 		GITCID_NEW_REPO_NON_BARE="y"
 		GITCID_NEW_REPO_BARE=""
 		gitcid_log_info ${BASH_SOURCE[0]} $LINENO "Making regular non-bare git repositories because of the command line option: \"$1\""
@@ -176,33 +192,38 @@ gitcid_handle_args() {
 		echo "GITCID_NEW_REPO_NON_BARE=\"${GITCID_NEW_REPO_NON_BARE}\""
 		echo "GITCID_NEW_REPO_BARE=\"${GITCID_NEW_REPO_BARE}\""
 		shift
+		HANDLED_ARGS=("$@")
+
 		return 0
 
 	elif [[ $# -ge 1 && "${1:0:1}" == "-" ]]; then
 		gitcid_get_init_header
 		gitcit_begin_logs
+
 		gitcid_log_err ${BASH_SOURCE[0]} $LINENO "Invalid option: \"$1\""
 		shift
+		HANDLED_ARGS=("$@")
+
 		return 4
 
 	else
 		gitcid_get_init_header
 		gitcit_begin_logs
+		HANDLED_ARGS=("$@")
+
 		return 0
 	fi
 }
 
 gitcid_init() {
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
-	GITCID_NEW_REPO_BARE=${GITCID_NEW_REPO_BARE:-$(if [ -z ${GITCID_NEW_REPO_NON_BARE+x} ]; then echo "--bare"; else echo ""; fi)}
 	GITCID_NEW_REPO_PERMISSIONS=${GITCID_NEW_REPO_PERMISSIONS:-"0640"}
-	GITCID_NEW_REPO_NAME_DEFAULT=${GITCID_NEW_REPO_NAME_DEFAULT:-"repo.git"}
-	GITCID_NEW_REPO_PATH_DEFAULT=${GITCID_NEW_REPO_PATH_DEFAULT:-"./${GITCID_NEW_REPO_NAME_DEFAULT}"}
 
 	source "${GITCID_DIR}deps.sh" $@
 	res_import_deps=$?
 	if [ $res_import_deps -ne 0 ]; then
 		gitcid_log_err ${BASH_SOURCE[0]} $LINENO "Failed importing GitCid dependencies. I guess it's not going to work, sorry!"
+		
 		return $res_import_deps
 	fi
 
@@ -225,10 +246,17 @@ gitcid_init() {
 	res_gitcid_handle_args=$?
 	if [ $res_gitcid_handle_args -gt 3 ]; then
 		gitcid_log_err ${BASH_SOURCE[0]} $LINENO "There was a problem with the supplied command's options or arguments."
+		
 		return $res_gitcid_handle_args
+	
 	elif [ $res_gitcid_handle_args -ne 0 ]; then
 		return $res_gitcid_handle_args
 	fi
+	set -- "${HANDLED_ARGS[@]}"
+
+	GITCID_NEW_REPO_BARE=${GITCID_NEW_REPO_BARE:-$(if [ -z ${GITCID_NEW_REPO_NON_BARE+x} ]; then echo "--bare"; else echo ""; fi)}
+	GITCID_NEW_REPO_NAME_DEFAULT=${GITCID_NEW_REPO_NAME_DEFAULT:-$(if [ -z ${GITCID_NEW_REPO_NON_BARE+x} ]; then echo "repo.git"; else echo "repo"; fi)}
+	GITCID_NEW_REPO_PATH_DEFAULT=${GITCID_NEW_REPO_PATH_DEFAULT:-"./${GITCID_NEW_REPO_NAME_DEFAULT}"}
 
 	gitcid_log_info ${BASH_SOURCE[0]} $LINENO "Running script: ${BASH_SOURCE[0]} $@"
 
@@ -236,6 +264,7 @@ gitcid_init() {
 	res_make_new_git_repo=$?
 	if [ $res_make_new_git_repo -ne 0 ]; then
 		gitcid_log_err ${BASH_SOURCE[0]} $LINENO "Failed making new git repo. I guess it's not going to work, sorry!"
+		
 		return $res_make_new_git_repo
 	fi
 }
