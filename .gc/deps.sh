@@ -8,13 +8,13 @@ gitcid_detect_sudo() {
 
 	cat "$GROUP_FILE_PATH" | grep -P "$SUDO_GROUPS" | grep "$("$WHOAMI_CMD")" >/dev/null
 	if [ $? -eq 0 ]; then
-		gitcid_log_info ${BASH_SOURCE[0]} $LINENO "You seem to have sudo privileges. Enabling the sudo command."
+		gitcid_log_info_verbose ${BASH_SOURCE[0]} $LINENO "You seem to have sudo privileges. Enabling the sudo command."
 		SUDO_CMD=$(if [ -z "$SUDO_CMD" ]; then echo "sudo"; fi)
 	fi
 }
 
 gitcid_detect_os() {
-	gitcid_log_info ${BASH_SOURCE[0]} $LINENO "Attempting to find any missing GitCid dependencies and install them."
+	gitcid_log_info_verbose ${BASH_SOURCE[0]} $LINENO "Attempting to find any missing GitCid dependencies and install them."
 	
 	ARCH_PKG_CMD=${ARCH_PKG_CMD:-"pacman"}
 	ARCH_PKG_CMD_INSTALL_ARGS=${ARCH_PKG_CMD_INSTALL_ARGS:-"--noconfirm -Syy"}
@@ -62,22 +62,37 @@ dependencies installed:"
 	fi
 }
 
+gitcid_enable_verbose() {
+	for arg in "${@:1}"; do
+		echo "$arg" | grep -P "\-.*v.*|\-\-verbose" >/dev/null
+		if [ $? -eq 0 ]; then
+			reason="$arg"
+			
+			if [ "$reason" != "--verbose" ]; then
+				reason="-v"
+			fi
+			
+			export GITCID_VERBOSE_OUTPUT="y"
+			export GITCID_LOG_TIMESTAMP_CMD="date -Ins"
+			echo "$(${GITCID_LOG_TIMESTAMP_CMD}) [${BASH_SOURCE[0]} ($LINENO)]	info-verbose: Activating verbose output because of the command line option: \"$reason\""
+		fi
+	done
+}
+
 gitcid_deps() {
-	echo "$(date -Ins) [${BASH_SOURCE[0]} ($LINENO)]	info: Running script: ${BASH_SOURCE[0]} $@"
+	gitcid_enable_verbose $@
 
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
 	GITCID_DEPS_DIR=${GITCID_DEPS_DIR:-"${GITCID_DIR}.gc-deps/"}
 	GITCID_GIT_HOOKS_CLIENT_DIR=${GITCID_GIT_HOOKS_CLIENT_DIR:-"${GITCID_DIR}.gc-git-hooks-client"}
 	GITCID_UTIL_DIR=${GITCID_UTIL_DIR:-"${GITCID_DIR}.gc-util/"}
 	GITCID_UTIL_LOG=${GITCID_UTIL_LOG:-"${GITCID_UTIL_DIR}log.env"}
+	GITCID_IMPORT_DIR=${GITCID_IMPORT_DIR:-"${GITCID_DIR}.gc-import/"}
+	GITCID_IMPORT_UTIL_LOG=${GITCID_IMPORT_UTIL_LOG:-"${GITCID_IMPORT_DIR}util-log.env"}
 
-	echo "$(date -Ins) [${BASH_SOURCE[0]} ($LINENO)]	import: Importing GitCid log utils: ${GITCID_UTIL_LOG}"
-	source "${GITCID_UTIL_LOG}"
-	res_import_util_log=$?
-	if [ $res_import_util_log -ne 0 ]; then
-		echo "$(date -Ins) [${BASH_SOURCE[0]} ($LINENO)]	error: Failed importing GitCid log utils. I guess it's not going to work, sorry!"
-		return $res_import_util_log
-	fi
+	source "${GITCID_IMPORT_UTIL_LOG}"
+
+	gitcid_log_info_verbose ${BASH_SOURCE[0]} $LINENO "Running script: ${BASH_SOURCE[0]} $@"
 
 	gitcid_detect_sudo $@
 	res_detect_sudo=$?
@@ -100,11 +115,11 @@ so you'll need to run this script as root. It will probably fail now if you aren
 	done
 
 	if [ $HAS_DEPS -ne 0 ]; then
-		gitcid_log_info ${BASH_SOURCE[0]} $LINENO "You are missing at least one of these dependencies:"
+		gitcid_log_info_verbose ${BASH_SOURCE[0]} $LINENO "You are missing at least one of these dependencies:"
 		echo "${GITCID_DEPS[@]}"
 		
 		if [ $SUPPORTED_DISTRO -eq 0 ]; then
-			gitcid_log_info ${BASH_SOURCE[0]} $LINENO "We will try to install them now, using the following command:"
+			gitcid_log_info_verbose ${BASH_SOURCE[0]} $LINENO "We will try to install them now, using the following command:"
 			echo "${GITCID_DEPS_INSTALL_CMD[@]} ${GITCID_DEPS[@]}"
 
 			eval "${GITCID_DEPS_INSTALL_CMD[@]} ${GITCID_DEPS[@]}"
@@ -126,7 +141,7 @@ please our system, if you know the correct values for your unsupported OS:"
 		fi
 	fi
 
-	gitcid_log_info ${BASH_SOURCE[0]} $LINENO "Setting \"$GITCID_GIT_HOOKS_CLIENT_DIR\" as this git repo's \"core.hooksPath\""
+	gitcid_log_info_verbose ${BASH_SOURCE[0]} $LINENO "Setting \"$GITCID_GIT_HOOKS_CLIENT_DIR\" as this git repo's \"core.hooksPath\""
 	
 	git config core.hooksPath "$GITCID_GIT_HOOKS_CLIENT_DIR"
 	git_config_res=$?
@@ -135,7 +150,7 @@ please our system, if you know the correct values for your unsupported OS:"
 		return $git_config_res
 	fi
 
-	gitcid_log_info ${BASH_SOURCE[0]} $LINENO "All GitCid dependencies are installed."
+	gitcid_log_info_verbose ${BASH_SOURCE[0]} $LINENO "All GitCid dependencies are installed."
 }
 
 gitcid_deps $@

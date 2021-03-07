@@ -2,8 +2,6 @@
 # This git hook will run on the client before a commit is made.
 
 gc_git_hook_client_pre_commit() {
-	echo "$(date -Ins) [${BASH_SOURCE[0]} ($LINENO)]	info: Invoked client git hook: ${BASH_SOURCE[0]} $@"
-
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
 
 	source "${GITCID_DIR}deps.sh"
@@ -13,11 +11,7 @@ gc_git_hook_client_pre_commit() {
 		return $res_import_deps
 	fi
 
-	res=$res_import_deps
-	if [ $res -ne 0 ]; then
-		gitcid_log_err ${BASH_SOURCE[0]} $LINENO "The client git hook failed: ${BASH_SOURCE[0]} $@"
-		return $res
-	fi
+	gitcid_log_info ${BASH_SOURCE[0]} $LINENO "Invoked client git hook: ${BASH_SOURCE[0]} $@"
 
 	gitcid_log_info ${BASH_SOURCE[0]} $LINENO "The client git hook finished successfully: ${BASH_SOURCE[0]} $@"
 }
