@@ -7,8 +7,7 @@ gc_git_hook_client_pre_commit() {
 	source "${GITCID_DIR}deps.sh"
 	res_import_deps=$?
 	if [ $res_import_deps -ne 0 ]; then
-		gitcid_log_err ${BASH_SOURCE[0]} $LINENO "Failed importing GitCid dependencies. I guess it's not going to work, sorry!"
-		return $res_import_deps
+		gitcid_log_warn ${BASH_SOURCE[0]} $LINENO "Failed importing GitCid dependencies. Things might not work properly, so you might want to address the issue."
 	fi
 
 	gitcid_log_info ${BASH_SOURCE[0]} $LINENO "Invoked client git hook: ${BASH_SOURCE[0]} $@"
