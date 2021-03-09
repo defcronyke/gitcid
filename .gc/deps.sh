@@ -161,7 +161,7 @@ so you'll need to run this script as root. It will probably fail now if you aren
 
 	if [ $HAS_DEPS -ne 0 ]; then
 		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "You are missing at least one of these dependencies:"
-		echo "${GITCID_DEPS[@]}"
+		echo "${GITCID_DEPS_CMDS[@]}"
 		
 		if [ $SUPPORTED_DISTRO -eq 0 ]; then
 			gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "We will try to install them now, using the following command:"
@@ -185,36 +185,54 @@ please our system, if you know the correct values for your unsupported OS:"
 			return 80
 		fi
 
-		if [ $IS_DEBIAN -eq 0 ] && [ $HAS_DOCKER -ne 0 ]; then
-			curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO_CMD gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-			
-			uname -a | grep "x86_64" >/dev/null
-			IS_X64=$?
+		if [ $HAS_DOCKER -ne 0 ]; then
+			if [ $IS_DEBIAN -eq 0 ]; then
+				curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO_CMD gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+				
+				uname -a | grep "x86_64" >/dev/null
+				IS_X64=$?
 
-			uname -a | grep "arm64" >/dev/null
-			IS_ARM64=$?
+				uname -a | grep "arm64" >/dev/null
+				IS_ARM64=$?
 
-			uname -a | grep "arm" >/dev/null
-			IS_ARMHF=$?
-			
-			if [ $IS_X64 -eq 0 ]; then
-				echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-			elif [ $IS_ARM64 -eq 0 ]; then
-				echo "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-			elif [ $IS_ARMHF -eq 0 ]; then
-				echo "deb [arch=armhf signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-			else
-				gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "You don't have Docker installed, and you're running on a CPU architecture which \
-doesn't have official Docker builds for it. You will have to try installing Docker from source yourself if you want this to work."
-				return 82
+				uname -a | grep "arm" >/dev/null
+				IS_ARMHF=$?
+				
+				if [ $IS_X64 -eq 0 ]; then
+					echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+	$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+				elif [ $IS_ARM64 -eq 0 ]; then
+					echo "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+	$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+				elif [ $IS_ARMHF -eq 0 ]; then
+					echo "deb [arch=armhf signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+	$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+				else
+					gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "You don't have Docker installed, and you're running on a CPU architecture which \
+	doesn't have official Docker builds for it. You will have to try installing Docker from source yourself if you want this to work."
+					return 82
+				fi
+				
+				eval "${GITCID_DEPS_INSTALL_CMD[@]} docker-ce docker-ce-cli containerd.io"
+
+			elif [ $IS_ARCH -eq 0 ]; then
+				eval "${GITCID_DEPS_INSTALL_CMD[@]} docker"
+				$SUDO_CMD systemctl enable docker
+				$SUDO_CMD systemctl start docker
 			fi
-			
-			eval "${GITCID_DEPS_INSTALL_CMD[@]} docker-ce docker-ce-cli containerd.io"
+		fi
+	fi
 
-			gpasswd -a $USER docker
+	docker ps >/dev/null
+	if [ $? -ne 0 ]; then
+		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Adding user \"$USER\" to the \"docker\" group."
+		$SUDO_CMD gpasswd -a $USER docker
+
+		docker ps >/dev/null
+		if [ $? -ne 0 ]; then
+			gitcid_log_notice "${BASH_SOURCE[0]}" $LINENO "Your user account \"$USER\" doesn't have permission to use Docker. \
+Logging out and back in should fix the issue."
+			return 83
 		fi
 	fi
 
