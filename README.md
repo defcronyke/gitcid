@@ -4,13 +4,15 @@
 
 ## Download GitCid
 
-1. Make sure you've installed [`git`](https://git-scm.com) first, then run the following command:
-   ```shell
-   git clone https://gitlab.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
-   ```
-1. Or if you prefer, you can run this command instead (you need to have `curl` and `git` installed first):
+1. Make sure you've installed [`git`](https://git-scm.com) and
+   [`curl`](https://man7.org/linux/man-pages/man1/curl.1.html) first,
+   then run the following command:
    ```shell
    source <(curl -sL https://tinyurl.com/gitcid)
+   ```
+1. Or if you prefer, you can run this command instead:
+   ```shell
+   git clone https://gitlab.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
    ```
 
 ## Usage Examples
