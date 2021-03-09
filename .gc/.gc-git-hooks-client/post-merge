@@ -12,13 +12,8 @@ gc_git_hook_client_post_merge() {
 
 	gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Invoked client git hook: ${BASH_SOURCE[0]} $@"
 
-	if [ ! -z "$(git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD)" ]; then
-		rm "${GITCID_DIR}.gc-update-available" 2>/dev/null
-		gitcid_log_notice "${BASH_SOURCE[0]}" $LINENO "GitCid has just been updated."
-
-	else
-		gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "There were no GitCid updates available."
-	fi
+	rm "${GITCID_DIR}.gc-update-available" 2>/dev/null
+	gitcid_log_notice "${BASH_SOURCE[0]}" $LINENO "GitCid has just been updated."
 
 	gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "The client git hook finished successfully: ${BASH_SOURCE[0]} $@"
 }
