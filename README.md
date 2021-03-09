@@ -41,7 +41,7 @@
    ```
 1. Make several new bare git repos at once (suitable for using as git remotes), local and/or remote ones:
    ```shell
-   .gc/init.sh -b ~/example-regular-repo1 example-regular-repo2.git
+   .gc/init.sh -b ~/local-bare-repo1 user@host:~/remote-bare-repo1 local-bare-repo2.git user@host:~/remote-bare-repo2.git
    ```
 
 ### Install GitCid into an existing git repository:
