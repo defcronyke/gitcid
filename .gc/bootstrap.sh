@@ -28,6 +28,22 @@ gitcid_bootstrap() {
 	if [ ! -z ${GITCID_EXISTING_REPO+x} ]; then
 		pwd="$PWD"
 		echo "note: GitCid is being installed into an existing git repo: $pwd"
+
+		if [ ! -d ".git" ]; then
+			echo "warning: The current directory doesn't have a \".git/\" folder. \
+Assuming it's a bare repo, and treating it as such. To suppress this warning next time, \
+run the command with the following flag: -b"
+
+			new_args=()
+			for arg in "$@"; do
+				new_args+=("$arg")
+			done
+
+			new_args+=("-b")
+
+			set -- "${new_args[@]}"
+		fi
+
 		tmpdir="$(mktemp -d)"
 		cd "$tmpdir"
 		
