@@ -30,9 +30,8 @@ gitcid_bootstrap() {
 		pwd="$PWD"
 		echo "note: GitCid is being installed into an existing git repo: $pwd"
 
-	
 		if [ ! -d ".git" ]; then
-			printf "%b\n" "-b" | grep -P "^\-.*b.*$|\-\-bare" >/dev/null
+			printf "%b\n" "$@" | grep -P "^\-.*b.*$|\-\-bare" >/dev/null
 			if [ $? -ne 0 ] && [ -z "$GITCID_OVERRIDE_REPO_TYPE" ]; then
 				printf "%b\n" "\nwarning: The current directory doesn't have a \".git/\" folder. \
 Assuming it's a bare repo, and treating it as such. To suppress this warning next time, \
@@ -50,7 +49,7 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
 				set -- "${new_args[@]}"
 			fi
 		else
-			printf "%b\n" "-b" | grep -P "^\-.*b.*$|\-\-bare" >/dev/null
+			printf "%b\n" "$@" | grep -P "^\-.*b.*$|\-\-bare" >/dev/null
 			if [ $? -eq 0 ] && [ -z "$GITCID_OVERRIDE_REPO_TYPE" ]; then
 				printf "%b\n" "\nwarning: The current directory has a \".git/\" folder, but the \"-b\" flag was used. \
 Assuming it's a normal (non-bare) repo, and treating it as such. To suppress this warning next time, \
