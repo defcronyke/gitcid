@@ -12,16 +12,16 @@ gitcid_get_architecture() {
 
 	if [ $IS_X64 -eq 0 ]; then
 		ARCH=""
-		KERNEL_HEADERS=${KERNEL_HEADERS:-"linux-headers-`uname -r`"}
+		# KERNEL_HEADERS=${KERNEL_HEADERS:-"linux-headers-`uname -r`"}
 	elif [ $IS_ARM64 -eq 0 ]; then
 		ARCH="arm64v8/"
-		KERNEL_HEADERS=${KERNEL_HEADERS:-"raspberrypi-kernel-headers"}
+		# KERNEL_HEADERS=${KERNEL_HEADERS:-"raspberrypi-kernel-headers"}
 	elif [ $IS_ARMHF -eq 0 ]; then
 		ARCH="arm32v7/"
-		KERNEL_HEADERS=${KERNEL_HEADERS:-"raspberrypi-kernel-headers"}
+		# KERNEL_HEADERS=${KERNEL_HEADERS:-"raspberrypi-kernel-headers"}
 	else
 		ARCH=""
-		KERNEL_HEADERS=${KERNEL_HEADERS:-"linux-headers-`uname -r`"}
+		# KERNEL_HEADERS=${KERNEL_HEADERS:-"linux-headers-`uname -r`"}
 	fi
 }
 
@@ -33,9 +33,10 @@ gitcid_docker_compose_hello_up() {
 
 	docker network create docker-compose-net --subnet 10.0.1.0/24 2>/dev/null
 
+	# sed "s@{KERNEL_HEADERS}@${KERNEL_HEADERS}@g" | \
+
 	cat Dockerfile.tmpl | \
 		sed "s@{ARCH}@${ARCH}@g" | \
-		sed "s@{KERNEL_HEADERS}@${KERNEL_HEADERS}@g" | \
 		tee Dockerfile
 
 	docker-compose up $@
