@@ -34,9 +34,9 @@ gitcid_get_init_header() {
 	echo "Website: $(gitcid_get_project_link)"
 	echo "------"
 	echo ""
-	echo "Description: ${BASH_SOURCE[0]} - Initialize a new git repository (or several), either locally or at an ssh server path. Defaults to making a bare repo suitable for hosting a git remote."
+	echo "Description: ${BASH_SOURCE[0]} - Initialize a new git repository (or several), either locally or at an ssh server path."
 	echo ""
-	echo "Summary: ${BASH_SOURCE[0]} [-h|--help|-i|-n|-V] [-v|--verbose] [./repo[.git] ...] [[user@]remote:~/repo[.git] ...]"
+	echo "Summary: ${BASH_SOURCE[0]} [-h|--help|-i|-b|-V] [-v|--verbose] [./repo[.git] ...] [[user@]remote:~/repo[.git] ...]"
 	echo ""
 	echo "You can override the following environment variables if you want:"
 	echo "GITCID_NEW_REPO_NON_BARE=\"${GITCID_NEW_REPO_NON_BARE}\""
@@ -61,7 +61,7 @@ gitcid_get_init_usage() {
 	echo "-------"
 	echo "[ -h | --help ]		- Print this help message, and exit."
 	echo "[ -i | --info ]		- Print the name and some other info about this command, and exit."
-	echo "[ -n | --non-bare ]	- Make regular non-bare git repositories instead of bare ones."
+	echo "[ -b | --bare ]		- Make bare git repositories, suitable for hosting git remotes."
 	echo "[ -V | --version ]	- Print the version of this command, and exit."
 	echo "[ -v | --verbose ]	- Activate a more verbose style of output."
 	echo ""
@@ -81,6 +81,9 @@ gitcit_begin_logs() {
 }
 
 gitcid_handle_args() {
+	GITCID_NEW_REPO_NON_BARE="y"
+	GITCID_NEW_REPO_BARE=""
+
 	if [[ $# -ge 1 && ("$1" == "-h" || "$1" == "--help") ]]; then
 		shift
 		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_get_init_usage $@)"
@@ -108,16 +111,16 @@ gitcid_handle_args() {
 
 		return 0
 	
-	elif [[ $# -ge 1 && ("$1" == "-n" || "$1" == "--non-bare") ]]; then
+	elif [[ $# -ge 1 && ("$1" == "-b" || "$1" == "--bare") ]]; then
 		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_get_init_header)"
 		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcit_begin_logs)"
 
-		GITCID_NEW_REPO_NON_BARE="y"
-		GITCID_NEW_REPO_BARE=""
-		gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Making regular non-bare git repositories because of the command line option: \"$1\""
-		gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Setting the following environment variables:"
-		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "GITCID_NEW_REPO_NON_BARE=\"${GITCID_NEW_REPO_NON_BARE}\""
-		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "GITCID_NEW_REPO_BARE=\"${GITCID_NEW_REPO_BARE}\""
+		unset GITCID_NEW_REPO_NON_BARE
+		GITCID_NEW_REPO_BARE="--bare"
+		gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Making bare git repositories because of the command line option: \"$1\""
+		# gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Setting the following environment variables:"
+		# gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "GITCID_NEW_REPO_NON_BARE=\"${GITCID_NEW_REPO_NON_BARE}\""
+		# gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "GITCID_NEW_REPO_BARE=\"${GITCID_NEW_REPO_BARE}\""
 		shift
 		HANDLED_ARGS=("$@")
 
@@ -232,17 +235,17 @@ gitcid_make_new_git_repo() {
 		GITCID_NEW_REPO_PATH_DIR=$(echo "$GITCID_NEW_REPO_PATH" | cut -d':' -f2)
 
 		if [ -z ${GITCID_NEW_REPO_NON_BARE+x} ]; then
-			GITCID_NEW_HOOKS_TARGET="${GITCID_DIR}.gc-git-hooks"
-			GITCID_NEW_HOOKS_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/hooks"
+			# GITCID_NEW_HOOKS_TARGET="${GITCID_DIR}.gc-git-hooks"
+			# GITCID_NEW_HOOKS_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/hooks"
 
-			GITCID_NEW_EXCLUDE_TARGET="../${GITCID_DIR}.gc-git-exclude"
-			GITCID_NEW_EXCLUDE_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/info/exclude"
+			# GITCID_NEW_EXCLUDE_TARGET="../${GITCID_DIR}.gc-git-exclude"
+			GITCID_NEW_EXCLUDE_FILE="info/exclude"
 		else
-			GITCID_NEW_HOOKS_TARGET="../${GITCID_DIR}.gc-git-hooks"
-			GITCID_NEW_HOOKS_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/.git/hooks"
+			# GITCID_NEW_HOOKS_TARGET="../${GITCID_DIR}.gc-git-hooks"
+			# GITCID_NEW_HOOKS_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/.git/hooks"
 
-			GITCID_NEW_EXCLUDE_TARGET="../../${GITCID_DIR}.gc-git-exclude"
-			GITCID_NEW_EXCLUDE_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/.git/info/exclude"
+			# GITCID_NEW_EXCLUDE_TARGET="../../${GITCID_DIR}.gc-git-exclude"
+			GITCID_NEW_EXCLUDE_FILE=".git/info/exclude"
 		fi
 
 		if [ $GITCID_IS_SSH_PATH -eq 0 ]; then
@@ -256,7 +259,7 @@ gitcid_make_new_git_repo() {
 			scp "${GITCID_DIR}../README-gitcid.md" $GITCID_NEW_REPO_PATH_HOST:${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" 2>/dev/null
 			
 			output_git_init="Running ssh... $(ssh "$GITCID_NEW_REPO_PATH_HOST" \
-"git init --shared=${GITCID_NEW_REPO_PERMISSIONS} --template=${GITCID_INIT_TEMPLATE_DIR} ${GITCID_NEW_REPO_BARE} ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}")"
+"git init --shared=${GITCID_NEW_REPO_PERMISSIONS} ${GITCID_NEW_REPO_BARE} ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}")"
 			
 			res_git_init=$?
 			if [ $res_git_init -ne 0 ]; then
@@ -269,8 +272,9 @@ gitcid_make_new_git_repo() {
 				gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "$output_git_init"
 
 				ssh "$GITCID_NEW_REPO_PATH_HOST" \
-					"ln -sf ${GITCID_NEW_HOOKS_TARGET} ${GITCID_NEW_HOOKS_DIR}; \
-					ln -sf ${GITCID_NEW_EXCLUDE_TARGET} ${GITCID_NEW_EXCLUDE_DIR}"
+"cd ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME} && \
+git config core.hooksPath \"${GITCID_GIT_HOOKS_CLIENT_DIR}\" && \
+cp \"${GITCID_DIR}.gc-git-exclude\" \"${GITCID_NEW_EXCLUDE_FILE}\""
 			fi
 
 			gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "New git repo initialized at remote destination: ${GITCID_NEW_REPO_PATH_HOST}:${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}"
@@ -286,7 +290,7 @@ gitcid_make_new_git_repo() {
 			cp "${GITCID_DIR}../README.md" ${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" 2>/dev/null || \
 			cp "${GITCID_DIR}../README-gitcid.md" ${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" 2>/dev/null
 
-			output_git_init="$(git init --shared=${GITCID_NEW_REPO_PERMISSIONS} --template=${GITCID_INIT_TEMPLATE_DIR} ${GITCID_NEW_REPO_BARE} "${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}" 2>&1)"
+			output_git_init="$(git init --shared=${GITCID_NEW_REPO_PERMISSIONS} ${GITCID_NEW_REPO_BARE} "${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}" 2>&1)"
 			res_git_init=$?
 			if [ $res_git_init -ne 0 ]; then
 				gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "$output_git_init"
@@ -297,8 +301,14 @@ gitcid_make_new_git_repo() {
 			else
 				gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "$output_git_init"
 				
-				ln -sf "${GITCID_NEW_HOOKS_TARGET}" "${GITCID_NEW_HOOKS_DIR}"
-				ln -sf "${GITCID_NEW_EXCLUDE_TARGET}" "${GITCID_NEW_EXCLUDE_DIR}"
+				pwd="$PWD"
+				cd "${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}"
+				git config core.hooksPath "${GITCID_GIT_HOOKS_CLIENT_DIR}"
+				cp "${GITCID_DIR}.gc-git-exclude" "${GITCID_NEW_EXCLUDE_FILE}"
+				cd "$pwd"
+
+				# ln -sf "${GITCID_NEW_HOOKS_TARGET}" "${GITCID_NEW_HOOKS_DIR}"
+				# ln -sf "${GITCID_NEW_EXCLUDE_TARGET}" "${GITCID_NEW_EXCLUDE_DIR}"
 			fi
 
 			gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "New git repo initialized at local destination: ${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}"

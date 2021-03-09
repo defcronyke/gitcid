@@ -72,14 +72,16 @@ gitcid_enable_verbose() {
 				reason="-v"
 			fi
 			
-			export GITCID_VERBOSE_OUTPUT="y"
-			export GITCID_LOG_TIMESTAMP_CMD="date -Ins"
+			GITCID_VERBOSE_OUTPUT="y"
+			GITCID_LOG_TIMESTAMP_CMD="date -Ins"
+			# export GITCID_VERBOSE_OUTPUT="y"
+			# export GITCID_LOG_TIMESTAMP_CMD="date -Ins"
 		fi
 	done
 }
 
 gitcid_update() {
-	last_update_check=$(cat "${GITCID_DIR}.gc-last-update-check.txt" || echo 0)
+	last_update_check=$(cat "${GITCID_DIR}.gc-last-update-check.txt" 2>/dev/null || echo 0)
 	current_time=$(date +%s)
 	
 	# Check for GitCid updates if at least 24 hours have passed since last update check.
@@ -120,7 +122,7 @@ gitcid_deps() {
 
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
 	GITCID_DEPS_DIR=${GITCID_DEPS_DIR:-"${GITCID_DIR}.gc-deps/"}
-	GITCID_GIT_HOOKS_CLIENT_DIR=${GITCID_GIT_HOOKS_CLIENT_DIR:-"${GITCID_DIR}.gc-init-template/hooks"}
+	GITCID_GIT_HOOKS_CLIENT_DIR=${GITCID_GIT_HOOKS_CLIENT_DIR:-"${GITCID_DIR}.gc-git-hooks"}
 	GITCID_UTIL_DIR=${GITCID_UTIL_DIR:-"${GITCID_DIR}.gc-util/"}
 	GITCID_UTIL_LOG=${GITCID_UTIL_LOG:-"${GITCID_UTIL_DIR}log.env"}
 	GITCID_IMPORT_DIR=${GITCID_IMPORT_DIR:-"${GITCID_DIR}.gc-import/"}
