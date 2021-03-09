@@ -294,7 +294,12 @@ gitcid_wait_for_background_jobs() {
 gitcid_mention_update() {
 	if [ -f "${GITCID_DIR}.gc-update-available" ]; then
 		gitcid_log_update "${BASH_SOURCE[0]}" $LINENO "An updated version of GitCid is available. \
-Please run the following command at your earliest opportunity:\ngit pull"
+Please run the following command at your earliest opportunity:\ngit pull" 1>&2
+		return 0
+	fi
+
+	if [ ! -z ${GITCID_CHECKED_FOR_UPDATES+x} ]; then
+		gitcid_log_update_verbose "${BASH_SOURCE[0]}" $LINENO "GitCid is up-to-date." 1>&2
 	fi
 }
 

@@ -88,9 +88,11 @@ gitcid_update() {
 	update_diff=$(( $current_time - $last_update_check ))
 
 	if [ $update_diff -lt $GITCID_UPDATE_FREQUENCY ]; then
-		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "No need to check for GitCid updates yet because we checked recently (next update check after $(( $GITCID_UPDATE_FREQUENCY - $update_diff )) more seconds)."
+		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "No need to check for GitCid updates yet because we checked recently (next update check after $(( $GITCID_UPDATE_FREQUENCY - $update_diff )) more seconds)." 1>&2
 		return 0
 	fi
+
+	GITCID_CHECKED_FOR_UPDATES="y"
 
 	( 
 		git fetch origin >/dev/null
@@ -102,13 +104,11 @@ gitcid_update() {
 		fi
 
 		rm "${GITCID_DIR}.gc-update-available" 2>/dev/null
-
-		gitcid_log_background_verbose "${BASH_SOURCE[0]}" $LINENO "GitCid is up-to-date."
 	) &
 
 	GITCID_BACKGROUND_JOBS+=($!)
 
-	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Checking for GitCid updates in the background..."
+	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Checking for GitCid updates in the background..." 1>&2
 
 	date +%s > "${GITCID_DIR}.gc-last-update-check.txt"
 }
