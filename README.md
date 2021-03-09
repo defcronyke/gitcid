@@ -6,11 +6,11 @@
 
 1. Make sure you've installed `git` first, then run the following command:
    ```shell
-   git clone https://github.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -hv
+   git clone https://github.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
    ```
 1. Or if you prefer, you can run this command instead (you need to have `curl` and `git` installed first):
    ```shell
-   source <(curl -sL https://tinyurl.com/gitcid) -v
+   source <(curl -sL https://tinyurl.com/gitcid)
    ```
 
 ## Usage Examples
