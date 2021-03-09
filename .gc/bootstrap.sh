@@ -60,10 +60,10 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
 				new_args=()
 				for arg in "$@"; do
 					if [ "$arg" != "--bare" ]; then
-						new_arg=$(printf "%b" "$arg" | sed -E "s/^(\-.*)(b)(.*)$/\1\3/g")
+						new_arg=$(printf "%b\n" "$arg" | sed -E "s/^(\-.*)(b)(.*)$/\1\3/g")
 
 						if [ "$new_arg" != "-" ]; then
-							new_args+=("$arg")
+							new_args+=("$new_arg")
 						fi
 					fi
 				done
