@@ -10,7 +10,7 @@
    ```shell
    source <(curl -sL https://tinyurl.com/gitcid)
    ```
-1. Or if you prefer, you can run this command instead:
+1. (Optional) Or if you prefer, you can run this command instead:
    ```shell
    git clone https://gitlab.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
    ```
@@ -26,11 +26,11 @@
 
 ### Install GitCid into an existing git repository:
 
-1. Run this command from the top-level directory of your existing git repo that
-   you'd like to install GitCid into (it works for both regular and bare repos):
-   ```shell
-   source <(curl -sL https://tinyurl.com/gitcid) -e
-   ```
+- Run this command from the top-level directory of your existing git repo that
+  you'd like to install GitCid into (it works for both regular and bare repos):
+  ```shell
+  source <(curl -sL https://tinyurl.com/gitcid) -e
+  ```
 
 ### Make new git repositories:
 
