@@ -276,16 +276,42 @@ gitcid_init() {
 	fi
 }
 
+gitcid_wait_for_background_jobs() {
+	for job_pid in ${GITCID_BACKGROUND_JOBS[@]}; do
+		any_jobs="y"
+		gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Waiting for GitCid background job to finish: $job_pid"
+		wait $job_pid
+	done
+
+	GITCID_BACKGROUND_JOBS=()
+
+	if [ ! -z ${any_jobs+x} ]; then
+		unset any_jobs
+		gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "All GitCid background jobs are finished."
+	fi
+}
+
+gitcid_mention_update() {
+	if [ -f "${GITCID_DIR}.gc-update-available" ]; then
+		gitcid_log_notice_verbose "${BASH_SOURCE[0]}" $LINENO "An updated version of GitCid is available. \
+Please run the following command at your earliest opportunity:\ngit pull"
+	fi
+}
+
 gitcid_init_exit() {
 	res=$1
 	shift
 
-	gitcid_log_notice "${BASH_SOURCE[0]}" $LINENO "GitCid script finished: $0 $@" >/dev/null
+	gitcid_wait_for_background_jobs
+
+	gitcid_mention_update
+
+	gitcid_log_notice_verbose "${BASH_SOURCE[0]}" $LINENO "GitCid script finished: $0 $@"
 
 	if [ $res -ne 0 ]; then
 		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "GitCid script finished with an error.\nexit code:\n$res"
 	else
-		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "exit code:\n$res" >/dev/null
+		gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "exit code:\n$res"
 	fi
 
 	return $res

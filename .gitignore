@@ -1,6 +1,5 @@
-*
-
-!.gc/
-!.gitignore
-!LICENSE
-!README.md
+.gc/.gc-logs/
+.gc/.gc-last-update-check.txt
+.gc/.gc-update-available
+repo.git/
+repo/

@@ -78,7 +78,43 @@ gitcid_enable_verbose() {
 	done
 }
 
+gitcid_update() {
+	last_update_check=$(cat "${GITCID_DIR}.gc-last-update-check.txt" || echo 0)
+	current_time=$(date +%s)
+	
+	# Check for GitCid updates if at least 24 hours have passed since last update check.
+	GITCID_UPDATE_FREQUENCY=${GITCID_UPDATE_FREQUENCY:-$(( 24 * 60 * 60 * 1 ))}
+	
+	update_diff=$(( $current_time - $last_update_check ))
+
+	if [ $update_diff -lt $GITCID_UPDATE_FREQUENCY ]; then
+		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "No need to check for GitCid updates yet because we checked recently (next update check after $(( $GITCID_UPDATE_FREQUENCY - $update_diff )) more seconds)."
+		return 0
+	fi
+
+	( 
+		git fetch >/dev/null
+
+		if [ $(git rev-parse HEAD) == $(git rev-parse @{u}) ]; then
+			touch "${GITCID_DIR}.gc-update-available"
+			return 0
+		fi
+
+		rm "${GITCID_DIR}.gc-update-available" 2>/dev/null
+
+		gitcid_log_background_verbose "${BASH_SOURCE[0]}" $LINENO "GitCid is up-to-date."
+	) &
+
+	GITCID_BACKGROUND_JOBS+=($!)
+
+	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Checking for GitCid updates in the background..."
+
+	date +%s > "${GITCID_DIR}.gc-last-update-check.txt"
+}
+
 gitcid_deps() {
+	GITCID_BACKGROUND_JOBS=()
+
 	gitcid_enable_verbose $@
 
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
@@ -92,6 +128,8 @@ gitcid_deps() {
 	source "${GITCID_IMPORT_UTIL_LOG}"
 
 	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Running script: ${BASH_SOURCE[0]} $@"
+
+	gitcid_update
 
 	gitcid_detect_sudo $@
 	res_detect_sudo=$?
