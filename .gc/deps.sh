@@ -91,8 +91,8 @@ gitcid_update() {
 		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "No need to check for GitCid updates yet because we checked recently (next update check after $(( $GITCID_UPDATE_FREQUENCY - $update_diff )) more seconds)." 1>&2
 		return 0
 	fi
-
-	GITCID_CHECKED_FOR_UPDATES="y"
+	
+	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Checking for GitCid updates in the background..." 1>&2
 
 	( 
 		git fetch origin >/dev/null
@@ -108,7 +108,7 @@ gitcid_update() {
 
 	GITCID_BACKGROUND_JOBS+=($!)
 
-	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Checking for GitCid updates in the background..." 1>&2
+	GITCID_CHECKED_FOR_UPDATES="y"
 
 	date +%s > "${GITCID_DIR}.gc-last-update-check.txt"
 }
