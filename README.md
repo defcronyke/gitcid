@@ -24,15 +24,10 @@
 
 ### Install GitCid into an existing git repository:
 
-- Run these commands from the top-level directory of your existing git repo that you'd like to install GitCid into.
-
-1. Install GitCid into a regular git repo:
+1. Run this command from the top-level directory of your existing git repo that
+   you'd like to install GitCid into (it works for both regular and bare repos):
    ```shell
    source <(curl -sL https://tinyurl.com/gitcid) -e
-   ```
-1. Install GitCid into a bare git repo:
-   ```shell
-   source <(curl -sL https://tinyurl.com/gitcid) -eb
    ```
 
 ### Make new git repositories:
