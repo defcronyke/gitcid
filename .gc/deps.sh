@@ -17,7 +17,7 @@ gitcid_detect_os() {
 	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Attempting to find any missing GitCid dependencies and install them."
 	
 	ARCH_PKG_CMD=${ARCH_PKG_CMD:-"pacman"}
-	ARCH_PKG_CMD_INSTALL_ARGS=${ARCH_PKG_CMD_INSTALL_ARGS:-"--noconfirm -Syy"}
+	ARCH_PKG_CMD_INSTALL_ARGS=${ARCH_PKG_CMD_INSTALL_ARGS:-"--noconfirm --needed -Syy"}
 
 	DEBIAN_PKG_CMD=${DEBIAN_PKG_CMD:-"apt-get"}
 	DEBIAN_PKG_CMD_UPDATE_ARGS=${DEBIAN_PKG_CMD_UPDATE_ARGS:-"update"}
@@ -150,12 +150,17 @@ so you'll need to run this script as root. It will probably fail now if you aren
 
 	HAS_DEPS=0
 	HAS_DOCKER=0
+	HAS_DOCKER_COMPOSE=0
 	for i in ${GITCID_DEPS_CMDS[@]}; do
 		which $i >/dev/null 2>&1
 		HAS_DEPS=$?
 
 		if [ "$i" == "docker" ]; then
 			HAS_DOCKER=${HAS_DEPS}
+		fi
+
+		if [ "$i" == "docker-compose" ]; then
+			HAS_DOCKER_COMPOSE=${HAS_DEPS}
 		fi
 	done
 
@@ -221,6 +226,13 @@ please our system, if you know the correct values for your unsupported OS:"
 				$SUDO_CMD systemctl start docker
 			fi
 		fi
+
+		if [ $HAS_DOCKER_COMPOSE -ne 0 ]; then
+			curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o docker-compose && \
+			chmod 755 docker-compose && \
+			sudo mv docker-compose /usr/local/bin/
+		fi
+
 	fi
 
 	docker ps >/dev/null
