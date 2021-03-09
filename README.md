@@ -2,11 +2,11 @@
 
 ---
 
-## Download this project
+## Download GitCid
 
-1. Make sure you've installed `git` first, then run the following command:
+1. Make sure you've installed [`git`](https://git-scm.com) first, then run the following command:
    ```shell
-   git clone https://github.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
+   git clone https://gitlab.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
    ```
 1. Or if you prefer, you can run this command instead (you need to have `curl` and `git` installed first):
    ```shell
@@ -17,12 +17,10 @@
 
 ### Get Usage Help
 
-- Run this command from the top-level directory of the GitCid git repo.
-
-1. Run this command for usage info:
-   ```shell
-   .gc/init.sh -h
-   ```
+- Run this command from the top-level directory of the GitCid repo, for usage info:
+  ```shell
+  .gc/init.sh -h
+  ```
 
 ### Install GitCid into an existing git repository:
 
@@ -34,7 +32,8 @@
 
 ### Make new git repositories:
 
-- Run these commands from the top-level directory of the GitCid git repo.
+- Run these `.gc/init.sh` commands from the top-level directory of the GitCid repo,
+  to make new GitCid git repositories.
 
 1. Make a new local git repo with the default name of "`repo`" in the current directory:
    ```shell
