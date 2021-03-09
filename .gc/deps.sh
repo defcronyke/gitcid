@@ -93,7 +93,7 @@ gitcid_update() {
 	fi
 
 	( 
-		git fetch >/dev/null
+		git fetch origin >/dev/null
 
 		# if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
 		if [ ! -z "$(git log HEAD..origin/master --oneline)" ]; then
