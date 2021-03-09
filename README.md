@@ -52,7 +52,7 @@
 source <(curl -sL https://tinyurl.com/gitcid) -e
 ```
 
-1. Install GitCid into a bare git repo:
+2. Install GitCid into a bare git repo:
 
 ```shell
 source <(curl -sL https://tinyurl.com/gitcid) -eb
