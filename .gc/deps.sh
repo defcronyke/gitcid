@@ -213,6 +213,8 @@ doesn't have official Docker builds for it. You will have to try installing Dock
 			fi
 			
 			eval "${GITCID_DEPS_INSTALL_CMD[@]} docker-ce docker-ce-cli containerd.io"
+
+			gpasswd -a $USER docker
 		fi
 	fi
 
