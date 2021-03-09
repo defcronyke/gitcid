@@ -95,7 +95,7 @@ gitcid_update() {
 	( 
 		git fetch >/dev/null
 
-		if [ $(git rev-parse HEAD) == $(git rev-parse @{u}) ]; then
+		if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
 			touch "${GITCID_DIR}.gc-update-available"
 			return 0
 		fi
