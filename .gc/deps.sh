@@ -190,18 +190,18 @@ please our system, if you know the correct values for your unsupported OS:"
 			return 80
 		fi
 
+		uname -a | grep "x86_64" >/dev/null
+		IS_X64=$?
+
+		uname -a | grep "arm64" >/dev/null
+		IS_ARM64=$?
+
+		uname -a | grep "arm" >/dev/null
+		IS_ARMHF=$?
+
 		if [ $HAS_DOCKER -ne 0 ]; then
 			if [ $IS_DEBIAN -eq 0 ]; then
-				curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO_CMD gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-				
-				uname -a | grep "x86_64" >/dev/null
-				IS_X64=$?
-
-				uname -a | grep "arm64" >/dev/null
-				IS_ARM64=$?
-
-				uname -a | grep "arm" >/dev/null
-				IS_ARMHF=$?
+				curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO_CMD gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg		
 				
 				if [ $IS_X64 -eq 0 ]; then
 					echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
