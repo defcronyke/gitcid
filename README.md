@@ -15,6 +15,13 @@
 
 ## Usage Examples
 
+### Get Usage Help
+
+1. Run this command for usage info:
+   ```shell
+   .gc/init.sh -h
+   ```
+
 ### Install GitCid into an existing git repository:
 
 - Run these commands from the top-level directory of your existing git repo that you'd like to install GitCid into.
@@ -32,12 +39,8 @@
 
 ### Make new git repositories:
 
-- Run these commands from the top-level directory of this project's git repo.
+- Run these commands from the top-level directory of the GitCid git repo.
 
-1. Run this command for usage info:
-   ```shell
-   .gc/init.sh -h
-   ```
 1. Make a new local git repo with the default name of "`repo`" in the current directory:
    ```shell
    .gc/init.sh
