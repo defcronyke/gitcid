@@ -21,7 +21,7 @@ gitcid_detect_os() {
 
 	DEBIAN_PKG_CMD=${DEBIAN_PKG_CMD:-"apt-get"}
 	DEBIAN_PKG_CMD_UPDATE_ARGS=${DEBIAN_PKG_CMD_UPDATE_ARGS:-"update"}
-	DEBIAN_PKG_CMD_INSTALL_ARGS=${DEBIAN_PKG_CMD_INSTALL_ARGS:-"install --no-install-recommends -y"}
+	DEBIAN_PKG_CMD_INSTALL_ARGS=${DEBIAN_PKG_CMD_INSTALL_ARGS:-"install -y"}
 
 	FEDORA_PKG_CMD=${FEDORA_PKG_CMD:-"dnf"}
 	FEDORA_PKG_CMD_UPDATE_ARGS=${FEDORA_PKG_CMD_UPDATE_ARGS:-"-y update"}
@@ -149,9 +149,14 @@ so you'll need to run this script as root. It will probably fail now if you aren
 	fi
 
 	HAS_DEPS=0
+	HAS_DOCKER=0
 	for i in ${GITCID_DEPS_CMDS[@]}; do
 		which $i >/dev/null 2>&1
 		HAS_DEPS=$?
+
+		if [ "$i" == "docker" ]; then
+			HAS_DOCKER=${HAS_DEPS}
+		fi
 	done
 
 	if [ $HAS_DEPS -ne 0 ]; then
@@ -174,10 +179,40 @@ so you'll need to run this script as root. It will probably fail now if you aren
 Please install them yourself and try again afterwards. Maybe it'll work if you do that."
 			gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "You can also try setting the following environment variables to \
 please our system, if you know the correct values for your unsupported OS:"
-			echo "GITCID_DEPS_INSTALL_CMD=${GITCID_DEPS_INSTALL_CMD[@]}"
-			echo "GITCID_DEPS=${GITCID_DEPS[@]}"
-			echo "GITCID_DEPS_CMDS=${GITCID_DEPS_CMDS[@]}"
+			gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "GITCID_DEPS_INSTALL_CMD=${GITCID_DEPS_INSTALL_CMD[@]}"
+			gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "GITCID_DEPS=${GITCID_DEPS[@]}"
+			gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "GITCID_DEPS_CMDS=${GITCID_DEPS_CMDS[@]}"
 			return 80
+		fi
+
+		if [ $IS_DEBIAN -eq 0 ] && [ $HAS_DOCKER -ne 0 ]; then
+			curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO_CMD gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+			
+			uname -a | grep "x86_64" >/dev/null
+			IS_X64=$?
+
+			uname -a | grep "arm64" >/dev/null
+			IS_ARM64=$?
+
+			uname -a | grep "armhf" >/dev/null
+			IS_ARMHF=$?
+			
+			if [ $IS_X64 -eq 0 ]; then
+				echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+			elif [ $IS_ARM64 -eq 0 ]; then
+				echo "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+			elif [ $IS_ARMHF -eq 0 ]; then
+				echo "deb [arch=armhf signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+			else
+				gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "You don't have Docker installed, and you're running on a CPU architecture which \
+doesn't have official Docker builds for it. You will have to try installing Docker from source yourself if you want this to work."
+				return 82
+			fi
+			
+			eval "${GITCID_DEPS_INSTALL_CMD[@]} docker-ce docker-ce-cli containerd.io"
 		fi
 	fi
 
