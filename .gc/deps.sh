@@ -228,8 +228,12 @@ please our system, if you know the correct values for your unsupported OS:"
 		fi
 
 		if [ $HAS_DOCKER_COMPOSE -ne 0 ]; then
-			if [ $IS_ARM64 -eq 0 ] || [ $IS_ARMHF -eq 0 ]; then
-				curl -L "https://github.com/linuxserver/docker-docker-compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o docker-compose && \
+			if [ $IS_ARM64 -eq 0 ]; then
+				curl -L "https://github.com/linuxserver/docker-docker-compose/releases/latest/download/docker-compose-arm64" -o docker-compose && \
+				chmod 755 docker-compose && \
+				sudo mv docker-compose /usr/local/bin/
+			elif [ $IS_ARMHF -eq 0 ]; then
+				curl -L "https://github.com/linuxserver/docker-docker-compose/releases/latest/download/docker-compose-armhf" -o docker-compose && \
 				chmod 755 docker-compose && \
 				sudo mv docker-compose /usr/local/bin/
 			else
