@@ -231,6 +231,20 @@ gitcid_make_new_git_repo() {
 
 		GITCID_NEW_REPO_PATH_DIR=$(echo "$GITCID_NEW_REPO_PATH" | cut -d':' -f2)
 
+		if [ -z ${GITCID_NEW_REPO_NON_BARE+x} ]; then
+			GITCID_NEW_HOOKS_TARGET="${GITCID_DIR}.gc-git-hooks"
+			GITCID_NEW_HOOKS_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/hooks"
+
+			GITCID_NEW_EXCLUDE_TARGET="../${GITCID_DIR}.gc-git-exclude"
+			GITCID_NEW_EXCLUDE_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/info/exclude"
+		else
+			GITCID_NEW_HOOKS_TARGET="../${GITCID_DIR}.gc-git-hooks"
+			GITCID_NEW_HOOKS_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/.git/hooks"
+
+			GITCID_NEW_EXCLUDE_TARGET="../../${GITCID_DIR}.gc-git-exclude"
+			GITCID_NEW_EXCLUDE_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/.git/info/exclude"
+		fi
+
 		if [ $GITCID_IS_SSH_PATH -eq 0 ]; then
 			gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Initializing new git repo at ssh destination: ${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}"
 
@@ -253,6 +267,10 @@ gitcid_make_new_git_repo() {
 			
 			else
 				gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "$output_git_init"
+
+				ssh "$GITCID_NEW_REPO_PATH_HOST" \
+					"ln -sf ${GITCID_NEW_HOOKS_TARGET} ${GITCID_NEW_HOOKS_DIR}; \
+					ln -sf ${GITCID_NEW_EXCLUDE_TARGET} ${GITCID_NEW_EXCLUDE_DIR}"
 			fi
 
 			gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "New git repo initialized at remote destination: ${GITCID_NEW_REPO_PATH_HOST}:${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}"
@@ -263,6 +281,8 @@ gitcid_make_new_git_repo() {
 			mkdir -p ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}
 
 			cp -r "${GITCID_DIR}" ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME} >/dev/null
+
+
 			cp "${GITCID_DIR}../README.md" ${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" 2>/dev/null || \
 			cp "${GITCID_DIR}../README-gitcid.md" ${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" 2>/dev/null
 
@@ -276,6 +296,9 @@ gitcid_make_new_git_repo() {
 			
 			else
 				gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "$output_git_init"
+				
+				ln -sf "${GITCID_NEW_HOOKS_TARGET}" "${GITCID_NEW_HOOKS_DIR}"
+				ln -sf "${GITCID_NEW_EXCLUDE_TARGET}" "${GITCID_NEW_EXCLUDE_DIR}"
 			fi
 
 			gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "New git repo initialized at local destination: ${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}"
