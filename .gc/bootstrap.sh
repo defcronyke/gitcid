@@ -34,7 +34,7 @@ gitcid_bootstrap() {
 		if [ ! -d ".git" ]; then
 			printf "%b\n" "-b" | grep -P "^\-.*b.*$|\-\-bare" >/dev/null
 			if [ $? -ne 0 ] && [ -z "$GITCID_OVERRIDE_REPO_TYPE" ]; then
-				echo "warning: The current directory doesn't have a \".git/\" folder. \
+				printf "%b\n" "warning: The current directory doesn't have a \".git/\" folder. \
 Assuming it's a bare repo, and treating it as such. To suppress this warning next time, \
 run the command with the following flag: -b\n\n\
 To override this automatic fix, you can set the following environment variable:\n\
@@ -52,7 +52,7 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\""
 		else
 			printf "%b\n" "-b" | grep -P "^\-.*b.*$|\-\-bare" >/dev/null
 			if [ $? -eq 0 ] && [ -z "$GITCID_OVERRIDE_REPO_TYPE" ]; then
-				echo "warning: The current directory has a \".git/\" folder, but the \"-b\" flag was used. \
+				printf "%b\n" "warning: The current directory has a \".git/\" folder, but the \"-b\" flag was used. \
 Assuming it's a normal (non-bare) repo, and treating it as such. To suppress this warning next time, \
 run the command without the following flag: -b\n\n\
 To override this automatic fix, you can set the following environment variable:\n\
