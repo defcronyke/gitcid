@@ -95,7 +95,7 @@ gitcid_update() {
 	( 
 		gitcid_log_background_verbose "${BASH_SOURCE[0]}" $LINENO "Checking for GitCid updates in the background..." 1>&2
 
-		gitcid_log_background_verbose "${BASH_SOURCE[0]}" $LINENO "Performing git fetch: $(git fetch origin 2>&1 && echo "No updates found on git origin remote.")" 1>&2
+		gitcid_log_background_verbose "${BASH_SOURCE[0]}" $LINENO "Performing git fetch... $(git fetch origin 2>&1)" 1>&2
 
 		# if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
 		if [ ! -z "$(git log HEAD..origin/master --oneline)" ]; then
