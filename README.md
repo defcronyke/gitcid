@@ -17,6 +17,8 @@
 
 ### Get Usage Help
 
+- Run this command from the top-level directory of the GitCid git repo.
+
 1. Run this command for usage info:
    ```shell
    .gc/init.sh -h
