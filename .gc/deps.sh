@@ -194,7 +194,7 @@ please our system, if you know the correct values for your unsupported OS:"
 			uname -a | grep "arm64" >/dev/null
 			IS_ARM64=$?
 
-			uname -a | grep "armhf" >/dev/null
+			uname -a | grep "arm" >/dev/null
 			IS_ARMHF=$?
 			
 			if [ $IS_X64 -eq 0 ]; then
