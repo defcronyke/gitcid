@@ -14,8 +14,6 @@ gitcid_detect_sudo() {
 }
 
 gitcid_detect_os() {
-	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Attempting to find any missing GitCid dependencies and install them."
-	
 	ARCH_PKG_CMD=${ARCH_PKG_CMD:-"pacman"}
 	ARCH_PKG_CMD_INSTALL_ARGS=${ARCH_PKG_CMD_INSTALL_ARGS:-"--noconfirm --needed -Syy"}
 
@@ -137,6 +135,8 @@ gitcid_deps() {
 
 	gitcid_update
 
+	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Attempting to find any missing GitCid dependencies and install them."
+
 	gitcid_detect_sudo $@
 	res_detect_sudo=$?
 	if [ $res_detect_sudo -ne 0 ]; then
@@ -169,13 +169,13 @@ so you'll need to run this script as root. It will probably fail now if you aren
 
 	if [ $HAS_DEPS -ne 0 ]; then
 		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "You are missing at least one of these dependencies:"
-		echo "${GITCID_DEPS_CMDS[@]}"
+		gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_DEPS_CMDS[@]}"
 		
 		if [ $SUPPORTED_DISTRO -eq 0 ]; then
 			gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "We will try to install them now, using the following command:"
-			echo "${GITCID_DEPS_INSTALL_CMD[@]} ${GITCID_DEPS[@]}"
+			gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_DEPS_INSTALL_CMD[@]} ${GITCID_DEPS[@]}"
 
-			eval "${GITCID_DEPS_INSTALL_CMD[@]} ${GITCID_DEPS[@]}"
+			gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "$(eval "${GITCID_DEPS_INSTALL_CMD[@]} ${GITCID_DEPS[@]}")"
 			res=$?
 
 			if [ $res -ne 0 ]; then
@@ -208,16 +208,16 @@ please our system, if you know the correct values for your unsupported OS:"
 				
 				if [ $IS_X64 -eq 0 ]; then
 					echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-	$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 				elif [ $IS_ARM64 -eq 0 ]; then
 					echo "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-	$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 				elif [ $IS_ARMHF -eq 0 ]; then
 					echo "deb [arch=armhf signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-	$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 				else
 					gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "You don't have Docker installed, and you're running on a CPU architecture which \
-	doesn't have official Docker builds for it. You will have to try installing Docker from source yourself if you want this to work."
+doesn't have official Docker builds for it. You will have to try installing Docker from source yourself if you want this to work."
 					return 82
 				fi
 				
@@ -259,6 +259,49 @@ please our system, if you know the correct values for your unsupported OS:"
 Logging out and back in should fix the issue."
 			return 83
 		fi
+	fi
+
+	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Attempting to find any missing GitCid python dependencies and install them."
+
+	GITCID_SHELL_PROFILE_FILE=${GITCID_SHELL_PROFILE_FILE:-"$HOME/.bashrc"}
+	GITCID_PYTHON_DEFAULT_PATH=${GITCID_PYTHON_DEFAULT_PATH:-'$HOME/.local/bin'}
+
+	# pwd="$PWD"
+	# source "$GITCID_SHELL_PROFILE_FILE"
+	# cd "$pwd"
+
+	HAS_PYTHON_DEPS=0
+	for i in ${GITCID_PYTHON_DEPS_CMDS[@]}; do
+		which $i >/dev/null 2>&1
+		HAS_PYTHON_DEPS=$?
+	done
+
+	if [ $HAS_PYTHON_DEPS -ne 0 ]; then
+		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "You are missing at least one of these python dependencies:"
+		gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_PYTHON_DEPS_CMDS[@]}"
+
+		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "We will try to install them now, using the following command:"
+		gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_PYTHON_DEPS_INSTALL_CMD[@]} ${GITCID_PYTHON_DEPS[@]}"
+
+		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "$(eval "${GITCID_PYTHON_DEPS_INSTALL_CMD[@]} ${GITCID_PYTHON_DEPS[@]}")"
+		res=$?
+
+		if [ $res -ne 0 ]; then
+			gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed installing python dependencies. You'll need to install them manually then I guess."
+			return 81
+		fi
+	fi
+
+	cat "$GITCID_SHELL_PROFILE_FILE" | grep "${GITCID_PYTHON_DEFAULT_PATH}" >/dev/null
+	if [ $? -ne 0 ]; then
+		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Python path not found in your \$PATH. Adding it in: $GITCID_SHELL_PROFILE_FILE"
+		echo "export PATH=\"${GITCID_PYTHON_DEFAULT_PATH}:\$PATH\"" | tee -a "${GITCID_SHELL_PROFILE_FILE}"
+		gitcid_log_notice_verbose "${BASH_SOURCE[0]}" $LINENO "Running this script again: ${BASH_SOURCE[0]} $@"
+		pwd="$PWD"
+		source "$GITCID_SHELL_PROFILE_FILE"
+		cd "$pwd"
+		source "${BASH_SOURCE[0]}" $@
+		return 0
 	fi
 
 	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Setting \"$GITCID_GIT_HOOKS_CLIENT_DIR\" as this git repo's \"core.hooksPath\""
