@@ -154,7 +154,7 @@ so you'll need to run this script as root. It will probably fail now if you aren
 	HAS_DEPS=0
 	HAS_DOCKER=0
 	HAS_DOCKER_COMPOSE=0
-	for i in ${GITCID_DEPS_CMDS[@]}; do
+	for i in "${GITCID_DEPS_CMDS[@]}"; do
 		which $i >/dev/null 2>&1
 		HAS_DEPS=$?
 
@@ -166,6 +166,15 @@ so you'll need to run this script as root. It will probably fail now if you aren
 			HAS_DOCKER_COMPOSE=${HAS_DEPS}
 		fi
 	done
+
+	uname -a | grep "x86_64" >/dev/null
+	IS_X64=$?
+
+	uname -a | grep "arm64" >/dev/null
+	IS_ARM64=$?
+
+	uname -a | grep "arm" >/dev/null
+	IS_ARMHF=$?
 
 	if [ $HAS_DEPS -ne 0 ]; then
 		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "You are missing at least one of these dependencies:"
@@ -193,14 +202,6 @@ please our system, if you know the correct values for your unsupported OS:"
 			return 80
 		fi
 
-		uname -a | grep "x86_64" >/dev/null
-		IS_X64=$?
-
-		uname -a | grep "arm64" >/dev/null
-		IS_ARM64=$?
-
-		uname -a | grep "arm" >/dev/null
-		IS_ARMHF=$?
 
 		if [ $HAS_DOCKER -ne 0 ]; then
 			if [ $IS_DEBIAN -eq 0 ]; then
@@ -266,13 +267,9 @@ Logging out and back in should fix the issue."
 	GITCID_SHELL_PROFILE_FILE=${GITCID_SHELL_PROFILE_FILE:-"$HOME/.bashrc"}
 	GITCID_PYTHON_DEFAULT_PATH=${GITCID_PYTHON_DEFAULT_PATH:-'$HOME/.local/bin'}
 
-	# pwd="$PWD"
-	# source "$GITCID_SHELL_PROFILE_FILE"
-	# cd "$pwd"
-
 	HAS_PYTHON_DEPS=0
-	for i in ${GITCID_PYTHON_DEPS_CMDS[@]}; do
-		which $i >/dev/null 2>&1
+	for i in "${GITCID_PYTHON_DEPS_CMDS[@]}"; do
+		which "$i" >/dev/null 2>&1
 		HAS_PYTHON_DEPS=$?
 	done
 
@@ -302,6 +299,40 @@ Logging out and back in should fix the issue."
 		cd "$pwd"
 		source "${BASH_SOURCE[0]}" $@
 		return 0
+	fi
+
+	GITCID_YQ_CMD="${GITCID_YQ_CMD:-"yq"}"
+
+	which "${GITCID_YQ_CMD}" >/dev/null 2>&1
+	if [ $? -ne 0 ]; then
+		if [ $IS_X64 -eq 0 ]; then
+			GITCID_YQ_DOWNLOAD_BINARY=${GITCID_YQ_DOWNLOAD_BINARY:-"yq_linux_amd64"}
+		elif [ $IS_ARM64 -eq 0 ]; then
+			GITCID_YQ_DOWNLOAD_BINARY=${GITCID_YQ_DOWNLOAD_BINARY:-"yq_linux_arm64"}
+		elif [ $IS_ARMHF -eq 0 ]; then
+			GITCID_YQ_DOWNLOAD_BINARY=${GITCID_YQ_DOWNLOAD_BINARY:-"yq_linux_arm"}
+		else
+			GITCID_YQ_DOWNLOAD_BINARY=${GITCID_YQ_DOWNLOAD_BINARY:-"yq_linux_amd64"}
+		fi
+
+		GITCID_YQ_DOWNLOAD_URL="${GITCID_YQ_DOWNLOAD_URL:-"https://github.com/mikefarah/yq/releases/latest/download/${GITCID_YQ_DOWNLOAD_BINARY}"}"
+		GITCID_YQ_DOWNLOAD_CMD="${GITCID_YQ_DOWNLOAD_CMD:-"curl -sL $GITCID_YQ_DOWNLOAD_URL"}"
+		GITCID_YQ_CMD_INSTALL_PATH="${GITCID_YQ_CMD_INSTALL_PATH:-"/usr/local/bin/"}"
+		
+		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "The command \"${GITCID_YQ_CMD}\" wasn't found in your \$PATH. \
+Attempting to download it by running the following command:\n\
+${GITCID_YQ_DOWNLOAD_CMD} > \"${GITCID_DIR}${GITCID_YQ_CMD}\""
+
+		eval $GITCID_YQ_DOWNLOAD_CMD > "${GITCID_DIR}${GITCID_YQ_CMD}"
+
+		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Attempting to install \"${GITCID_YQ_CMD}\" by running the following command:\n\
+chmod 755 \"${GITCID_DIR}${GITCID_YQ_CMD}\" && ${SUDO_CMD} mv \"${GITCID_DIR}${GITCID_YQ_CMD}\" \"${GITCID_YQ_CMD_INSTALL_PATH}\""
+		
+		chmod 755 "${GITCID_DIR}${GITCID_YQ_CMD}" && ${SUDO_CMD} mv "${GITCID_DIR}${GITCID_YQ_CMD}" "${GITCID_YQ_CMD_INSTALL_PATH}"
+		if [ $? -ne 0 ]; then
+			gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed installing the \"${GITCID_YQ_CMD}\" command. You'll need to install it manually then I guess."
+			return 81
+		fi
 	fi
 
 	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Setting \"$GITCID_GIT_HOOKS_CLIENT_DIR\" as this git repo's \"core.hooksPath\""
