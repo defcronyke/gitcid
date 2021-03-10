@@ -33,9 +33,13 @@ gitcid_run() {
 
     GITCID_DEFAULT_BRANCH=${GITCID_DEFAULT_BRANCH:-"$(gitcid_get_default_branch)"}
     GITCID_CURRENT_BRANCH="$(gitcid_get_current_branch)"
+    GITCID_DEFAULT_REMOTE=${GITCID_DEFAULT_REMOTE:-"$(gitcid_get_default_remote)"}
+    GITCID_DEFAULT_REMOTE_PATH=${GITCID_DEFAULT_REMOTE_PATH:-"$(gitcid_get_default_remote_path)"}
 
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "This git repo's default branch is: ${GITCID_DEFAULT_BRANCH}"
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "This git repo's current branch is: ${GITCID_CURRENT_BRANCH}"
+    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "This git repo's default remote is: ${GITCID_DEFAULT_REMOTE}"
+    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "This git repo's default remote path is: ${GITCID_DEFAULT_REMOTE_PATH}"
 
     res=$res_import_deps
 
