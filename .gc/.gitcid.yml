@@ -1,0 +1,46 @@
+# Docker image to use.
+image: ${ARCH}python:slim
+
+# Defaults to using Docker Hub registry: docker.io
+registry: docker.io
+# registry: my-docker-registry:5000
+
+workflow:
+  rules: |
+    if: '${GITCID_COMMIT_BRANCH}'
+
+before_script: |
+  echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+
+# Valid values for stage:
+# build, test, deploy
+
+build:
+  stage: build
+  script: |
+    echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+  # artifacts:
+  #   paths: |
+  #     public
+  rules: |
+    if: '${GITCID_COMMIT_BRANCH} == ${GITCID_DEFAULT_BRANCH}'
+
+test:
+  stage: test
+  script: |
+    echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+  # artifacts:
+  #   paths: |
+  #     test
+  rules: |
+    if: '${GITCID_COMMIT_BRANCH} != ${GITCID_DEFAULT_BRANCH}'
+
+deploy:
+  stage: deploy
+  script: |
+    echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+  # artifacts:
+  #   paths: |
+  #     public
+  rules: |
+    if: '${GITCID_COMMIT_BRANCH} == ${GITCID_DEFAULT_BRANCH}'

@@ -73,12 +73,6 @@ gitcid_get_init_usage() {
 	echo "[ user@host:/abs/ssh/path/to/new/remote/repo[.git] ... ]"
 }
 
-gitcit_begin_logs() {
-	echo ""
-	echo "Logs"
-	echo "----"
-}
-
 gitcid_handle_args() {
 	GITCID_NEW_REPO_NON_BARE="y"
 	GITCID_NEW_REPO_BARE=""
@@ -86,7 +80,7 @@ gitcid_handle_args() {
 	if [[ $# -ge 1 && ("$1" == "-h" || "$1" == "--help") ]]; then
 		shift
 		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_get_init_usage $@)"
-		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcit_begin_logs)" >/dev/null
+		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_begin_logs)" >/dev/null
 		HANDLED_ARGS=("$@")
 		gitcid_return_now="y"
 
@@ -95,7 +89,7 @@ gitcid_handle_args() {
 	elif [[ $# -ge 1 && ("$1" == "-i" || "$1" == "--info") ]]; then
 		shift
 		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_get_init_info $@)"
-		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcit_begin_logs)" >/dev/null
+		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_begin_logs)" >/dev/null
 		HANDLED_ARGS=("$@")
 		gitcid_return_now="y"
 
@@ -104,7 +98,7 @@ gitcid_handle_args() {
 	elif [[ $# -ge 1 && ("$1" == "-V" || "$1" == "--version") ]]; then
 		shift
 		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_get_project_version $@)"
-		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcit_begin_logs)" >/dev/null
+		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_begin_logs)" >/dev/null
 		HANDLED_ARGS=("$@")
 		gitcid_return_now="y"
 
@@ -112,7 +106,7 @@ gitcid_handle_args() {
 	
 	elif [[ $# -ge 1 && ("$1" == "-b" || "$1" == "--bare") ]]; then
 		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_get_init_header)"
-		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcit_begin_logs)"
+		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_begin_logs)"
 
 		unset GITCID_NEW_REPO_NON_BARE
 		GITCID_NEW_REPO_BARE="--bare"
@@ -127,7 +121,7 @@ gitcid_handle_args() {
 
 	elif [[ $# -ge 1 && "${1:0:1}" == "-" ]]; then
 		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_get_init_header)"
-		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcit_begin_logs)"
+		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_begin_logs)"
 
 		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Invalid option: \"$1\""
 		shift
@@ -137,7 +131,7 @@ gitcid_handle_args() {
 
 	else
 		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_get_init_header)"
-		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcit_begin_logs)"
+		gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "$(gitcid_begin_logs)"
 
 		HANDLED_ARGS=("$@")
 
@@ -324,24 +318,17 @@ gitcid_init() {
 	res_import_deps=$?
 	if [ $res_import_deps -ne 0 ]; then
 		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed importing GitCid dependencies. I guess it's not going to work, sorry!"
-		
 		return $res_import_deps
 	fi
 
 	# Remove verbose flag from options, if present,
 	# because it's handled in .gc/deps.sh.
-	new_args=()
-	for arg in "${@:1}"; do
-		echo "$arg" | grep -P "\-.*v.*" >/dev/null
-		if [ $? -eq 0 ] && [ "$arg" != "--verbose" ]; then
-			arg=$(echo "$arg" | sed 's#v##g')
-		fi
-
-		if [ "$arg" != "-" ] && [ "$arg" != "--verbose" ]; then
-			new_args+=("$arg")
-		fi
-	done
-	set -- "${new_args[@]}"
+	source <(source "${GITCID_UTIL_DIR}verbose.env" $@)
+	res_import_deps=$?
+	if [ $res_import_deps -ne 0 ]; then
+		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed importing GitCid verbose utils. I guess it's not going to work, sorry!"
+		return $res_import_deps
+	fi
 
 	gitcid_handle_args $@
 	res_gitcid_handle_args=$?
