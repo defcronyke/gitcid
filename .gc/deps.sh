@@ -74,8 +74,6 @@ gitcid_enable_verbose() {
 			
 			GITCID_VERBOSE_OUTPUT="y"
 			GITCID_LOG_TIMESTAMP_CMD="date -Ins"
-			# export GITCID_VERBOSE_OUTPUT="y"
-			# export GITCID_LOG_TIMESTAMP_CMD="date -Ins"
 		fi
 	done
 
@@ -105,7 +103,6 @@ gitcid_update() {
 
 		gitcid_log_background_verbose "${BASH_SOURCE[0]}" $LINENO "Performing git fetch... $(git fetch origin 2>&1)" 1>&2
 
-		# if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
 		if [ ! -z "$(git log HEAD..origin/master --oneline)" ]; then
 			touch "${GITCID_DIR}.gc-update-available"
 			return 0

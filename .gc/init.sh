@@ -111,9 +111,6 @@ gitcid_handle_args() {
 		unset GITCID_NEW_REPO_NON_BARE
 		GITCID_NEW_REPO_BARE="--bare"
 		gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Making bare git repositories because of the command line option: \"$1\""
-		# gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Setting the following environment variables:"
-		# gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "GITCID_NEW_REPO_NON_BARE=\"${GITCID_NEW_REPO_NON_BARE}\""
-		# gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "GITCID_NEW_REPO_BARE=\"${GITCID_NEW_REPO_BARE}\""
 		shift
 		HANDLED_ARGS=("$@")
 
@@ -156,11 +153,8 @@ gitcid_wait_for_background_jobs() {
 
 gitcid_mention_update() {
 	if [ -f "${GITCID_DIR}.gc-update-available" ]; then
-		gitcid_log_update "${BASH_SOURCE[0]}" $LINENO "An updated version of GitCid is available. \
-Please run one of the following commands at your earliest opportunity:\n\n\
-If it's your own git repository with GitCid in it: \n\
-source <(curl -sL https://tinyurl.com/gitcid) -e\n\n\
-if it's the GitCid project repository:\n\
+		gitcid_log_update "${BASH_SOURCE[0]}" $LINENO "An updated version of your git repository is available. \
+Please run the following command at your earliest opportunity:\n\
 git pull" 1>&2
 		return 0
 	fi
@@ -232,16 +226,8 @@ gitcid_make_new_git_repo() {
 		GITCID_NEW_REPO_PATH_DIR=$(echo "$GITCID_NEW_REPO_PATH" | cut -d':' -f2)
 
 		if [ -z ${GITCID_NEW_REPO_NON_BARE+x} ]; then
-			# GITCID_NEW_HOOKS_TARGET="${GITCID_DIR}.gc-git-hooks"
-			# GITCID_NEW_HOOKS_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/hooks"
-
-			# GITCID_NEW_EXCLUDE_TARGET="../${GITCID_DIR}.gc-git-exclude"
 			GITCID_NEW_EXCLUDE_FILE="info/exclude"
 		else
-			# GITCID_NEW_HOOKS_TARGET="../${GITCID_DIR}.gc-git-hooks"
-			# GITCID_NEW_HOOKS_DIR="${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}/.git/hooks"
-
-			# GITCID_NEW_EXCLUDE_TARGET="../../${GITCID_DIR}.gc-git-exclude"
 			GITCID_NEW_EXCLUDE_FILE=".git/info/exclude"
 		fi
 
@@ -305,9 +291,6 @@ git config receive.advertisePushOptions true"
 				cp "${GITCID_DIR}.gc-git-exclude" "${GITCID_NEW_EXCLUDE_FILE}"
 				git config receive.advertisePushOptions true
 				cd "$pwd"
-
-				# ln -sf "${GITCID_NEW_HOOKS_TARGET}" "${GITCID_NEW_HOOKS_DIR}"
-				# ln -sf "${GITCID_NEW_EXCLUDE_TARGET}" "${GITCID_NEW_EXCLUDE_DIR}"
 			fi
 
 			gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "New git repo initialized at local destination: ${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}"
