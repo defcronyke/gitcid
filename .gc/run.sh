@@ -52,26 +52,18 @@ gitcid_run() {
     fi
 
     GITCID_YML_UNPARSED="$(cat ${GITCID_PIPELINE_CONF_FILE})"
-    # GITCID_YML_UNPARSED="${GITCID_YML_UNPARSEDX%x}"
 
     gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Unparsed ${GITCID_PIPELINE_CONF_FILE}:"
     gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_YML_UNPARSED}\n"
 
-#     GITCID_YML_PARSEDX="$(cat ${GITCID_PIPELINE_CONF_FILE} | \
-# sed "s#\${GITCID_YML_COMMIT_BRANCH}#${GITCID_YML_COMMIT_BRANCH}#g" | \
-# sed "s#\${GITCID_YML_DEFAULT_BRANCH}#${GITCID_YML_DEFAULT_BRANCH}#g" | \
-# sed "s#\${GITCID_YML_ARCH}#${GITCID_YML_ARCH}#g" | \
-# "${GITCID_YQ_CMD}" e -; echo x)"
-#     GITCID_YML_PARSED="${GITCID_YML_PARSEDX%x}"
-
-    # This one is for the terminal output.
+    # This is for the terminal output.
     GITCID_YML_PARSED="$(cat ${GITCID_PIPELINE_CONF_FILE} | \
 sed "s#\${GITCID_YML_COMMIT_BRANCH}#${GITCID_YML_COMMIT_BRANCH}#g" | \
 sed "s#\${GITCID_YML_DEFAULT_BRANCH}#${GITCID_YML_DEFAULT_BRANCH}#g" | \
 sed "s#\${GITCID_YML_ARCH}#${GITCID_YML_ARCH}#g" | \
 "${GITCID_YQ_CMD}" -C e -)"
 
-    # This one is for the logs.
+    # This is for the logs.
     GITCID_YML_PARSED_PLAIN="$(cat ${GITCID_PIPELINE_CONF_FILE} | \
 sed "s#\${GITCID_YML_COMMIT_BRANCH}#${GITCID_YML_COMMIT_BRANCH}#g" | \
 sed "s#\${GITCID_YML_DEFAULT_BRANCH}#${GITCID_YML_DEFAULT_BRANCH}#g" | \
@@ -81,12 +73,6 @@ sed "s#\${GITCID_YML_ARCH}#${GITCID_YML_ARCH}#g" | \
     gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Parsed ${GITCID_PIPELINE_CONF_FILE}:"
     printf '%b\n' "${GITCID_YML_PARSED}"
     gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_YML_PARSED_PLAIN}\n" >/dev/null
-
-#     gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "$(cat ${GITCID_PIPELINE_CONF_FILE} | \
-# sed "s#\${GITCID_YML_COMMIT_BRANCH}#${GITCID_YML_COMMIT_BRANCH}#g" | \
-# sed "s#\${GITCID_YML_DEFAULT_BRANCH}#${GITCID_YML_DEFAULT_BRANCH}#g" | \
-# sed "s#\${GITCID_YML_ARCH}#${GITCID_YML_ARCH}#g" | \
-# "${GITCID_YQ_CMD}" -C e -)"
 
     res=$res_import_deps
 
