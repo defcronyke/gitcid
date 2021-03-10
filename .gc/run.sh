@@ -33,7 +33,7 @@ gitcid_run() {
 	fi
 
     GITCID_DEFAULT_BRANCH=${GITCID_DEFAULT_BRANCH:-"$(gitcid_get_default_branch)"}
-    GITCID_CURRENT_BRANCH="$(gitcid_get_current_branch)"
+    GITCID_CURRENT_BRANCH=${GITCID_CURRENT_BRANCH:-"$(gitcid_get_current_branch)"}
     GITCID_DEFAULT_REMOTE=${GITCID_DEFAULT_REMOTE:-"$(gitcid_get_default_remote)"}
     GITCID_DEFAULT_REMOTE_PATH=${GITCID_DEFAULT_REMOTE_PATH:-"$(gitcid_get_default_remote_path)"}
 
@@ -45,12 +45,18 @@ gitcid_run() {
 
     GITCID_YML_ARCH=${GITCID_YML_ARCH:-"$(gitcid_get_architecture $@)"}
     GITCID_YML_DEFAULT_BRANCH="${GITCID_DEFAULT_BRANCH}"
+    
     GITCID_YML_COMMIT_BRANCH="${GITCID_YML_COMMIT_BRANCH:-"${GITCID_REF_NAME}"}"
+    if [ -z "$GITCID_YML_COMMIT_BRANCH" ]; then
+        GITCID_YML_COMMIT_BRANCH="${GITCID_CURRENT_BRANCH}"
+    fi
 
-    gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "$(cat ${GITCID_PIPELINE_CONF_FILE} | \
+    GITCID_YML_PARSED="$(cat ${GITCID_PIPELINE_CONF_FILE} | \
 sed "s#\${GITCID_YML_COMMIT_BRANCH}#${GITCID_YML_COMMIT_BRANCH}#g" | \
 sed "s#\${GITCID_YML_DEFAULT_BRANCH}#${GITCID_YML_DEFAULT_BRANCH}#g" | \
 sed "s#\${GITCID_YML_ARCH}#${GITCID_YML_ARCH}#g")"
+
+    gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "$GITCID_YML_PARSED"
 
     res=$res_import_deps
 

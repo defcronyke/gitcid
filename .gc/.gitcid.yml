@@ -17,6 +17,7 @@ before_script: |
 
 build:
   stage: build
+  shell: /usr/bin/env bash
   python_requirements: |
     flask
     redis
