@@ -67,18 +67,14 @@ gc_post_receive_get_ref_name() {
 			refname_type="tracking branch"
 			short_refname=${refname##refs/remotes/}
 			echo >&2 "*** Push-update of tracking branch, $refname"
-			echo >&2 "***  - no email generated."
 			return 1
 			;;
 		*)
 			# Anything else (is there anything else?)
 			echo >&2 "*** Unknown type of update to $refname ($rev_type)"
-			echo >&2 "***  - no email generated"
 			return 1
 			;;
 	esac
-
-    # GITCID_REF_NAME="$(echo "${short_refname}" | sed -E 's#\s\s*# #g' | xargs -0 | cut -d' ' -f4)"
 
     GITCID_REF_NAME="${short_refname}"
 
@@ -109,7 +105,7 @@ gc_git_hook_post_receive() {
 
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Got ref name: ${GITCID_REF_NAME}"
 
-    source "${GITCID_DIR}run.sh" $@
+    source "${GITCID_DIR}run.sh" -d $@
 	res_import_deps=$?
 	if [ $res_import_deps -ne 0 ]; then
 		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed running GitCid pipeline. Exiting with error code:\n\

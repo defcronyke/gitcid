@@ -2,7 +2,7 @@ version: "3.9"
 networks:
   default:
     external:
-      name: docker-compose-net
+      name: gitcid-docker-compose-net
 services:
   web:
     build: .

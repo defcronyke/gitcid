@@ -29,7 +29,7 @@ gitcid_docker_compose_hello_up() {
 	pwd="$PWD"
 	cd "$(dirname "${BASH_SOURCE[0]}")"
 
-	docker network create docker-compose-net --subnet 10.0.1.0/24 2>/dev/null
+	docker network create gitcid-docker-compose-net --subnet 10.0.1.0/24 2>/dev/null
 
 	cat Dockerfile.tmpl | \
 		sed "s@\${GITCID_YML_ARCH}@${GITCID_YML_ARCH}@g" | \
