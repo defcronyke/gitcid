@@ -78,6 +78,12 @@ gitcid_enable_verbose() {
 			# export GITCID_LOG_TIMESTAMP_CMD="date -Ins"
 		fi
 	done
+
+	if [ ! -z ${GITCID_VERBOSE_OUTPUT+x} ]; then
+		GITCID_LOG_TIMESTAMP_CMD="date -Ins"
+	else
+		GITCID_LOG_TIMESTAMP_CMD="date -Iseconds"
+	fi
 }
 
 gitcid_update() {

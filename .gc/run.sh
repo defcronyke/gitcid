@@ -3,6 +3,7 @@
 gitcid_run() {
     GITCID_DIR=${GITCID_DIR:-".gc/"}
     GITCID_UTIL_DIR=${GITCID_UTIL_DIR:-"${GITCID_DIR}.gc-util/"}
+    GITCID_PIPELINE_CONF_FILE=${GITCID_PIPELINE_CONF_FILE:-"${GITCID_DIR}.gitcid.yml"}
 
     input_args=$@
     
@@ -36,10 +37,20 @@ gitcid_run() {
     GITCID_DEFAULT_REMOTE=${GITCID_DEFAULT_REMOTE:-"$(gitcid_get_default_remote)"}
     GITCID_DEFAULT_REMOTE_PATH=${GITCID_DEFAULT_REMOTE_PATH:-"$(gitcid_get_default_remote_path)"}
 
-    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "This git repo's default branch is: ${GITCID_DEFAULT_BRANCH}"
-    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "This git repo's current branch is: ${GITCID_CURRENT_BRANCH}"
-    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "This git repo's default remote is: ${GITCID_DEFAULT_REMOTE}"
-    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "This git repo's default remote path is: ${GITCID_DEFAULT_REMOTE_PATH}"
+    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "This git repo's default branch is: ${GITCID_DEFAULT_BRANCH}"
+    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "This git repo's current branch is: ${GITCID_CURRENT_BRANCH}"
+    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "This git repo's default remote is: ${GITCID_DEFAULT_REMOTE}"
+    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "This git repo's default remote path is: ${GITCID_DEFAULT_REMOTE_PATH}"
+    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Running GitCid pipeline defined in config file: ${GITCID_PIPELINE_CONF_FILE}"
+
+    GITCID_YML_ARCH=${GITCID_YML_ARCH:-"$(gitcid_get_architecture $@)"}
+    GITCID_YML_DEFAULT_BRANCH="${GITCID_DEFAULT_BRANCH}"
+    GITCID_YML_COMMIT_BRANCH="${GITCID_YML_COMMIT_BRANCH:-"${GITCID_REF_NAME}"}"
+
+    gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "$(cat ${GITCID_PIPELINE_CONF_FILE} | \
+sed "s#\${GITCID_YML_COMMIT_BRANCH}#${GITCID_YML_COMMIT_BRANCH}#g" | \
+sed "s#\${GITCID_YML_DEFAULT_BRANCH}#${GITCID_YML_DEFAULT_BRANCH}#g" | \
+sed "s#\${GITCID_YML_ARCH}#${GITCID_YML_ARCH}#g")"
 
     res=$res_import_deps
 

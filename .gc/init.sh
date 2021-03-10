@@ -267,7 +267,8 @@ gitcid_make_new_git_repo() {
 				ssh "$GITCID_NEW_REPO_PATH_HOST" \
 "cd ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME} && \
 git config core.hooksPath \"${GITCID_GIT_HOOKS_CLIENT_DIR}\" && \
-cp \"${GITCID_DIR}.gc-git-exclude\" \"${GITCID_NEW_EXCLUDE_FILE}\""
+cp \"${GITCID_DIR}.gc-git-exclude\" \"${GITCID_NEW_EXCLUDE_FILE}\" && \
+git config receive.advertisePushOptions true"
 			fi
 
 			gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "New git repo initialized at remote destination: ${GITCID_NEW_REPO_PATH_HOST}:${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}"
@@ -298,6 +299,7 @@ cp \"${GITCID_DIR}.gc-git-exclude\" \"${GITCID_NEW_EXCLUDE_FILE}\""
 				cd "${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}"
 				git config core.hooksPath "${GITCID_GIT_HOOKS_CLIENT_DIR}"
 				cp "${GITCID_DIR}.gc-git-exclude" "${GITCID_NEW_EXCLUDE_FILE}"
+				git config receive.advertisePushOptions true
 				cd "$pwd"
 
 				# ln -sf "${GITCID_NEW_HOOKS_TARGET}" "${GITCID_NEW_HOOKS_DIR}"

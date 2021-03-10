@@ -1,5 +1,5 @@
 # Docker image to use.
-image: ${ARCH}python:slim
+image: ${GITCID_YML_ARCH}python:slim
 
 # Defaults to using Docker Hub registry: docker.io
 registry: docker.io
@@ -7,7 +7,7 @@ registry: docker.io
 
 workflow:
   rules: |
-    if: '${GITCID_COMMIT_BRANCH}'
+    if: '"${GITCID_YML_COMMIT_BRANCH}"'
 
 before_script: |
   echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
@@ -23,7 +23,7 @@ build:
   #   paths: |
   #     public
   rules: |
-    if: '${GITCID_COMMIT_BRANCH} == ${GITCID_DEFAULT_BRANCH}'
+    if: '"${GITCID_YML_COMMIT_BRANCH}" == "${GITCID_YML_DEFAULT_BRANCH}"'
 
 test:
   stage: test
@@ -33,7 +33,7 @@ test:
   #   paths: |
   #     test
   rules: |
-    if: '${GITCID_COMMIT_BRANCH} != ${GITCID_DEFAULT_BRANCH}'
+    if: '"${GITCID_YML_COMMIT_BRANCH}" != "${GITCID_YML_DEFAULT_BRANCH}"'
 
 deploy:
   stage: deploy
@@ -43,4 +43,4 @@ deploy:
   #   paths: |
   #     public
   rules: |
-    if: '${GITCID_COMMIT_BRANCH} == ${GITCID_DEFAULT_BRANCH}'
+    if: '"${GITCID_YML_COMMIT_BRANCH}" == "${GITCID_YML_DEFAULT_BRANCH}"'
