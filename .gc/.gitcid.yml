@@ -17,6 +17,9 @@ before_script: |
 
 build:
   stage: build
+  python_requirements: |
+    flask
+    redis
   script: |
     echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
   # artifacts:

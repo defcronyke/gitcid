@@ -32,7 +32,7 @@ gitcid_docker_compose_hello_up() {
 	docker network create docker-compose-net --subnet 10.0.1.0/24 2>/dev/null
 
 	cat Dockerfile.tmpl | \
-		sed "s@{GITCID_YML_ARCH}@${GITCID_YML_ARCH}@g" | \
+		sed "s@\${GITCID_YML_ARCH}@${GITCID_YML_ARCH}@g" | \
 		tee Dockerfile
 
 	docker-compose up $@
