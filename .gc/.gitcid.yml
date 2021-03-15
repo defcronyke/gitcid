@@ -1,10 +1,13 @@
-# Docker image to use.
-image: ${GITCID_YML_ARCH}python:slim
-
-# Defaults to using Docker Hub registry: docker.io
+# Docker registry to use.
+# Defaults to official Docker Hub registry: docker.io
 registry: docker.io
 # registry: my-docker-registry:5000
 
+# Docker image to use.
+# Defaults to image: debian:stable-slim
+image: ${GITCID_YML_ARCH}python:slim
+
+# Only run this pipeline if we've pushed to a branch.
 workflow:
   rules: |
     if: '"${GITCID_YML_COMMIT_BRANCH}"'
@@ -30,6 +33,16 @@ build:
     if: '"${GITCID_YML_COMMIT_BRANCH}" == "${GITCID_YML_DEFAULT_BRANCH}"'
 
 test:
+  stage: test
+  script: |
+    echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+  # artifacts:
+  #   paths: |
+  #     test
+  rules: |
+    if: '"${GITCID_YML_COMMIT_BRANCH}" != "${GITCID_YML_DEFAULT_BRANCH}"'
+
+test2:
   stage: test
   script: |
     echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"

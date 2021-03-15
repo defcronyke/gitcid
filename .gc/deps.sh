@@ -61,6 +61,7 @@ dependencies installed:"
 }
 
 gitcid_enable_verbose() {
+	gitcid_verbose_requested=1
 	for arg in "${@:1}"; do
 		echo "$arg" | grep -P "\-.*v.*|\-\-verbose" >/dev/null
 		if [ $? -eq 0 ]; then
@@ -70,10 +71,16 @@ gitcid_enable_verbose() {
 				reason="-v"
 			fi
 			
-			GITCID_VERBOSE_OUTPUT="y"
-			GITCID_LOG_TIMESTAMP_CMD="date -Ins"
+			gitcid_verbose_requested=0
+			break
 		fi
 	done
+	
+	if [ $gitcid_verbose_requested -eq 0 ]; then
+		GITCID_VERBOSE_OUTPUT="y"
+	else
+		unset GITCID_VERBOSE_OUTPUT
+	fi
 
 	if [ ! -z ${GITCID_VERBOSE_OUTPUT+x} ]; then
 		GITCID_LOG_TIMESTAMP_CMD="date -Ins"
