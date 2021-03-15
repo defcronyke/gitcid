@@ -231,15 +231,24 @@ gitcid_make_new_git_repo() {
 			GITCID_NEW_EXCLUDE_FILE=".git/info/exclude"
 		fi
 
+		if [ ! -z "${GITCID_VERBOSE_OUTPUT}" ]; then
+			GITCID_RSYNC_VERBOSE_FLAG="-v --progress"
+		else
+			GITCID_RSYNC_VERBOSE_FLAG=""
+		fi
+
 		if [ $GITCID_IS_SSH_PATH -eq 0 ]; then
 			gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Initializing new git repo at ssh destination: ${GITCID_NEW_REPO_PATH}/${GITCID_NEW_REPO_NAME}"
 
 			GITCID_NEW_REPO_PATH_HOST=$(echo "$GITCID_NEW_REPO_PATH" | cut -d':' -f1)
 
 			ssh "$GITCID_NEW_REPO_PATH_HOST" "mkdir -p ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}"
-			scp -r "${GITCID_DIR}" $GITCID_NEW_REPO_PATH_HOST:${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME} >/dev/null
-			scp "${GITCID_DIR}../README.md" $GITCID_NEW_REPO_PATH_HOST:${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" 2>/dev/null || \
-			scp "${GITCID_DIR}../README-gitcid.md" $GITCID_NEW_REPO_PATH_HOST:${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" 2>/dev/null
+
+			rsync ${GITCID_RSYNC_VERBOSE_FLAG} -Ra "${GITCID_DIR}" ${GITCID_NEW_REPO_PATH_HOST}:"${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}" \
+				--exclude "${GITCID_LOG_DIR}"
+			
+			scp "${GITCID_DIR}../README.md" $GITCID_NEW_REPO_PATH_HOST:${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" >/dev/null 2>&1 || \
+			scp "${GITCID_DIR}../README-gitcid.md" $GITCID_NEW_REPO_PATH_HOST:${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" >/dev/null 2>&1
 			
 			output_git_init="Running ssh... $(ssh "$GITCID_NEW_REPO_PATH_HOST" \
 "git init --shared=${GITCID_NEW_REPO_PERMISSIONS} ${GITCID_NEW_REPO_BARE} ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}")"
@@ -268,8 +277,8 @@ git config receive.advertisePushOptions true"
 
 			mkdir -p ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}
 
-			cp -r "${GITCID_DIR}" ${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME} >/dev/null
-
+			rsync ${GITCID_RSYNC_VERBOSE_FLAG} -Ra "${GITCID_DIR}" "${GITCID_NEW_REPO_PATH_DIR}/${GITCID_NEW_REPO_NAME}" \
+				--exclude "${GITCID_LOG_DIR}"
 
 			cp "${GITCID_DIR}../README.md" ${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" 2>/dev/null || \
 			cp "${GITCID_DIR}../README-gitcid.md" ${GITCID_NEW_REPO_PATH_DIR}/"${GITCID_NEW_REPO_NAME}/README-gitcid.md" 2>/dev/null
