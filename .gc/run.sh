@@ -41,41 +41,17 @@ gitcid_run() {
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "current git branch is: ${GITCID_CURRENT_BRANCH}"
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "default git branch is: ${GITCID_DEFAULT_BRANCH}"
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "default git remote is: ${GITCID_DEFAULT_REMOTE}"
+    
+    source "${GITCID_UTIL_DIR}yml.env" $@
+	res_import_deps=$?
+	if [ $res_import_deps -ne 0 ]; then
+		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed importing GitCid yml utils. I guess it's not going to work, sorry!"
+		return $res_import_deps
+	fi
+    
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Running GitCid pipeline defined in config file: ${GITCID_PIPELINE_CONF_FILE}"
 
-    GITCID_YML_ARCH=${GITCID_YML_ARCH:-"$(gitcid_get_architecture $@)"}
-    GITCID_YML_DEFAULT_BRANCH="${GITCID_DEFAULT_BRANCH}"
-    
-    GITCID_YML_COMMIT_BRANCH="${GITCID_YML_COMMIT_BRANCH:-"${GITCID_REF_NAME}"}"
-    if [ -z "$GITCID_YML_COMMIT_BRANCH" ]; then
-        GITCID_YML_COMMIT_BRANCH="${GITCID_CURRENT_BRANCH}"
-    fi
-
-    GITCID_YML_UNPARSED="$(cat ${GITCID_PIPELINE_CONF_FILE})"
-
-    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Unparsed yaml file: ${GITCID_PIPELINE_CONF_FILE}"
-    gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_YML_UNPARSED}\n"
-
-    # Set this to "-v" for some really verbose yaml parser output.
-    GITCID_YQ_VERBOSE_FLAG=${GITCID_YQ_VERBOSE_FLAG:-""}
-
-    # This is for the terminal output.
-    GITCID_YML_PARSED_COLOUR="$(cat ${GITCID_PIPELINE_CONF_FILE} | \
-sed "s#\${GITCID_YML_COMMIT_BRANCH}#${GITCID_YML_COMMIT_BRANCH}#g" | \
-sed "s#\${GITCID_YML_DEFAULT_BRANCH}#${GITCID_YML_DEFAULT_BRANCH}#g" | \
-sed "s#\${GITCID_YML_ARCH}#${GITCID_YML_ARCH}#g" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -eC e -)"
-
-    # This is for the logs.
-    GITCID_YML_PARSED="$(cat ${GITCID_PIPELINE_CONF_FILE} | \
-sed "s#\${GITCID_YML_COMMIT_BRANCH}#${GITCID_YML_COMMIT_BRANCH}#g" | \
-sed "s#\${GITCID_YML_DEFAULT_BRANCH}#${GITCID_YML_DEFAULT_BRANCH}#g" | \
-sed "s#\${GITCID_YML_ARCH}#${GITCID_YML_ARCH}#g" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e -)"
-
-    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Parsed yaml file: ${GITCID_PIPELINE_CONF_FILE}"
-    gitcid_log_echo_nosave_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_YML_PARSED_COLOUR}"
-    gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_YML_PARSED}\n" >/dev/null
+    gitcid_util_yml_get_unparsed_yml $@
 
     if [ -z "$GITCID_VERBOSE_OUTPUT" ]; then
         exec 2>/dev/null
@@ -83,76 +59,21 @@ sed "s#\${GITCID_YML_ARCH}#${GITCID_YML_ARCH}#g" | \
         exec 2>/dev/tty
     fi
 
-    GITCID_YML_REGISTRY="$(printf '%b' "$GITCID_YML_PARSED" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '.registry' - || echo "docker.io")"
-    GITCID_YML_REGISTRY="$(printf '%b' "$GITCID_YML_REGISTRY" | sed 's#null##g')"
-    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "docker registry: $GITCID_YML_REGISTRY"
+    gitcid_util_yml_get_parsed_yml "$GITCID_PIPELINE_CONF_FILE"
 
-    GITCID_YML_IMAGE="$(printf '%b' "$GITCID_YML_PARSED" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '.image' - || echo "debian:stable-slim")"
-    GITCID_YML_IMAGE="$(printf '%b' "$GITCID_YML_IMAGE" | sed 's#null##g')"
-    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "docker image: $GITCID_YML_IMAGE"
+    gitcid_util_yml_get_docker_registry "$GITCID_YML_PARSED"
 
-    GITCID_YML_WORKFLOW_RULES="$(printf '%b' "$GITCID_YML_PARSED" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '.workflow.rules' -)"
-    GITCID_YML_WORKFLOW_RULES="$(printf '%b' "$GITCID_YML_WORKFLOW_RULES" | sed 's#null##g')"
-    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "docker workflow rules:"
-    gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "$GITCID_YML_WORKFLOW_RULES"
+    gitcid_util_yml_get_docker_image "$GITCID_YML_PARSED"
 
-    GITCID_YML_BEFORE_SCRIPT="$(printf '%b' "$GITCID_YML_PARSED" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '.before_script' -)"
-    GITCID_YML_BEFORE_SCRIPT="$(printf '%b' "$GITCID_YML_BEFORE_SCRIPT" | \
-sed 's#null##g' | \
-sed "s#\${GITCID_YML_STAGE_TYPE}#before_script#g" | \
-sed "s#\${GITCID_YML_STAGE_NAME}#before_script#g")"
-    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "docker before_script:"
-    gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "$GITCID_YML_BEFORE_SCRIPT"
+    gitcid_util_yml_get_workflow_rules "$GITCID_YML_PARSED"
 
-    GITCID_YML_STAGES="$(printf '%b' "$GITCID_YML_PARSED" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '. | del(.registry) | del(.image) | del(.workflow) | del(.before_script)' -)"
-    GITCID_YML_STAGES="$(printf '%b' "$GITCID_YML_STAGES" | \
-sed 's#null##g')"
+    gitcid_util_yml_get_before_script "$GITCID_YML_PARSED"
 
-    GITCID_YML_STAGE_TYPES=($(printf '%b' "$GITCID_YML_STAGES" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '.[].stage' -))
+    gitcid_util_yml_get_pipeline_stages "$GITCID_YML_PARSED"
 
-    GITCID_YML_STAGE_NAMES=($(printf '%b' "$GITCID_YML_STAGES" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e 'keys | .[]' -))
-
-    GITCID_YML_STAGES_OUT=()
-
-    # Substitute env vars in yaml file: ${GITCID_YML_STAGE_TYPE}
-    GITCID_YML_STAGES_T=()
-    t_i=0
-    for t in ${GITCID_YML_STAGE_TYPES[@]}; do
-        GITCID_YML_STAGES_T+=("$(printf '%b\n' "$GITCID_YML_STAGES" | \
-stage=${GITCID_YML_STAGE_NAMES[$t_i]} "${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '.[env(stage)] | {env(stage): .} | .' - | \
-sed "s#\${GITCID_YML_STAGE_TYPE}#$t#g")")
-        t_i=$((t_i + 1))
-    done
-    GITCID_YML_STAGES_OUT=("${GITCID_YML_STAGES_T[@]}")
-
-    # Substitute env vars in yaml file: ${GITCID_YML_STAGE_NAME}
-    GITCID_YML_STAGES_N=()
-    n_i=0
-    for n in ${GITCID_YML_STAGE_NAMES[@]}; do
-        GITCID_YML_STAGES_N+=("$(printf '%b\n' "${GITCID_YML_STAGES_OUT[@]}" | \
-stage=${GITCID_YML_STAGE_NAMES[$n_i]} "${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '.[env(stage)] | {env(stage): .} | .' - | \
-sed "s#\${GITCID_YML_STAGE_NAME}#$n#g")")
-        n_i=$((n_i + 1))
-    done
-    GITCID_YML_STAGES_OUT=("${GITCID_YML_STAGES_N[@]}")
-
-    GITCID_YML_STAGES_OUT_PARSED_COLOUR=("$(printf '%b\n' "${GITCID_YML_STAGES_OUT[@]}" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -eC e '.' -)")
-    GITCID_YML_STAGES_OUT_PARSED=("$(printf '%b\n' "${GITCID_YML_STAGES_OUT[@]}" | \
-"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '.' -)")
-
-    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "docker pipeline stages from file: ${GITCID_PIPELINE_CONF_FILE}"
-    gitcid_log_echo_nosave_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_YML_STAGES_OUT_PARSED_COLOUR[@]}"
-    gitcid_log_echo_verbose "${BASH_SOURCE[0]}" $LINENO "${GITCID_YML_STAGES_OUT_PARSED[@]}\n" >/dev/null
-
-    exec 2>/dev/tty
+    if [ -z "$GITCID_VERBOSE_OUTPUT" ]; then
+        exec 2>/dev/tty
+    fi
 
     res=$res_import_deps
 
