@@ -4,6 +4,8 @@
 
 ## Quickstart / Demonstration
 
+First you must install: curl, rsync, git, docker, and docker-compose (latest version from python's `pip` package manager).
+
 ```shell
 git init repo1 && cd repo1 && source <(curl -sL https://tinyurl.com/gitcid) -e; echo "test" | tee test.txt && git add . && git commit -m "Initial commit" && .gc/init.sh -b ../repo1; git remote add origin ../repo1.git/ && git push -u origin master && .gc/run.sh -v; .gc/init.sh -h; git log; git remote -v
 ```
