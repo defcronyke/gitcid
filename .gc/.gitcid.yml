@@ -13,7 +13,7 @@ workflow:
     if: '"${GITCID_YML_COMMIT_BRANCH}"'
 
 before_script: |
-  echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+  printf '%s\\n' "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
 
 # Valid values for stage:
 # build, test, deploy
@@ -25,7 +25,8 @@ build:
     flask
     redis
   script: |
-    echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+    printf '%s\\n' "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+    echo "This is the second command in this pipeline stage."
   # artifacts:
   #   paths: |
   #     public
@@ -35,7 +36,7 @@ build:
 test:
   stage: test
   script: |
-    echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+    printf '%s\\n' "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
   # artifacts:
   #   paths: |
   #     test
@@ -45,7 +46,7 @@ test:
 test2:
   stage: test
   script: |
-    echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+    printf '%s\\n' "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
   # artifacts:
   #   paths: |
   #     test
@@ -55,7 +56,7 @@ test2:
 deploy:
   stage: deploy
   script: |
-    echo "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
+    printf '%s\\n' "Running ${GITCID_YML_STAGE_TYPE} stage: ${GITCID_YML_STAGE_NAME}"
   # artifacts:
   #   paths: |
   #     public

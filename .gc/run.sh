@@ -1,6 +1,52 @@
 #!/usr/bin/env bash
 # This file is meant to be run from a git hook,
 
+gitcid_run_pipeline_stages() {
+    if [ $# -lt 2 ]; then
+        echo "Not running any pipeline stages because none were provided."
+        return 0
+    fi
+
+    GITCID_YML_PARSED="$1"
+
+    gitcid_util_yml_get_docker_registry "$GITCID_YML_PARSED"
+    gitcid_util_yml_get_docker_image "$GITCID_YML_PARSED"
+    gitcid_util_yml_get_workflow_rules "$GITCID_YML_PARSED"
+    gitcid_util_yml_get_before_script "$GITCID_YML_PARSED"
+
+    GITCID_RUN_PIPELINE_STAGES="$2"
+
+    if [ $# -ge 3 ]; then
+        GITCID_RUN_PIPELINE_STAGES_OUTPUT="$3"
+    else
+        GITCID_RUN_PIPELINE_STAGES_OUTPUT="$GITCID_RUN_PIPELINE_STAGES"
+    fi
+
+    gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "running pipeline stages:"
+    gitcid_log_echo_escape_verbose "${BASH_SOURCE[0]}" $LINENO "$GITCID_RUN_PIPELINE_STAGES_OUTPUT"
+
+    first_line="y"
+
+    printf '%s\n' "$GITCID_RUN_PIPELINE_STAGES" | \
+"${GITCID_YQ_CMD}" ${GITCID_YQ_VERBOSE_FLAG} -e e '.[] | .script' - | \
+    while read stage_script; do
+        if [ ! -z "$first_line" ]; then
+            unset first_line
+            gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Running pipeline stage script..."
+            gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "\n\n---------- begin ----------\n"
+        fi
+
+        if [ ! -z "$stage_script" ]; then
+            gitcid_log_echo_escape "${BASH_SOURCE[0]}" $LINENO "$(eval $stage_script)"
+        fi
+
+        if [ -z "$stage_script" ]; then
+            first_line="y"
+            gitcid_log_echo "${BASH_SOURCE[0]}" $LINENO "\n----------- end -----------\n\n"
+        fi
+    done
+}
+
 gitcid_run() {
     GITCID_DIR=${GITCID_DIR:-".gc/"}
     GITCID_UTIL_DIR=${GITCID_UTIL_DIR:-"${GITCID_DIR}.gc-util/"}
@@ -61,15 +107,15 @@ gitcid_run() {
 
     gitcid_util_yml_get_parsed_yml "$GITCID_PIPELINE_CONF_FILE"
 
-    gitcid_util_yml_get_docker_registry "$GITCID_YML_PARSED"
+    # gitcid_util_yml_get_docker_registry "$GITCID_YML_PARSED"
 
-    gitcid_util_yml_get_docker_image "$GITCID_YML_PARSED"
+    # gitcid_util_yml_get_docker_image "$GITCID_YML_PARSED"
 
-    gitcid_util_yml_get_workflow_rules "$GITCID_YML_PARSED"
+    # gitcid_util_yml_get_workflow_rules "$GITCID_YML_PARSED"
 
-    gitcid_util_yml_get_before_script "$GITCID_YML_PARSED"
+    # gitcid_util_yml_get_before_script "$GITCID_YML_PARSED"
 
-    gitcid_util_yml_get_pipeline_stages "$GITCID_YML_PARSED"
+    gitcid_util_yml_get_pipeline_stages "$GITCID_YML_PARSED" gitcid_run_pipeline_stages
 
     if [ -z "$GITCID_VERBOSE_OUTPUT" ]; then
         exec 2>/dev/tty
