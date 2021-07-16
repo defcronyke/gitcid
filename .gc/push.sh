@@ -11,10 +11,8 @@
 # able to operate docker for CI/CD.
 
 gitcid_push() {
-  input="$@"
-
-  git push "$input" || \
-  git push "$input"
+  git push $@ || \
+  git push $@
 }
 
-gitcid_push "$@"
+gitcid_push $@
