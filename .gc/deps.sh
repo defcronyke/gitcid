@@ -218,6 +218,7 @@ please our system, if you know the correct values for your unsupported OS:"
 			if [ $IS_DEBIAN -eq 0 ]; then
 				#curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO_CMD gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
+        # Install docker-ce official gpg keyring.
         curl -fsSL https://download.docker.com/linux/debian/gpg > tmp-key.txt && \
         cat tmp-key.txt | \
         sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg; \
