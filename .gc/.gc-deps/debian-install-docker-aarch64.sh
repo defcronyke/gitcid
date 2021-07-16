@@ -1,4 +1,6 @@
 #!/bin/bash
+# NOTE: THIS FILE ISN'T CURRENTLY BEING USED
+#
 # Install Docker on Debian-like OS aarch64 
 # (for example Raspberry Pi OS 64-bit)
 
@@ -33,8 +35,8 @@ gitcid_debian_install_docker_aarch64() {
   echo "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && \
   sudo apt-get update && \
-  sudo apt-get install -y docker-ce docker-ce-cli containerd.io && \
-  sudo gpasswd -a $USER docker
+  sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 }
 
-gitcid_debian_install_docker_aarch64 "$@"
+# NOTE: Uncomment the line below to activate this script.
+# gitcid_debian_install_docker_aarch64 "$@"

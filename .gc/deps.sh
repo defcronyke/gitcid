@@ -177,7 +177,7 @@ so you'll need to run this script as root. It will probably fail now if you aren
 	uname -a | grep "x86_64" >/dev/null
 	IS_X64=$?
 
-	uname -a | grep "arm64" >/dev/null
+	uname -a | grep "aarch64" >/dev/null
 	IS_ARM64=$?
 
 	uname -a | grep "arm" >/dev/null

@@ -3,9 +3,3 @@
 - Reject commit if remote user isn't in the `docker` group. 
 	They will be added already but needs logout/login again 
 	when first added to the group.
-
-- automatically install `yq` if missing:
-
-	wget https://github.com/mikefarah/yq/releases/download/v4.10.0/yq_linux_arm64.tar.gz -O - | \
-	tar xz && \
-	sudo mv yq_linux_arm64 /usr/bin/yq
