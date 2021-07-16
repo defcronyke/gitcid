@@ -1,5 +1,0 @@
-.gc/run.sh
-----------
-- Reject commit if remote user isn't in the `docker` group. 
-	They will be added already but needs logout/login again 
-	when first added to the group.
