@@ -3,4 +3,6 @@
 .gc/.gc-update-available
 repo.git/
 repo/
+repo1.git/
+repo1/
 .gc/.gc-docker-compose/*/Dockerfile
