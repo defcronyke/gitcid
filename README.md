@@ -2,17 +2,22 @@
 
 ---
 
-## Quickstart / Demonstration
+## Dependencies
 
-First you must install: curl, rsync, git, docker, and docker-compose (latest version from python's `pip` package manager).
+GitCid will try to install these for you automatically if they're missing from your system, but if it fails, you might need to install them yourself:
 
-```shell
-git init repo1 && cd repo1 && source <(curl -sL https://tinyurl.com/gitcid) -e; echo "test" | tee test.txt && git add . && git commit -m "Initial commit" && .gc/init.sh -b ../repo1; git remote add origin ../repo1.git/ && git push -u origin master && .gc/run.sh -v; .gc/init.sh -h; git log; git remote -v
-```
+- curl
+- rsync
+- git
+- docker
+- docker-compose - Usually the version found in `pip` or `pip3` (python's package manager) is the one that works properly.
+- yq - [https://github.com/mikefarah/yq](https://github.com/mikefarah/yq)
 
----
+There are a few more dependencies needed depending on your OS, but they should be installed automatically in most cases. See the files in `.gc/.gc-deps` for full details.
 
-## Download GitCid
+## Quickstart
+
+### Download GitCid
 
 1. Make sure you've installed [`git`](https://git-scm.com) and
    [`curl`](https://man7.org/linux/man-pages/man1/curl.1.html) first,
@@ -22,11 +27,47 @@ git init repo1 && cd repo1 && source <(curl -sL https://tinyurl.com/gitcid) -e; 
    source <(curl -sL https://tinyurl.com/gitcid)
    ```
 
-1. (Optional) Or if you prefer, you can run this command instead:
+   When this command finishes, it will have created a new folder called `gitcid` in your current directory, and then it will bring you into this new folder.
+
+2. (Optional) Or if you prefer, you can run this command instead:
 
    ```shell
    git clone https://gitlab.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
    ```
+
+### Create a new git remote with GitCid CI/CD features added to it
+
+1. In the `gitcid` folder, run this command:
+
+   ```shell
+   .gc/new-remote.sh ~/repo1.git
+   ```
+
+   - It should output some details, and if successful, it will have created a new git remote repo at the path: `~/repo1.git`
+   - It will tell you the proper `git clone` command that you can use to clone your new repo at the bottom of the output if everything worked properly.
+   - If it didn't work properly for some reason, it will mention some errors which can help you figure out what went wrong.
+
+2. You can use remote `ssh` paths for the new remote repo location also, instead of a local path, for example:
+
+   ```shell
+   .gc/new-remote.sh git1:~/repo1.git
+   ```
+
+3. An example `git clone` command to clone your git repo might look something like this:
+
+   ```shell
+   git clone git1:~/repo1.git && cd repo1
+   ```
+
+   It's just the regular way of cloning git repos.
+
+4. When you make your new remote repo, you will also be given a command you can use to add `GitCid` features to your locally cloned repo that you cloned from the remote. Here's that same command in case you need it. Make sure you're inside your local repo when you run this command:
+
+   ```shell
+   source <(curl -sL https://tinyurl.com/gitcid) -e
+   ```
+
+   The above command will add GitCid to your git repo in a .gitignore'd folder called: `.gc/`
 
 ## Usage Examples
 
