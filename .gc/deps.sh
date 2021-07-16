@@ -172,6 +172,10 @@ so you'll need to run this script as root. It will probably fail now if you aren
 		if [ "$i" == "docker-compose" ]; then
 			HAS_DOCKER_COMPOSE=${HAS_DEPS}
 		fi
+
+    if [ $HAS_DEPS -ne 0 ]; then
+      break
+    fi
 	done
 
 	uname -a | grep "x86_64" >/dev/null
