@@ -86,25 +86,28 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
       return 1
     fi
 		
-		git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo ""
+		git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
+    .gc/init.sh $@ "$pwd"
 
-    if [ ! -d "$pwd"/.gc ]; then
-      mv .gc/ "$pwd"/.gc/ && \
-      cd "$pwd" && \
-      .gc/init.sh $@
-    else
-      cd "$pwd"
-    fi
+    cd "$pwd"
 
-    cat .gitignore 2>/dev/null | grep ".gc/" >/dev/null
-    if [ $? -ne 0 ]; then
-      echo ".gc/" | tee -a .gitignore
-    fi
+    # if [ ! -d "$pwd"/.gc ]; then
+    #   # mv .gc/ "$pwd"/.gc/ && \
+    #   # cd "$pwd" && \
+    #   # .gc/init.sh $@
+    # else
+    #   cd "$pwd"
+    # fi
 
-    cat .gitignore 2>/dev/null | grep "repo/" >/dev/null
-    if [ $? -ne 0 ]; then
-      echo "repo/" | tee -a .gitignore
-    fi
+    # cat .gitignore 2>/dev/null | grep ".gc/" >/dev/null
+    # if [ $? -ne 0 ]; then
+    #   echo ".gc/" | tee -a .gitignore
+    # fi
+
+    # cat .gitignore 2>/dev/null | grep "repo/" >/dev/null
+    # if [ $? -ne 0 ]; then
+    #   echo "repo/" | tee -a .gitignore
+    # fi
 
     ls "$tmpdir" && \
     echo "info: Removing tmp directory because we're finished with it: $tmpdir" && \
