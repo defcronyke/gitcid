@@ -92,18 +92,18 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
       mv .gc/ "$pwd"/.gc/ && \
       cd "$pwd" && \
       .gc/init.sh $@
-
-      cat .gitignore 2>/dev/null | grep ".gc/" >/dev/null
-      if [ $? -ne 0 ]; then
-        echo ".gc/" | tee -a .gitignore
-      fi
-
-      cat .gitignore 2>/dev/null | grep "repo/" >/dev/null
-      if [ $? -ne 0 ]; then
-        echo "repo/" | tee -a .gitignore
-      fi
     else
       cd "$pwd"
+    fi
+
+    cat .gitignore 2>/dev/null | grep ".gc/" >/dev/null
+    if [ $? -ne 0 ]; then
+      echo ".gc/" | tee -a .gitignore
+    fi
+
+    cat .gitignore 2>/dev/null | grep "repo/" >/dev/null
+    if [ $? -ne 0 ]; then
+      echo "repo/" | tee -a .gitignore
     fi
 
     ls "$tmpdir" && \
