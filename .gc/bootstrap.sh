@@ -76,7 +76,15 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
 		cd "$tmpdir"
 		
 		git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
-		.gc/init.sh $@ "$pwd"; \
+		.gc/init.sh $@ "$pwd"
+
+    if [ ! -d "$pwd"/.gc ]; then
+      echo "Moving \".gc/\" folder to: $pwd/.gc"
+      mv ./gc "$pwd"/.gc
+    else
+      echo "Not moving \".gc/\" folder because it's already in-place."
+    fi
+
 		cd "$pwd" && \
 		.gc/init.sh -h $@
 
