@@ -87,7 +87,6 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
     fi
 		
 		git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
-    .gc/init.sh $@ && \
     .gc/init.sh $@ "$pwd"
 
     # if [ ! -d "$pwd"/.gc ]; then
