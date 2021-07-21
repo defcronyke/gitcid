@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# To use this to install GitCid, run the following command:
+#   source <(curl -sL https://tinyurl.com/gitcid)
+#
+# If you want to add GitCid to an existing git repo, run this instead:
+#   source <(curl -sL https://tinyurl.com/gitcid) -e
 
 gitcid_bootstrap() {
 	GITCID_GIT_PROJECT_SOURCE="https://gitlab.com/defcronyke/gitcid.git"
@@ -77,6 +82,8 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
 		
 		git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
 		.gc/init.sh $@ "$pwd"
+
+    cd "$tmpdir"
 
     if [ ! -d "$pwd"/.gc ]; then
       echo "Moving \".gc/\" folder to: $pwd/.gc"
