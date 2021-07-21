@@ -108,7 +108,8 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
 
     ls "$tmpdir" && \
     echo "info: Removing tmp directory because we're finished with it: $tmpdir" && \
-    rm -rf "$tmpdir"
+    rm -rf "$tmpdir" && \
+    echo ""
 
     .gc/init.sh -h $@
 
