@@ -79,23 +79,24 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
 
 		tmpdir="$(mktemp -d)"
 		cd "$tmpdir"
+    
+    if [ $? -ne 0 ]; then
+      echo "error: Failed entering tmp directory: $tmpdir"
+      echo "error: Cannot continue, this isn't going to work, sorry! Exiting..."
+      return 1
+    fi
 		
 		git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
-		.gc/init.sh $@ "$pwd"
-
-    cd "$tmpdir/gitcid"
+    cd "$pwd"
 
     if [ ! -d "$pwd"/.gc ]; then
-      echo "Moving \".gc/\" folder to: $pwd/.gc"
-      echo "$PWD"
-      ls -al
-      mv .gc/ "$pwd"/.gc
-    else
-      echo "Not moving \".gc/\" folder because it's already in-place."
+      "$tmpdir"/gitcid/.gc/init.sh $@ "$pwd"
     fi
 
-		cd "$pwd" && \
-		.gc/init.sh -h $@
+		.gc/init.sh -h $@ && \
+    ls "$tmpdir" && \
+    echo "info: Removing tmp directory because we're finished with it: $tmpdir" && \
+    rm -rf "$tmpdir"
 
 		return 0
 	fi
