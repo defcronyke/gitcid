@@ -89,34 +89,24 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
 		git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
     .gc/init.sh $@ "$pwd"
 
-    # if [ ! -d "$pwd"/.gc ]; then
-    #   mv .gc/ "$pwd"/.gc/
-    # fi
-
     cd "$pwd"
 
-    # cat .gitignore 2>/dev/null | grep ".gc/" >/dev/null
-    # if [ $? -ne 0 ]; then
-    #   echo ".gc/" | tee -a .gitignore
-    # fi
-
-    # cat .gitignore 2>/dev/null | grep "repo/" >/dev/null
-    # if [ $? -ne 0 ]; then
-    #   echo "repo/" | tee -a .gitignore
-    # fi
-
-    ls "$tmpdir" && \
+    ls "$tmpdir" >/dev/null && \
     echo "info: Removing tmp directory because we're finished with it: $tmpdir" && \
     rm -rf "$tmpdir" && \
     echo ""
 
     .gc/init.sh -h $@
 
+    echo ""
+
 		return 0
 	fi
 
 	git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
 	.gc/init.sh -h $@
+
+  echo ""
 }
 
 gitcid_bootstrap $@
