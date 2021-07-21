@@ -86,13 +86,13 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
       return 1
     fi
 		
-		git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
-    cd "$pwd"
+		git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo ""
 
     if [ ! -d "$pwd"/.gc ]; then
-      "$tmpdir"/gitcid/.gc/init.sh $@ "$pwd"
+      .gc/init.sh $@ "$pwd"
     fi
 
+    cd "$pwd" && \
 		.gc/init.sh -h $@ && \
     ls "$tmpdir" && \
     echo "info: Removing tmp directory because we're finished with it: $tmpdir" && \
