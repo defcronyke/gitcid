@@ -89,7 +89,7 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
       echo "Moving \".gc/\" folder to: $pwd/.gc"
       echo "$PWD"
       ls -al
-      mv ./gc "$pwd"/.gc
+      mv .gc/ "$pwd"/.gc
     else
       echo "Not moving \".gc/\" folder because it's already in-place."
     fi
