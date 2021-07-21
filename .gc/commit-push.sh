@@ -13,6 +13,7 @@ gitcid_commit_push() {
 
   git add .; \
   git commit -m "$msg" && \
+  .gc/push.sh || \
   .gc/push.sh -u origin master
 }
 
