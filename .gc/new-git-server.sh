@@ -70,6 +70,11 @@ gitcid_new_git_server() {
 
   echo ""
 
+  # List all detected git servers on the network.
+  .gc/git-servers.sh
+
+  echo ""
+
   return $res
 }
 
