@@ -141,11 +141,11 @@ gitcid_new_git_server() {
     #  & tasks+=( $! )
   done
 
-  for i in $(jobs -rp); do
+  for i in $(jobs -p); do
     wait $i
     loop_res=$?
     if [ $loop_res -ne 0 ]; then
-      for k in $(jobs -rp); do
+      for k in $(jobs -p); do
         kill $k
       done
 
@@ -166,7 +166,7 @@ gitcid_new_git_server() {
 
   # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
 
-  return $?
+  return 0
 }
 
 gitcid_new_git_server $@
