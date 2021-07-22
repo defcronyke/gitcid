@@ -75,10 +75,10 @@ gc_new_git_server_interactive() {
   return 0
 }
 
+tasks=( )
+
 gitcid_new_git_server() {
   gc_new_git_server_open_web_browser=1
-
-  tasks=( )
 
   trap 'echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; gitcid_new_git_server_usage; echo ""; return 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
@@ -168,4 +168,4 @@ gitcid_new_git_server() {
 
 gitcid_new_git_server $@
 
-echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || exit $?; done; echo ""
+echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
