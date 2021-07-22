@@ -149,7 +149,7 @@ gitcid_new_git_server() {
       echo ""
       echo "Setting up sudo for passwordless operation: $0 -s $@"
       echo ""
-      ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit $?'
+      ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; /bin/bash <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'
       echo ""
     else
       { ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash & in2_task="$!"; wait $in2_task; exit 0' & in_task=$!; wait $in_task; exit 0; } & tasks+=( $! )
