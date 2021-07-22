@@ -18,14 +18,21 @@
 
 gitcid_new_git_server_usage() {
   echo ""
-  echo "Install a new git server at a target ssh location."
+  echo "Install a git server at an ssh target location."
+  echo ""
+  echo "Currently supported target platforms are:"
+  echo ""
+  echo "  Raspberry Pi OS (aarch64)"
+  echo ""
   echo ""
   echo "usage: $0 [-y] <target new git server's ssh path>"
   echo ""
   echo "example: $0 pi@git1"
   echo ""
-  echo "note: Only the user's home directory is currently"
-  echo "supported for the ssh target installation path."
+  echo ""
+  echo "Full instructions are here:"
+  echo ""
+  echo "  https://gitlab.com/defcronyke/gitcid"
   echo ""
 }
 
@@ -42,11 +49,11 @@ gitcid_new_git_server() {
     gc_new_git_server_target="$1"
     
     echo ""
-    echo "Are you sure you want to install a new git server at the path: $gc_new_git_server_target [ y / N ] ? "
+    echo "Are you sure you want to install a git server at the ssh path: $gc_new_git_server_target [ y / N ] ? "
 
     read gc_new_git_server_confirm
     if [ "$gc_new_git_server_confirm" != "y" ] && [ "$gc_new_git_server_confirm" != "Y" ]; then
-      echo "Cancelled new git server installation."
+      echo "Cancelled git server installation."
       echo ""
       return 2
     fi
@@ -61,7 +68,7 @@ gitcid_new_git_server() {
   fi
 
   echo ""
-  echo "Installing a new git server at the following path: $gc_new_git_server_target"
+  echo "Installing a new git server at the following ssh path: $gc_new_git_server_target"
   echo ""
 
   ssh -t $gc_new_git_server_target 'curl -sL https://tinyurl.com/git-server-init | bash'
