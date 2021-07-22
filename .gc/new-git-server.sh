@@ -78,7 +78,9 @@ gitcid_new_git_server() {
   input="$@"
   gc_new_git_server_open_web_browser=1
 
-  trap 'echo ""; gitcid_new_git_server_usage; exit 255' INT
+  tasks=()
+
+  trap 'echo ""; for i in $tasks; do kill $i; done, echo ""; gitcid_new_git_server_usage; return 255' INT
 
   # ----------
   # Do some minimal git config setup to make some annoying yellow warning text stop 
@@ -130,6 +132,7 @@ gitcid_new_git_server() {
 
   for i in $@; do
     ssh -t $gc_new_git_server_target 'curl -sL https://tinyurl.com/git-server-init | bash' &
+    tasks+=($!)
   done
 
   wait $(jobs -p)
