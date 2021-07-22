@@ -138,7 +138,7 @@ gitcid_new_git_server() {
     # tasks+=($!)
   done
 
-  wait $(jobs -p) || \
+  wait $(jobs -rp) || \
   res=$?; \
   exit $?
 
