@@ -69,6 +69,12 @@ gitcid_new_git_server() {
   res=$?
 
   echo ""
+  echo "Waiting for 3 seconds..."
+  echo ""
+
+  sleep 3
+  
+  echo ""
 
   # List all detected git servers on the network.
   .gc/git-servers-open.sh 2>/dev/null
