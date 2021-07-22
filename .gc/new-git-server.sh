@@ -144,7 +144,7 @@ gitcid_new_git_server() {
   for j in $@; do
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
-      echo "Setting up sudo for passwordless operation: $0 -s"
+      echo "Setting up sudo for passwordless operation: $0 -s $@"
       echo ""
       ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit $?'
       echo ""
