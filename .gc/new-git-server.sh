@@ -32,6 +32,8 @@ gitcid_new_git_server_usage() {
 gitcid_new_git_server() {
   input="$@"
 
+  trap 'echo ""; gitcid_new_git_server_usage; exit 255' INT
+
   if [ $# -lt 1 ]; then
     gitcid_new_git_server_usage
     return 1
