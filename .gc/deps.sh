@@ -242,6 +242,33 @@ doesn't have official Docker builds for it. You will have to try installing Dock
 				
 				eval "${GITCID_DEPS_INSTALL_CMD[@]} docker-ce docker-ce-cli containerd.io"
 
+        # Fix docker getting stuck sometimes after install.
+        docker ps 2>/dev/null
+        if [ $? -ne 0 ]; then
+          echo ""
+          echo "info: Poking docker in case maybe it's stuck. Starting dockerd..."
+          echo ""
+          sudo /usr/bin/dockerd -H unix:// --containerd=/run/containerd/containerd.sock >/dev/null &
+          DOCKERD_TMP_PID=$!
+          echo "info: waiting 4 seconds..."
+          sleep 4
+          echo ""
+          echo "info: Stopping dockerd..."
+          echo ""
+          kill $DOCKERD_TMP_PID
+          echo ""
+          echo "waiting again, 3 seconds..."
+          sleep 3
+          echo ""
+          echo "trying to restart docker..."
+          echo ""
+          sudo systemctl restart docker && \
+          echo "docker restart success! yay, it's fixed!"
+          echo ""
+          docker ps
+          echo ""
+        fi
+
 			elif [ $IS_ARCH -eq 0 ]; then
 				eval "${GITCID_DEPS_INSTALL_CMD[@]} docker"
 				$SUDO_CMD systemctl enable docker
