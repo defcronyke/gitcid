@@ -169,6 +169,6 @@ gitcid_new_git_server() {
 gitcid_new_git_server $@
 res=$?
 
-echo ""; for i in ${tasks[@]}; do wait $(jobs -p) || kill "$i" 2>/dev/null; done; echo ""
+echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
 
 exit $res
