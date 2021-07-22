@@ -146,7 +146,13 @@ Maybe it works on other Debian or Debian-based platforms, but this hasn't been t
 
 WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section to install a dedicated git server onto a freshly installed Linux distro which is intended to be used only as a dedicated git server! This will install some dependencies automatically and do some system configurations that you might not prefer to have on devices that are being used for other purposes. USE AT YOUR OWN RISK! YOU HAVE BEEN WARNED!!
 
-1. Install new git server(s) onto dedicated device(s) at the given `ssh` target location(s):
+1. Install GitCid:
+
+   ```shell
+   source <(curl -sL https://tinyurl.com/gitcid)
+   ```
+
+2. Install new git server(s) onto dedicated device(s) at the given `ssh` target location(s):
 
    - Usage details:
 
@@ -178,4 +184,4 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
      .gc/new-git-server.sh -yo git1 git2 gitlab
      ```
 
-2. If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details.
+3. If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details.
