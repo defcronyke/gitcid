@@ -134,11 +134,11 @@ gitcid_new_git_server() {
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
   for i in $@; do
-    {  trap 'wait $(jobs -rp); gitcid_new_git_server_usage; return 0' INT; ssh -tt $i "/bin/bash -c \"trap 'wait $(jobs -rp); gitcid_new_git_server_usage; exit 0' INT; echo \"\"; echo \"-----\"; echo \"hostname: $(hostname)\"; echo \"-----\"; curl -sL https://tinyurl.com/git-server-init | bash && exit $? || exit $?\"" && exit $? || exit $?; } &
+    {  trap 'wait $(jobs -p); gitcid_new_git_server_usage; return 0' INT; ssh -tt $i "/bin/bash -c \"trap 'wait $(jobs -p); gitcid_new_git_server_usage; exit 0' INT; echo \"\"; echo \"-----\"; echo \"hostname: $(hostname)\"; echo \"-----\"; curl -sL https://tinyurl.com/git-server-init | bash && exit $? || exit $?\"" && exit $? || exit $?; } &
     tasks+=($!)
   done
 
-  wait $(jobs -rp)
+  wait $(jobs -p)
   res=$?
 
   echo ""; for i in $tasks; do kill $i; done; echo ""
