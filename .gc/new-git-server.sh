@@ -125,7 +125,6 @@ gitcid_new_git_server() {
 
   echo ""
   echo "Installing a new git server at the following ssh path: $gc_new_git_server_target"
-  echo ""
 
   ssh -t $gc_new_git_server_target 'curl -sL https://tinyurl.com/git-server-init | bash'
   res=$?
