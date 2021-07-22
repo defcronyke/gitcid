@@ -27,7 +27,7 @@ gitcid_new_git_server_usage() {
   echo ""
   echo "usage: $0 [-y] <target new git server's ssh path>"
   echo ""
-  echo "example: $0 pi@git1"
+  echo "example: $0 $USER@git1"
   echo ""
   echo ""
   echo "Full instructions are here:"
