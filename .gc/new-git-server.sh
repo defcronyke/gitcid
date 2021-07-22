@@ -80,7 +80,8 @@ gitcid_new_git_server() {
 
   tasks=()
 
-  trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
+  trap 'echo ""; gitcid_new_git_server_usage; exit 255' INT
+  # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
 
   # ----------
   # Do some minimal git config setup to make some annoying yellow warning text stop 
