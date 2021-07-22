@@ -80,7 +80,7 @@ tasks=( )
 gitcid_new_git_server() {
   gc_new_git_server_open_web_browser=1
 
-  trap 'echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; gitcid_new_git_server_usage; echo ""; return 255' INT
+  trap 'echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; gitcid_new_git_server_usage $@; echo ""; return 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
 
   # ----------
@@ -97,7 +97,7 @@ gitcid_new_git_server() {
   # ----------
 
   if [ $# -lt 1 ]; then
-    gitcid_new_git_server_usage
+    gitcid_new_git_server_usage $@
     return 0
 
   elif [ $# -lt 2 ]; then
@@ -107,7 +107,7 @@ gitcid_new_git_server() {
   else
     if [ "$1" == "-h" ]; then
       shift 1
-      gitcid_new_git_server_usage
+      gitcid_new_git_server_usage $@
       return 0
 
     elif [ "$1" == "-y" ]; then
@@ -126,7 +126,7 @@ gitcid_new_git_server() {
       echo ""
       echo "error: Invalid arguments: $@"
       echo ""
-      gitcid_new_git_server_usage
+      gitcid_new_git_server_usage $@
       return 1
     fi
   fi
@@ -135,7 +135,7 @@ gitcid_new_git_server() {
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
   for i in $@; do
-    ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; exec curl -sL https://tinyurl.com/git-server-init | bash; exit 0;' & tasks+=( $! )
+    ssh -t $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash &' & tasks+=( $! )
   done
 
   wait $(jobs -p) || \
