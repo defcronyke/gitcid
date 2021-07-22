@@ -72,20 +72,7 @@ gitcid_new_git_server() {
   echo ""
 
   ssh -t $gc_new_git_server_target 'curl -sL https://tinyurl.com/git-server-init | bash'
-
   res=$?
-
-  echo ""
-  echo "Waiting 10 seconds for GitWeb to be ready."
-  echo "Try refreshing the web page if it doesn't load on first attempt."
-  echo ""
-  echo "Waiting..."
-  echo ""
-
-  sleep 10
-
-  echo "."
-  echo ""
 
   # List all detected git servers on the network.
   echo ""
@@ -93,6 +80,9 @@ gitcid_new_git_server() {
   echo ""
   .gc/git-servers-open.sh 2>/dev/null
 
+  echo ""
+  echo "GitWeb pages launched in web browser. If any of pages don't"
+  echo "load on first attempt, try refreshing the page."
   echo ""
 
   return $res
