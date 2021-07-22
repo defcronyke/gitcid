@@ -76,11 +76,16 @@ gitcid_new_git_server() {
   res=$?
 
   echo ""
-  echo "Waiting for 3 seconds..."
+  echo "Waiting 6 seconds for GitWeb to be ready."
+  echo "Try refreshing the web page if it doesn't load on first attempt."
+  echo ""
+  echo "Waiting..."
   echo ""
 
-  sleep 3
+  sleep 6
   
+  echo ""
+  echo "."
   echo ""
 
   # List all detected git servers on the network.
