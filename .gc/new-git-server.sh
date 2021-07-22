@@ -79,6 +79,7 @@ tasks=( )
 
 gitcid_new_git_server() {
   gc_new_git_server_open_web_browser=1
+  gc_new_git_server_setup_sudo=1
 
   trap 'echo ""; for k in $(jobs -rp); do kill "$k"; done; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; gitcid_new_git_server_usage; echo ""; exit 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
@@ -110,6 +111,10 @@ gitcid_new_git_server() {
       gitcid_new_git_server_usage $@
       return 0
 
+    elif [ "$1" == "-s" ]; then
+      shift 1
+      gc_new_git_server_setup_sudo=0
+
     elif [ "$1" == "-y" ]; then
       shift 1
       
@@ -137,7 +142,15 @@ gitcid_new_git_server() {
   # stty tostop
   # stty -tostop
   for j in $@; do
-    { ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash & in2_task="$!"; wait $in2_task; exit 0' & in_task=$!; wait $in_task; exit 0; } & tasks+=( $! )
+    if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
+      echo ""
+      echo "Setting up sudo for passwordless operation: $0 -s"
+      echo ""
+      ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit $?'
+      echo ""
+    else
+      { ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash & in2_task="$!"; wait $in2_task; exit 0' & in_task=$!; wait $in_task; exit 0; } & tasks+=( $! )
+    fi
     #  & tasks+=( $! )
   done
 
