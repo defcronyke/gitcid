@@ -139,7 +139,6 @@ gitcid_new_git_server() {
     echo ""
     echo "GitWeb pages launched in web browser. If any pages don't"
     echo "load on first attempt, try refreshing the page."
-    echo ""
   else
     .gc/git-servers.sh 2>/dev/null
   fi
