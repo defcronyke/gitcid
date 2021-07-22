@@ -147,12 +147,6 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 1. Install a new git server onto a dedicated device at a given `ssh` target location:
 
-   - Get usage instructions:
-
-     ```shell
-     .gc/new-git-server.sh
-     ```
-
    - Interactive version with prompt:
 
      ```shell
@@ -164,3 +158,5 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
      ```shell
      .gc/new-git-server.sh -y pi@git1
      ```
+
+2. If everything worked as intended, your git server is now ready to use. See the output in your terminal, and the web page(s) that should have opened for more details.
