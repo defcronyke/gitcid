@@ -41,6 +41,19 @@ gitcid_new_git_server() {
 
   trap 'echo ""; gitcid_new_git_server_usage; exit 255' INT
 
+  # ----------
+  # Do some minimal git config setup to make some annoying yellow warning text stop 
+  # showing on newer versions of git.
+
+  # When doing "git pull", merge by default instead of rebase.
+  git config --global pull.rebase || \
+  git config --global pull.rebase false
+
+  # When doing "git init", use "master" for the default branch name.
+  git config --global init.defaultBranch || \
+  git config --global init.defaultBranch master
+  # ----------
+
   if [ $# -lt 1 ]; then
     gitcid_new_git_server_usage
     return 1
