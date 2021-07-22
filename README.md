@@ -124,3 +124,43 @@ There are a few more dependencies needed depending on your OS, but they should b
    ```shell
    .gc/init.sh -b user@host:~/remote-bare-repo1.git local-bare-repo1.git ./local-bare-repo2
    ```
+
+## Install a Dedicated Git Server
+
+Install a git server at a target ssh location, using the tools from this project:
+
+[https://gitlab.com/defcronyke/git-server](https://gitlab.com/defcronyke/git-server)
+
+Currently supported target platforms:
+
+- Raspberry Pi OS (aarch64)
+
+Platform support wishlist (Please feel free to test and contribute fix suggestions if you'd like to help with adding support for these):
+
+- Raspberry Pi OS (armhf)
+- Debian Stable (amd64)
+- Arch Linux (amd64)
+
+Maybe it works on other Debian or Debian-based platforms, but this hasn't been tested yet.
+
+WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section to install a dedicated git server onto a freshly installed Linux distro which is intended to be used only as a dedicated git server! This will install some dependencies automatically and do some system configurations that you might not prefer to have on devices that are being used for other purposes. USE AT YOUR OWN RISK! YOU HAVE BEEN WARNED!!
+
+1. Install a new git server onto a dedicated device at a given `ssh` target location:
+
+   - Get usage instructions:
+
+     ```shell
+     .gc/new-git-server.sh
+     ```
+
+   - Interactive version with prompt:
+
+     ```shell
+     .gc/new-git-server.sh pi@git1
+     ```
+
+   - Non-interactive version WITH NO PROMPT OR WARNINGS:
+
+     ```shell
+     .gc/new-git-server.sh -y pi@git1
+     ```
