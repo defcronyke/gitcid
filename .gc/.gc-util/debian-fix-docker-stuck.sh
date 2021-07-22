@@ -2,8 +2,9 @@
 # Fix docker getting stuck sometimes after install on Debian.
 
 gitcid_debian_fix_docker_stuck() {
-  docker ps 2>/dev/null
+  docker ps >/dev/null 2>&1
   if [ $? -ne 0 ]; then
+    echo ""
     echo ""
     echo "info: Poking docker in case maybe it's stuck. Starting dockerd..."
     echo ""
@@ -24,7 +25,7 @@ gitcid_debian_fix_docker_stuck() {
     sudo systemctl restart docker && \
     echo "docker restart success! yay, it's fixed!"
     echo ""
-    docker ps
+    docker ps >/dev/null 2>&1
     echo ""
   fi
 }
