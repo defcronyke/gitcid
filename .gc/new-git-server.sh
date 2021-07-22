@@ -70,6 +70,8 @@ gc_new_git_server_interactive() {
     echo ""
     return 2
   fi
+
+  return 0
 }
 
 gitcid_new_git_server() {
@@ -102,14 +104,15 @@ gitcid_new_git_server() {
     return $?
 
   else
+    gc_new_git_server_target="$2"
+
     if [ "$1" == "-y" ]; then
-      gc_new_git_server_target="$2"
+      echo ""
     elif [ "$1" == "-o" ]; then
       gc_new_git_server_open_web_browser=0
       gc_new_git_server_interactive $gc_new_git_server_target || \
       return $?
     elif [ "$1" == "-yo" ] || [ "$1" == "-oy" ]; then
-      gc_new_git_server_target="$2"
       gc_new_git_server_open_web_browser=0
     else
       gitcid_new_git_server_usage
