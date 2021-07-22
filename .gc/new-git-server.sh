@@ -97,21 +97,17 @@ gitcid_new_git_server() {
   git config --global init.defaultBranch master >/dev/null 2>&1
   # ----------
 
-  if [ $# -lt 1 ]; then
-    gitcid_new_git_server_usage $@
+  if [ $# -eq 1 ] && [ "$1" == "-h" ]; then
+    shift 1
+    gitcid_new_git_server_usage
     return 0
 
-  elif [ $# -lt 2 ]; then
-    gc_new_git_server_interactive $@ || \
-    return $?
+  elif [ $# -eq 0 ]; then
+    gitcid_new_git_server_usage
+    return 0
 
-  else
-    if [ "$1" == "-h" ]; then
-      shift 1
-      gitcid_new_git_server_usage $@
-      return 0
-
-    elif [ "$1" == "-s" ]; then
+  elif [ $# -ge 1 ]; then
+    if [ "$1" == "-s" ]; then
       shift 1
       gc_new_git_server_setup_sudo=0
 
@@ -127,12 +123,19 @@ gitcid_new_git_server() {
     elif [ "$1" == "-yo" ] || [ "$1" == "-oy" ]; then
       shift 1
       gc_new_git_server_open_web_browser=0
+
     else
-      echo ""
-      echo "error: Invalid arguments: $@"
-      echo ""
-      gitcid_new_git_server_usage $@
-      return 1
+      echo "$1" | grep -P "^\-.+" >/dev/null
+      if [ $? -eq 0 ]; then
+        echo ""
+        echo "error: Invalid arguments: $@"
+        echo ""
+        gitcid_new_git_server_usage $@
+        return 1
+      else
+        gc_new_git_server_interactive $@ || \
+        return $?
+      fi
     fi
   fi
 
@@ -170,25 +173,6 @@ gitcid_new_git_server() {
     fi
   done
 
-  # while [ true ]; do
-  #   # for i in ${tasks[@]}; do
-  #   #   wait $i || \
-  #   #   return 0
-  #   # done
-  # done
-
-  # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
-
-  return 0
-}
-
-gitcid_new_git_server $@
-res=$?
-
-echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
-
-# List all detected git servers on the network.
-if [ $res -eq 0 ]; then
   echo ""
   echo "GitWeb servers detected on your network:"
   echo ""
@@ -207,6 +191,22 @@ if [ $res -eq 0 ]; then
   echo ""
   echo "  .gc/git-servers-open.sh"
   echo ""
-fi
+
+  # while [ true ]; do
+  #   # for i in ${tasks[@]}; do
+  #   #   wait $i || \
+  #   #   return 0
+  #   # done
+  # done
+
+  # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
+
+  return 0
+}
+
+gitcid_new_git_server $@
+res=$?
+
+for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done
 
 exit $res
