@@ -80,7 +80,7 @@ gitcid_new_git_server() {
 
   tasks=()
 
-  trap 'echo ""; gitcid_new_git_server_usage; wait $(jobs -p)' INT
+  trap 'wait $(jobs -p); echo ""; gitcid_new_git_server_usage; exit 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
 
   # ----------
@@ -139,7 +139,7 @@ gitcid_new_git_server() {
     # tasks+=($!)
   done
 
-  wait $(jobs -p)
+  wait $(jobs -n)
 
   # echo ""; for i in $tasks; do kill $i; done; echo ""
 
