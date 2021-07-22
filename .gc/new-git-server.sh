@@ -80,7 +80,7 @@ tasks=( )
 gitcid_new_git_server() {
   gc_new_git_server_open_web_browser=1
 
-  trap 'echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; gitcid_new_git_server_usage $@; echo ""; return 255' INT
+  trap 'echo ""; for i in ${tasks[@]}; do kill $i 2>/dev/null; done; gitcid_new_git_server_usage $@; echo ""; exit 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
 
   # ----------
@@ -142,13 +142,24 @@ gitcid_new_git_server() {
   done
 
   while [ true ]; do
-    wait $(jobs -p) || \
-    break
+    for i in ${tasks[@]}; do
+      wait $i || \
+      return 0
+    done
   done
 
   # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
 
-  # List all detected git servers on the network.
+  return $res
+}
+
+gitcid_new_git_server $@
+res=$?
+
+echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
+
+# List all detected git servers on the network.
+if [ $res -eq 0 ]; then
   echo ""
   echo "GitWeb servers detected on your network:"
   echo ""
@@ -167,13 +178,6 @@ gitcid_new_git_server() {
   echo ""
   echo "  .gc/git-servers-open.sh"
   echo ""
-
-  return $res
-}
-
-gitcid_new_git_server $@
-res=$?
-
-echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
+fi
 
 exit $res
