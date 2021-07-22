@@ -80,7 +80,7 @@ gitcid_new_git_server() {
 
   tasks=()
 
-  trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; return 255' INT
+  trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
 
   # ----------
   # Do some minimal git config setup to make some annoying yellow warning text stop 
@@ -134,12 +134,13 @@ gitcid_new_git_server() {
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
   for i in $@; do
-    ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit $?' &
+    { ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit $?'; exit $? } &
     # tasks+=($!)
   done
 
-  wait $(jobs -p)
-  res=$?
+  wait $(jobs -p) || \
+  res=$?; \
+  exit $?
 
   # echo ""; for i in $tasks; do kill $i; done; echo ""
 
