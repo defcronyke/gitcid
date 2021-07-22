@@ -145,18 +145,36 @@ Maybe it works on other Debian or Debian-based platforms, but this hasn't been t
 
 WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section to install a dedicated git server onto a freshly installed Linux distro which is intended to be used only as a dedicated git server! This will install some dependencies automatically and do some system configurations that you might not prefer to have on devices that are being used for other purposes. USE AT YOUR OWN RISK! YOU HAVE BEEN WARNED!!
 
-1. Install a new git server onto a dedicated device at a given `ssh` target location:
+1. Install new git server(s) onto dedicated device(s) at the given `ssh` target location(s):
 
-   - Interactive version with prompt:
-
-     ```shell
-     .gc/new-git-server.sh pi@git1
-     ```
-
-   - Non-interactive version WITH NO PROMPT OR WARNINGS:
+   - Usage details:
 
      ```shell
-     .gc/new-git-server.sh -y pi@git1
+     .gc/new-git-server.sh -h
      ```
 
-2. If everything worked as intended, your git server is now ready to use. See the output in your terminal, and the web page(s) that should have opened for more details.
+   - Interactive version with confirmation:
+
+     ```shell
+     .gc/new-git-server.sh git1 git2 gitlab
+     ```
+
+   - Interactive version, open web browser to GitWeb pages when finished:
+
+   ```shell
+   .gc/new-git-server.sh -o git1 git2 gitlab
+   ```
+
+   - Non-interactive automated version:
+
+     ```shell
+     .gc/new-git-server.sh -y git1 git2 gitlab
+     ```
+
+   - Non-interactive version, open web browser to GitWeb pages when finished:
+
+   ```shell
+   .gc/new-git-server.sh -yo git1 git2 gitlab
+   ```
+
+2. If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details.
