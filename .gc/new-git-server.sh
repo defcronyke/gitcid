@@ -137,7 +137,7 @@ gitcid_new_git_server() {
   # stty tostop
   # stty -tostop
   for i in $@; do
-    { ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit 0' & tasks+=( $! ); }
+    { ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit 0'; } & tasks+=( $! )
     #  & tasks+=( $! )
   done
 
