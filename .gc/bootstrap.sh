@@ -9,6 +9,19 @@ gitcid_bootstrap() {
 	GITCID_GIT_PROJECT_SOURCE="https://gitlab.com/defcronyke/gitcid.git"
 	GITCID_OVERRIDE_REPO_TYPE=${GITCID_OVERRIDE_REPO_TYPE:-""}
 
+  # ----------
+  # Do some minimal git config setup to make some annoying yellow warning text stop 
+  # showing on newer versions of git.
+
+  # When doing "git pull", merge by default instead of rebase.
+  git config --global pull.rebase >/dev/null 2>&1 || \
+  git config --global pull.rebase false >/dev/null 2>&1
+
+  # When doing "git init", use "master" for the default branch name.
+  git config --global init.defaultBranch >/dev/null 2>&1 || \
+  git config --global init.defaultBranch master >/dev/null 2>&1
+  # ----------
+
 	if [ $# -ge 1 ]; then
 		new_args=()
 		for arg in "$@"; do

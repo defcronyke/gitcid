@@ -46,12 +46,12 @@ gitcid_new_git_server() {
   # showing on newer versions of git.
 
   # When doing "git pull", merge by default instead of rebase.
-  git config --global pull.rebase || \
-  git config --global pull.rebase false
+  git config --global pull.rebase >/dev/null 2>&1 || \
+  git config --global pull.rebase false >/dev/null 2>&1
 
   # When doing "git init", use "master" for the default branch name.
-  git config --global init.defaultBranch || \
-  git config --global init.defaultBranch master
+  git config --global init.defaultBranch >/dev/null 2>&1 || \
+  git config --global init.defaultBranch master >/dev/null 2>&1
   # ----------
 
   if [ $# -lt 1 ]; then

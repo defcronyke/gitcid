@@ -312,6 +312,19 @@ gitcid_init() {
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
 	GITCID_NEW_REPO_PERMISSIONS=${GITCID_NEW_REPO_PERMISSIONS:-"0640"}
 
+  # ----------
+  # Do some minimal git config setup to make some annoying yellow warning text stop 
+  # showing on newer versions of git.
+
+  # When doing "git pull", merge by default instead of rebase.
+  git config --global pull.rebase >/dev/null 2>&1 || \
+  git config --global pull.rebase false >/dev/null 2>&1
+
+  # When doing "git init", use "master" for the default branch name.
+  git config --global init.defaultBranch >/dev/null 2>&1 || \
+  git config --global init.defaultBranch master >/dev/null 2>&1
+  # ----------
+
 	source "${GITCID_DIR}deps.sh" $@
 	res_import_deps=$?
 	if [ $res_import_deps -ne 0 ]; then

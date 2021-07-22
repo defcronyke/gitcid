@@ -25,6 +25,19 @@ gitcid_new_remote() {
   gc_remote_repo="${1:-"git1:~/repo1.git"}"
   gc_local_repo="repo1"
 
+  # ----------
+  # Do some minimal git config setup to make some annoying yellow warning text stop 
+  # showing on newer versions of git.
+
+  # When doing "git pull", merge by default instead of rebase.
+  git config --global pull.rebase >/dev/null 2>&1 || \
+  git config --global pull.rebase false >/dev/null 2>&1
+
+  # When doing "git init", use "master" for the default branch name.
+  git config --global init.defaultBranch >/dev/null 2>&1 || \
+  git config --global init.defaultBranch master >/dev/null 2>&1
+  # ----------
+
   # Add ".git" to the end of the remote repo name if 
   # it's missing.
   echo $gc_remote_repo | grep ".git$"
