@@ -80,7 +80,7 @@ tasks=( )
 gitcid_new_git_server() {
   gc_new_git_server_open_web_browser=1
 
-  trap 'echo ""; for i in ${tasks[@]}; do kill $i 2>/dev/null; done; gitcid_new_git_server_usage $@; echo ""; exit 255' INT
+  # trap 'echo ""; for i in ${tasks[@]}; do kill $i 2>/dev/null; done; gitcid_new_git_server_usage $@; echo ""; exit 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
 
   # ----------
