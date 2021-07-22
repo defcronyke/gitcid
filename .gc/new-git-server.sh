@@ -141,8 +141,9 @@ gitcid_new_git_server() {
     #  & tasks+=( $! )
   done
 
-  for i in ${tasks[@]}; do
-    wait $i
+  while [ true ]; do
+    wait $(jobs -p) || \
+    break
   done
 
   # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
