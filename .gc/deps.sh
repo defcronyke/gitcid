@@ -141,6 +141,9 @@ gitcid_deps() {
 
 	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Running script: ${BASH_SOURCE[0]} $@"
 
+  # Try to fix Docker if maybe it got stuck (sometimes happens on Debian, maybe other places too).
+  .gc/.gc-util/debian-fix-docker-stuck.sh
+
 	gitcid_update
 
 	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Attempting to find any missing GitCid dependencies and install them."
@@ -248,35 +251,6 @@ doesn't have official Docker builds for it. You will have to try installing Dock
 				$SUDO_CMD systemctl start docker
 			fi
 		fi
-
-    # Fix docker getting stuck sometimes after install on Debian.
-    if [ $IS_DEBIAN -eq 0 ]; then
-      docker ps 2>/dev/null
-      if [ $? -ne 0 ]; then
-        echo ""
-        echo "info: Poking docker in case maybe it's stuck. Starting dockerd..."
-        echo ""
-        sudo /usr/bin/dockerd -H unix:// --containerd=/run/containerd/containerd.sock >/dev/null &
-        DOCKERD_TMP_PID=$!
-        echo "info: waiting 4 seconds..."
-        sleep 4
-        echo ""
-        echo "info: Stopping dockerd..."
-        echo ""
-        kill $DOCKERD_TMP_PID
-        echo ""
-        echo "waiting again, 3 seconds..."
-        sleep 3
-        echo ""
-        echo "trying to restart docker..."
-        echo ""
-        sudo systemctl restart docker && \
-        echo "docker restart success! yay, it's fixed!"
-        echo ""
-        docker ps
-        echo ""
-      fi
-    fi
 
 		if [ $HAS_DOCKER_COMPOSE -ne 0 ]; then
 			if [ $IS_ARM64 -eq 0 ]; then
