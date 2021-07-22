@@ -138,9 +138,10 @@ gitcid_new_git_server() {
     ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash' & tasks+=( $! )
   done
 
-  # wait $(jobs -n)
+  wait $(jobs -n) || \
+  return $?
 
-  echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
+  # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
 
   # List all detected git servers on the network.
   echo ""
