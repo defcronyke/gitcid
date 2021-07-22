@@ -135,28 +135,33 @@ gitcid_new_git_server() {
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
   # stty tostop
-  stty -tostop
+  # stty -tostop
   for i in $@; do
     { ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash' & tasks+=( $! ); } & tasks+=( $! )
     #  & tasks+=( $! )
   done
 
-  while [ true ]; do
-    for i in ${tasks[@]}; do
-      wait $i || \
-      return 0
-    done
+  for i in $(jobs -p); do
+    wait $i || \
+    return $?
   done
+
+  # while [ true ]; do
+  #   # for i in ${tasks[@]}; do
+  #   #   wait $i || \
+  #   #   return 0
+  #   # done
+  # done
 
   # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
 
-  return $res
+  return $?
 }
 
 gitcid_new_git_server $@
 res=$?
 
-echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
+# echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
 
 # List all detected git servers on the network.
 if [ $res -eq 0 ]; then
