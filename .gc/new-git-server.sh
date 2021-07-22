@@ -138,7 +138,7 @@ gitcid_new_git_server() {
     # tasks+=($!)
   done
 
-  # wait $(jobs -rp)
+  wait $(jobs -p)
 
   # echo ""; for i in $tasks; do kill $i; done; echo ""
 
