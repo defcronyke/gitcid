@@ -8,6 +8,11 @@ gitcid_debian_fix_docker_stuck() {
     echo ""
     echo "info: Poking docker in case maybe it's stuck. Starting dockerd..."
     echo ""
+    echo "info: Add network interface \"docker0\", since maybe it's missing for some reason..."
+    echo ""
+    ip link add name docker0 type bridge
+    ip addr add dev docker0 172.17.0.1/16
+    echo ""
     sudo /usr/bin/dockerd -H unix:// --containerd=/run/containerd/containerd.sock >/dev/null &
     DOCKERD_TMP_PID=$!
     echo "info: waiting 4 seconds..."
