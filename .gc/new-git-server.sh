@@ -134,15 +134,16 @@ gitcid_new_git_server() {
   echo ""
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
+  stty -tostop
   for i in $@; do
-    stty -tostop
     { ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash' & tasks+=( $! ); } & tasks+=( $! )
-    stty tostop
+    # stty tostop
     #  & tasks+=( $! )
   done
 
-  wait $(jobs -p) || \
-  return $?
+  for i in ${tasks[@]}; do
+    wait $i
+  done
 
   # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
 
