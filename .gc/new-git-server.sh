@@ -137,7 +137,7 @@ gitcid_new_git_server() {
   # stty tostop
   # stty -tostop
   for j in $@; do
-    { ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit 0' & tasks+=( $! ); } & tasks+=( $! )
+    { ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit 0'; exit 0; } & tasks+=( $! )
     #  & tasks+=( $! )
   done
 
@@ -174,7 +174,7 @@ res=$?
 
 echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
 
-List all detected git servers on the network.
+# List all detected git servers on the network.
 if [ $res -eq 0 ]; then
   echo ""
   echo "GitWeb servers detected on your network:"
