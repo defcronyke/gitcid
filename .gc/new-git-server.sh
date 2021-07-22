@@ -95,7 +95,7 @@ gitcid_new_git_server() {
 
   if [ $# -lt 1 ]; then
     gitcid_new_git_server_usage
-    return 1
+    return 0
 
   elif [ $# -lt 2 ]; then
     gc_new_git_server_target="$1"
@@ -106,7 +106,10 @@ gitcid_new_git_server() {
   else
     gc_new_git_server_target="$2"
 
-    if [ "$1" == "-y" ]; then
+    if [ "$1" == "-h" ]; then
+      gitcid_new_git_server_usage
+      return 0
+    elif [ "$1" == "-y" ]; then
       echo ""
     elif [ "$1" == "-o" ]; then
       gc_new_git_server_open_web_browser=0
@@ -139,13 +142,14 @@ gitcid_new_git_server() {
     echo ""
   else
     .gc/git-servers.sh 2>/dev/null
-    echo ""
-    echo "To open a web browser tab for each detected GitWeb server,"
-    echo "run this command:"
-    echo ""
-    echo "  .gc/git-servers-open.sh"
-    echo ""
   fi
+
+  echo ""
+  echo "To open a web browser tab for each detected GitWeb server,"
+  echo "run this command:"
+  echo ""
+  echo "  .gc/git-servers-open.sh"
+  echo ""
 
   return $res
 }
