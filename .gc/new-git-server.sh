@@ -137,7 +137,7 @@ gitcid_new_git_server() {
   # stty tostop
   # stty -tostop
   for i in $@; do
-    { ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash' & tasks+=( $! ); } & tasks+=( $! )
+    { ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash; exit 0' & tasks+=( $! ); }
     #  & tasks+=( $! )
   done
 
@@ -164,25 +164,25 @@ res=$?
 # echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
 
 # List all detected git servers on the network.
-if [ $res -eq 0 ]; then
-  echo ""
-  echo "GitWeb servers detected on your network:"
-  echo ""
-  if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
-    .gc/git-servers-open.sh 2>/dev/null
-    echo ""
-    echo "GitWeb pages launched in web browser. If any pages don't"
-    echo "load on first attempt, try refreshing the page."
-  else
-    .gc/git-servers.sh 2>/dev/null
-  fi
+# if [ $res -eq 0 ]; then
+#   echo ""
+#   echo "GitWeb servers detected on your network:"
+#   echo ""
+#   if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
+#     .gc/git-servers-open.sh 2>/dev/null
+#     echo ""
+#     echo "GitWeb pages launched in web browser. If any pages don't"
+#     echo "load on first attempt, try refreshing the page."
+#   else
+#     .gc/git-servers.sh 2>/dev/null
+#   fi
 
-  echo ""
-  echo "To open a web browser tab for each detected GitWeb server,"
-  echo "run this command:"
-  echo ""
-  echo "  .gc/git-servers-open.sh"
-  echo ""
-fi
+#   echo ""
+#   echo "To open a web browser tab for each detected GitWeb server,"
+#   echo "run this command:"
+#   echo ""
+#   echo "  .gc/git-servers-open.sh"
+#   echo ""
+# fi
 
 exit $res
