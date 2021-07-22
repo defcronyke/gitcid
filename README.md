@@ -154,34 +154,34 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 2. Install new git server(s) onto dedicated device(s) at the given `ssh` target location(s):
 
-- Usage details:
+   - Usage details:
 
-  ```shell
-  .gc/new-git-server.sh -h
-  ```
+   ```shell
+   .gc/new-git-server.sh -h
+   ```
 
-- Interactive version with confirmation:
+   - Interactive version with confirmation:
 
-  ```shell
-  .gc/new-git-server.sh git1 git2 gitlab
-  ```
+   ```shell
+   .gc/new-git-server.sh git1 git2 gitlab
+   ```
 
-- Interactive version, open web browser to GitWeb pages when finished:
+   - Interactive version, open web browser to GitWeb pages when finished:
 
-  ```shell
-  .gc/new-git-server.sh -o git1 git2 gitlab
-  ```
+   ```shell
+   .gc/new-git-server.sh -o git1 git2 gitlab
+   ```
 
-- Non-interactive automated version:
+   - Non-interactive automated version:
 
-  ```shell
-  .gc/new-git-server.sh -y git1 git2 gitlab
-  ```
+   ```shell
+   .gc/new-git-server.sh -y git1 git2 gitlab
+   ```
 
-- Non-interactive version, open web browser to GitWeb pages when finished:
+   - Non-interactive version, open web browser to GitWeb pages when finished:
 
-  ```shell
-  .gc/new-git-server.sh -yo git1 git2 gitlab
-  ```
+   ```shell
+   .gc/new-git-server.sh -yo git1 git2 gitlab
+   ```
 
 3. If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details.
