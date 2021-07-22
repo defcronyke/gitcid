@@ -150,15 +150,15 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
    - Usage details:
 
-     ```shell
-     .gc/new-git-server.sh -h
-     ```
+   ```shell
+   .gc/new-git-server.sh -h
+   ```
 
    - Interactive version with confirmation:
 
-     ```shell
-     .gc/new-git-server.sh git1 git2 gitlab
-     ```
+   ```shell
+   .gc/new-git-server.sh git1 git2 gitlab
+   ```
 
    - Interactive version, open web browser to GitWeb pages when finished:
 
@@ -168,9 +168,9 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
    - Non-interactive automated version:
 
-     ```shell
-     .gc/new-git-server.sh -y git1 git2 gitlab
-     ```
+   ```shell
+   .gc/new-git-server.sh -y git1 git2 gitlab
+   ```
 
    - Non-interactive version, open web browser to GitWeb pages when finished:
 
