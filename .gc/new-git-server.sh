@@ -80,7 +80,7 @@ gitcid_new_git_server() {
 
   tasks=()
 
-  trap 'echo ""; gitcid_new_git_server_usage; echo ""; exit 255' INT
+  trap 'echo ""; for i in ${tasks[@]}; do kill "$i" || exit $?; done; gitcid_new_git_server_usage; echo ""; exit 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
 
   # ----------
@@ -135,8 +135,7 @@ gitcid_new_git_server() {
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
   for i in $@; do
-    ( /bin/bash -ic 'ssh -tt '$i' "echo \"\"; echo \"-----\"; echo \"hostname: $(hostname)\"; echo \"-----\"; /bin/bash <(curl -sL https://tinyurl.com/git-server-init); exit $?"; exit $?' ) &
-    tasks+=( $! )
+    (ssh -tt "$i" "echo \"\"; echo \"-----\"; echo \"hostname: $(hostname)\"; echo \"-----\"; /bin/bash <(curl -sL https://tinyurl.com/git-server-init)") & tasks+=( $! )
   done
 
   # wait $(jobs -n)
