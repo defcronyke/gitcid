@@ -78,7 +78,7 @@ gc_new_git_server_interactive() {
 gitcid_new_git_server() {
   gc_new_git_server_open_web_browser=1
 
-  tasks=()
+  tasks=( )
 
   trap 'echo ""; for i in ${tasks[@]}; do kill "$i" || exit $?; done; gitcid_new_git_server_usage; echo ""; exit 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
@@ -135,12 +135,12 @@ gitcid_new_git_server() {
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
   for i in $@; do
-    (ssh -tt "$i" "echo \"\"; echo \"-----\"; echo \"hostname: $(hostname)\"; echo \"-----\"; /bin/bash <(curl -sL https://tinyurl.com/git-server-init)") & tasks+=( $! )
+    (ssh -tt "$i" 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; exec curl -sL https://tinyurl.com/git-server-init') & tasks+=( $! )
   done
 
   # wait $(jobs -n)
 
-  echo ""; for i in ${tasks[@]}; do wait "$i" || exit $?; done; echo ""
+  echo ""; for i in ${tasks[@]}; do wait "$i"; done; echo ""
 
   # List all detected git servers on the network.
   echo ""
