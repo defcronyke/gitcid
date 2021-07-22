@@ -138,7 +138,7 @@ gitcid_new_git_server() {
     ssh -tt $i 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash' & tasks+=( $! )
   done
 
-  wait $(jobs -n) || \
+  wait $(jobs -p) || \
   return $?
 
   # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
@@ -169,6 +169,6 @@ gitcid_new_git_server() {
 gitcid_new_git_server $@
 res=$?
 
-echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; echo ""
+echo ""; for i in ${tasks[@]}; do wait $(jobs -p) || kill "$i" 2>/dev/null; done; echo ""
 
 exit $res
