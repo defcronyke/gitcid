@@ -80,7 +80,7 @@ gitcid_new_git_server() {
 
   tasks=( )
 
-  trap 'echo ""; for i in ${tasks[@]}; do kill "$i" || exit $?; done; gitcid_new_git_server_usage; echo ""; exit 255' INT
+  trap 'echo ""; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; gitcid_new_git_server_usage; echo ""; return 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
 
   # ----------
@@ -140,7 +140,7 @@ gitcid_new_git_server() {
 
   # wait $(jobs -n)
 
-  echo ""; for i in ${tasks[@]}; do wait "$i"; done; echo ""
+  echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
 
   # List all detected git servers on the network.
   echo ""
@@ -166,3 +166,5 @@ gitcid_new_git_server() {
 }
 
 gitcid_new_git_server $@
+
+echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || exit $?; done; echo ""
