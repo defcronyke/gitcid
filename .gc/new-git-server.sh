@@ -121,12 +121,18 @@ gitcid_new_git_server() {
       gitcid_new_git_server_usage
       return 1
     fi
+
+    shift 1
   fi
 
   echo ""
-  echo "Installing a new git server at the following ssh path: $gc_new_git_server_target"
+  echo "Installing new git server(s) at the following ssh path(s): $gc_new_git_server_target"
 
-  ssh -t $gc_new_git_server_target 'curl -sL https://tinyurl.com/git-server-init | bash'
+  for i in $@; do
+    ssh -t $gc_new_git_server_target 'curl -sL https://tinyurl.com/git-server-init | bash' &
+  done
+
+  wait $(jobs -p)
   res=$?
 
   # List all detected git servers on the network.
