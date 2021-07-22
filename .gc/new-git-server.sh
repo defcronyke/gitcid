@@ -62,7 +62,7 @@ gitcid_new_git_server_usage() {
 
 gc_new_git_server_interactive() {
   echo ""
-  echo "Are you sure you want to install a git server at the ssh path: $gc_new_git_server_target [ y / N ] ? "
+  echo "Are you sure you want to install git server(s) at the ssh path(s): $@ [ y / N ] ? "
 
   read gc_new_git_server_confirm
   if [ "$gc_new_git_server_confirm" != "y" ] && [ "$gc_new_git_server_confirm" != "Y" ]; then
@@ -75,7 +75,6 @@ gc_new_git_server_interactive() {
 }
 
 gitcid_new_git_server() {
-  input="$@"
   gc_new_git_server_open_web_browser=1
 
   tasks=()
@@ -100,35 +99,38 @@ gitcid_new_git_server() {
     return 0
 
   elif [ $# -lt 2 ]; then
-    gc_new_git_server_target="$1"
-    
-    gc_new_git_server_interactive $gc_new_git_server_target || \
+    gc_new_git_server_interactive $@ || \
     return $?
 
   else
-    gc_new_git_server_target="$2"
-
     if [ "$1" == "-h" ]; then
+      shift 1
       gitcid_new_git_server_usage
       return 0
+
     elif [ "$1" == "-y" ]; then
-      echo ""
+      shift 1
+      
     elif [ "$1" == "-o" ]; then
+      shift 1
       gc_new_git_server_open_web_browser=0
-      gc_new_git_server_interactive $gc_new_git_server_target || \
+      gc_new_git_server_interactive $@ || \
       return $?
+
     elif [ "$1" == "-yo" ] || [ "$1" == "-oy" ]; then
+      shift 1
       gc_new_git_server_open_web_browser=0
     else
+      echo ""
+      echo "error: Invalid arguments: $@"
+      echo ""
       gitcid_new_git_server_usage
       return 1
     fi
-
-    shift 1
   fi
 
   echo ""
-  echo "Installing new git server(s) at the following ssh path(s): $gc_new_git_server_target"
+  echo "Installing new git server(s) at the following ssh path(s): $@"
 
   for i in $@; do
     { ssh -tt $i '/bin/bash -c "echo \"\"; echo \"-----\"; echo \"hostname: $(hostname)\"; echo \"-----\"; curl -sL https://tinyurl.com/git-server-init | bash"'; } &
