@@ -23,8 +23,9 @@ gitcid_new_git_server_usage() {
   echo ""
   echo "Currently supported target platforms are:"
   echo ""
+  echo "  Debian Testing (amd64)"
+  echo "  Raspberry Pi OS (armhf)"
   echo "  Raspberry Pi OS (aarch64)"
-  echo "  Debian 11 (amd64)"
   echo ""
   echo "Usage:"
   echo "-----"
@@ -133,7 +134,7 @@ gitcid_new_git_server() {
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
   for i in $@; do
-    { ssh -tt $i '/bin/bash -c "echo \"\"; echo \"-----\"; echo \"hostname: $(hostname)\"; echo \"-----\"; curl -sL https://tinyurl.com/git-server-init | bash; exit $?"; exit $?' & }
+    { ssh -tt $i '/bin/bash -c "trap \'echo \"\"; for i in $tasks; do kill $i; done; echo \"\"; gitcid_new_git_server_usage; return 255\' INT; echo \"\"; echo \"-----\"; echo \"hostname: $(hostname)\"; echo \"-----\"; curl -sL https://tinyurl.com/git-server-init | bash; exit $?"; exit $?' & } &
     tasks+=($!)
   done
 
