@@ -23,7 +23,7 @@ gitcid_debian_fix_docker_stuck() {
     for i in `ps aux | grep /usr/bin/dockerd | awk '{print $2}'`; do sudo kill $i; done
     sudo rm /var/run/docker.pid
     echo ""
-    /usr/bin/dockerd -H unix:// --containerd=/run/containerd/containerd.sock >/dev/null &
+    sudo /usr/bin/dockerd -H unix:// --containerd=/run/containerd/containerd.sock >/dev/null &
     DOCKERD_TMP_PID=$!
     echo "info: waiting 4 seconds..."
     sleep 4
