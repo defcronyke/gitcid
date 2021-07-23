@@ -190,7 +190,7 @@ gitcid_new_git_server() {
       echo ""
       echo "info: You need to use sequential mode the first time, to set up passwordless sudo so that parallel mode can work properly."
       echo ""
-      { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
+      { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; exit $?; } & tasks+=( $! )
     fi
   done
 
