@@ -123,6 +123,11 @@ gitcid_new_git_server() {
     elif [ "$1" == "-yo" ] || [ "$1" == "-oy" ]; then
       shift 1
       gc_new_git_server_open_web_browser=0
+    
+    elif [ "$1" == "-so" ] || [ "$1" == "-os" ]; then
+      shift 1
+      gc_new_git_server_setup_sudo=0
+      gc_new_git_server_open_web_browser=0
 
     else
       echo "$1" | grep -P "^\-.+" >/dev/null
@@ -147,12 +152,15 @@ gitcid_new_git_server() {
   for j in $@; do
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
-      echo "Setting up sudo for passwordless operation: $0 -s $@"
+      echo "Sequential operation: $0 -s $@"
       echo ""
       { ssh -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; } || \
         return $?
       echo ""
     else
+      echo ""
+      echo "Parallel operation (for sequential instead, use flag: -s): $0 $@"
+      echo ""
       { ssh -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
     fi
     #  & tasks+=( $! )
