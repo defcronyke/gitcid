@@ -30,7 +30,7 @@ gitcid_debian_fix_docker_stuck() {
     echo ""
     echo "info: Stopping dockerd..."
     echo ""
-    kill $DOCKERD_TMP_PID
+    sudo kill $DOCKERD_TMP_PID
     echo ""
     echo "waiting again, 3 seconds..."
     sleep 3
