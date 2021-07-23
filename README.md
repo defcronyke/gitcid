@@ -2,6 +2,19 @@
 
 ---
 
+Some power tools for use with [`git`](https://git-scm.com):
+
+- Quickly deploy new `git` remotes using `ssh` and `rsync` that you can push to, with `gitcid` tools activated inside them.
+- Quickly commit, push, or clone `git` repos, and add `gitcid` tools inside them.
+- The `gitcid` tools live inside each local or remote `git` repo, you can add them to any of your existing repos with one command.
+- When you add `gitcid` to your repo, it gains built-in `CI/CD` features with a bit of help from `docker-compose` (work-in-progress).
+- Specify your `CI/CD pipelines` in a `yaml` format that might be comfortable to you if you've used other `CI/CD` systems before.
+- Quickly deploy dedicated `git servers` to `ssh` remote locations using one command. It's recommended to install them on some dedicated devices on your LAN such as `Raspberry Pi` running `Raspberry Pi OS (aarch64 or armhf)`. Regular `Debian (amd64)` targets are also supported. Perhaps it works on some `Debian-derived` distros as well, but that hasn't been tested.
+- Plug in some removable disks to your `git server` and it will find and share any `git repos` it finds to the rest of your LAN.
+- Browse your plugged-in `git repos` with the familiar `GitWeb` UI.
+
+---
+
 ## Dependencies
 
 GitCid will try to install these for you automatically if they're missing from your system, but if it fails, you might need to install them yourself:
@@ -11,7 +24,7 @@ GitCid will try to install these for you automatically if they're missing from y
 - git
 - docker
 - docker-compose - Usually the version found in `pip` or `pip3` (python's package manager) is the one that works properly.
-- yq - [https://github.com/mikefarah/yq](https://github.com/mikefarah/yq)
+- yq ( [https://github.com/mikefarah/yq](https://github.com/mikefarah/yq) )
 
 There are a few more dependencies needed depending on your OS, but they should be installed automatically in most cases. See the files in `.gc/.gc-deps` for full details.
 
