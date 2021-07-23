@@ -210,7 +210,7 @@ gitcid_new_git_server() {
 gitcid_new_git_server $@
 res=$?
 
-if [ $res -eq 17 ]; then
+if [ $res -ne 0 ]; then
   if [ $# -gt 0 ]; then
     echo ""
     echo "args at return: $@"
@@ -287,6 +287,8 @@ if [ $res -eq 17 ]; then
   exit $last_bad
 fi
 
-new_git_server_detect_other_git_servers $@
+if [ $res -eq 0 ]; then
+  new_git_server_detect_other_git_servers $@
+fi
 
 exit $res

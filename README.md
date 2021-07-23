@@ -127,7 +127,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ## Install a Dedicated Git Server
 
-Install a git server at a target ssh location, using the tools from this project:
+Install a git server at a target ssh location, using tools from this project:
 
 [https://gitlab.com/defcronyke/git-server](https://gitlab.com/defcronyke/git-server)
 
