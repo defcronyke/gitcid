@@ -81,7 +81,7 @@ gitcid_new_git_server() {
   gc_new_git_server_open_web_browser=1
   gc_new_git_server_setup_sudo=1
 
-  trap 'echo ""; for k in $(jobs -rp); do kill "$k"; done; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; gitcid_new_git_server_usage; echo ""; exit 255' INT
+  # trap 'echo ""; echo "killing jobs: $(jobs -p)"; echo ""; echo "killing tasks: ${tasks[@]}"; for k in $(jobs -p); do kill "$k"; done; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; gitcid_new_git_server_usage; echo ""; exit 255' INT
   # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
 
   # ----------
@@ -149,29 +149,37 @@ gitcid_new_git_server() {
       echo ""
       echo "Setting up sudo for passwordless operation: $0 -s $@"
       echo ""
-      ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; /bin/bash <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'
+      { ssh -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; } || \
+        return $?
       echo ""
     else
-      { ssh -tt $j 'echo ""; echo "-----"; echo "hostname: $(hostname)"; echo "-----"; curl -sL https://tinyurl.com/git-server-init | bash & in2_task="$!"; wait $in2_task; exit 0' & in_task=$!; wait $in_task; exit 0; } & tasks+=( $! )
+      { ssh -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
     fi
     #  & tasks+=( $! )
   done
 
-  for i in $(jobs -p); do
-    wait $i
-    loop_res=$?
-    if [ $loop_res -ne 0 ]; then
-      for k in $(jobs -p); do
-        kill $k
-      done
+  if [ $gc_new_git_server_setup_sudo -ne 0 ]; then
+    for i in ${tasks[@]}; do
+      wait $i || \
+        return $?
+    done
+  fi
 
-      for k in ${tasks[@]}; do
-        kill $k 2>/dev/null
-      done
+  # for i in $(jobs -p); do
+  #   wait $i
+  #   loop_res=$?
+  #   if [ $loop_res -ne 0 ]; then
+  #     for k in $(jobs -p); do
+  #       kill $k
+  #     done
 
-      return $loop_res
-    fi
-  done
+  #     for k in ${tasks[@]}; do
+  #       kill $k 2>/dev/null
+  #     done
+
+  #     return $loop_res
+  #   fi
+  # done
 
   echo ""
   echo "GitWeb servers detected on your network:"
@@ -205,8 +213,8 @@ gitcid_new_git_server() {
 }
 
 gitcid_new_git_server $@
-res=$?
+# res=$?
 
-for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done
+# for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done
 
-exit $res
+# exit $res
