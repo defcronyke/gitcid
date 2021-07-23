@@ -111,9 +111,6 @@ gitcid_new_git_server() {
   gc_new_git_server_open_web_browser=1
   gc_new_git_server_setup_sudo=1
 
-  # trap 'echo ""; echo "killing jobs: $(jobs -p)"; echo ""; echo "killing tasks: ${tasks[@]}"; for k in $(jobs -p); do kill "$k"; done; for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done; gitcid_new_git_server_usage; echo ""; exit 255' INT
-  # trap 'echo ""; for i in $tasks; do kill $i; done; echo ""; gitcid_new_git_server_usage; exit 255' INT
-
   # ----------
   # Do some minimal git config setup to make some annoying yellow warning text stop 
   # showing on newer versions of git.
@@ -177,8 +174,6 @@ gitcid_new_git_server() {
   echo ""
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
-  # stty tostop
-  # stty -tostop
   for j in $@; do
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
@@ -197,7 +192,6 @@ gitcid_new_git_server() {
       echo ""
       { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; exit $?; } & tasks+=( $! )
     fi
-    #  & tasks+=( $! )
   done
 
   if [ $gc_new_git_server_setup_sudo -ne 0 ]; then
@@ -207,33 +201,8 @@ gitcid_new_git_server() {
     done
   fi
 
-  # for i in $(jobs -p); do
-  #   wait $i
-  #   loop_res=$?
-  #   if [ $loop_res -ne 0 ]; then
-  #     for k in $(jobs -p); do
-  #       kill $k
-  #     done
-
-  #     for k in ${tasks[@]}; do
-  #       kill $k 2>/dev/null
-  #     done
-
-  #     return $loop_res
-  #   fi
-  # done
-
   new_git_server_detect_other_git_servers $@ || \
     return $?
-
-  # while [ true ]; do
-  #   # for i in ${tasks[@]}; do
-  #   #   wait $i || \
-  #   #   return 0
-  #   # done
-  # done
-
-  # echo ""; for i in ${tasks[@]}; do wait "$i" 2>/dev/null || return $?; done; echo ""
 
   return 0
 }
@@ -242,16 +211,12 @@ gitcid_new_git_server $@
 res=$?
 
 if [ $res -eq 17 ]; then
-  # trap 'gc_new_git_server_install_cancel $@ || exit $?' INT
-
   if [ $# -gt 0 ]; then
     echo ""
     echo "args at return: $@"
     echo ""
     
-    # Save flags.
     first_arg=$1
-
     shift
   fi
 
@@ -320,19 +285,8 @@ if [ $res -eq 17 ]; then
   fi
 
   exit $last_bad
-  
-  # echo ""
-  # echo "ERROR: Failed getting sudo permission."
-  # echo ""
-  # echo "ERROR: You can grant passwordless sudo if you want by running the following command:"
-  # echo ""
-  # echo "  .gc/new-git-server.sh -s $USER@$(hostname)"
-  # echo ""
-  # return $res
 fi
 
 new_git_server_detect_other_git_servers $@
-
-# for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done
 
 exit $res
