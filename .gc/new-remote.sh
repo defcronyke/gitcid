@@ -52,7 +52,9 @@ gitcid_new_remote() {
   #   git clone git:~/git/repo1.git
   #
 
-  gc_remote_repo="$(echo "$(echo "$gc_remote_repo" | sed 's/~*\([^\^]\.*git\)*\(\/\)*//g' | sed 's/^.*\(\.git\)$//' | sed 's/\(^.*\:\)\/*\(.*\)\(\.git\)*$/\1~\/git\/new\/\2/').git")"
+  gc_remote_repo="$(gc_remote_repo="pi@meet:~/git/new/repo4.git"; printf '%s:~/git/new/%s.git\n' "$(echo "$gc_remote_repo" | cut -d: -f1)" "$(echo "$gc_remote_repo" | cut -d: -f2 | sed 's/~\/git\/new\///' | sed 's/~\/git//' | sed 's/\.git$//')")"
+
+  #gc_remote_repo="$(echo "$(echo "$gc_remote_repo" | sed 's/~*\([^\^]\.*git\)*\(\/\)*//g' | sed 's/^.*\(\.git\)$//' | sed 's/\(^.*\:\)\/*\(.*\)\(\.git\)*$/\1~\/git\/new\/\2/').git")"
 
 
   # echo "$gc_remote_repo" | grep -vP "^.+:~/git"
