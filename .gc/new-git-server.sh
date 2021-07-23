@@ -83,11 +83,31 @@ gc_new_git_server_interactive() {
   return 0
 }
 
-tasks=( )
+new_git_server_detect_other_git_servers() {
+  echo ""
+  echo "GitWeb servers detected on your network:"
+  echo ""
+  if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
+    .gc/git-servers-open.sh 2>/dev/null
+    echo ""
+    echo "GitWeb pages launched in web browser. If any pages don't"
+    echo "load on first attempt, try refreshing the page."
+  else
+    .gc/git-servers.sh 2>/dev/null
+  fi
+
+  echo ""
+  echo "To open a web browser tab for each detected GitWeb server,"
+  echo "run this command:"
+  echo ""
+  echo "  .gc/git-servers-open.sh"
+  echo ""
+}
 
 gitcid_new_git_server() {
   trap 'gc_new_git_server_install_cancel $@ || return $?' INT
 
+  tasks=( )
   gc_new_git_server_open_web_browser=1
   gc_new_git_server_setup_sudo=1
 
@@ -175,8 +195,7 @@ gitcid_new_git_server() {
       echo ""
       echo "info: You need to use sequential mode the first time, to set up passwordless sudo so that parallel mode can work properly."
       echo ""
-      no_sudo_hosts=( )
-      { ssh -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); res=$?; if [ $res -eq 17 ]; then 'no_sudo_hosts+=( '$USER@$(hostname)' )'; fi; exit $res'; } & tasks+=( $! )
+      { ssh -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
     fi
     #  & tasks+=( $! )
   done
@@ -204,24 +223,8 @@ gitcid_new_git_server() {
   #   fi
   # done
 
-  echo ""
-  echo "GitWeb servers detected on your network:"
-  echo ""
-  if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
-    .gc/git-servers-open.sh 2>/dev/null
-    echo ""
-    echo "GitWeb pages launched in web browser. If any pages don't"
-    echo "load on first attempt, try refreshing the page."
-  else
-    .gc/git-servers.sh 2>/dev/null
-  fi
-
-  echo ""
-  echo "To open a web browser tab for each detected GitWeb server,"
-  echo "run this command:"
-  echo ""
-  echo "  .gc/git-servers-open.sh"
-  echo ""
+  new_git_server_detect_other_git_servers $@ || \
+    return $?
 
   # while [ true ]; do
   #   # for i in ${tasks[@]}; do
@@ -239,15 +242,90 @@ gitcid_new_git_server $@
 res=$?
 
 if [ $res -eq 17 ]; then
+  # trap 'gc_new_git_server_install_cancel $@ || exit $?' INT
+
+  if [ $# -gt 0 ]; then
+    echo ""
+    echo "args at return: $@"
+    echo ""
+    
+    # Save flags.
+    first_arg=$1
+
+    shift
+  fi
+
+  no_sudo_hosts=( )
+
+  new_install_success=1
+  
+  last_bad=0
+
+  bad_hosts=( )
+
+  for i in $@; do
+    { ssh -tt $i 'sudo -n cat /dev/null; res=$?; if [ $res -ne 0 ]; then echo ""; echo "ERROR: [ HOST: $USER@$(hostname) ]: Host failed running sudo non-interactively, so they cannot be used in parallel mode. Trying again in sequential mode..."; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; res=$?; fi; exit $res'; };
+    res=$?
+
+    echo "res=$res"
+
+    if [ $res -eq 19 ]; then
+      echo ""
+      echo "Succeeded at enabling passwordless sudo. Trying parallel mode install..."
+      echo ""
+      { ssh -tt $i 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); res2=$?; exit $res2'; };
+      res2=$?
+
+      echo "res2=$res2"
+
+      if [ $res2 -ne 0 ]; then
+        last_bad=$res2
+        bad_hosts+=( "$i" )
+        echo ""
+        echo "ERROR: [ HOST: $i ]: Failed parallel mode install. Sorry, it looks like it's going to take some manual intervention to install a git server on this host, this system can't seem to do it automatically. Giving up."
+        echo ""
+      fi
+
+    elif [ $res -ne 0 ]; then
+      last_bad=$res
+      bad_hosts+=( "$i" )
+      echo ""
+      echo "ERROR: [ HOST: $i ]: Failed running in sequential mode. Return code: $res"
+    else
+      new_install_success=0
+    fi
+  done
+
   echo ""
-  echo "ERROR: no_sudo_hosts=( ${no_sudo_hosts[@]} )"
-  echo ""
-  # echo "ERROR: [ HOST: $USER@$(hostname) ]: Failed getting sudo permission."
+
+  if [ $new_install_success -ne 0 ]; then
+    gitcid_new_git_server_usage $@
+    echo ""
+  else
+    new_git_server_detect_other_git_servers $@
+    echo ""
+  fi
+
+  if [ $last_bad -ne 0 ]; then
+    echo "ERROR: At least one git server install failed. The last exit error code was: $last_bad"
+    echo ""
+    echo "ERROR: Hosts that failed installation:"
+    echo ""
+    for h in ${bad_hosts[@]}; do
+      echo "  $h"
+    done
+    echo ""
+  fi
+
+  exit $last_bad
+  
   # echo ""
-  echo "ERROR: You can grant passwordless sudo if you want by running the following command:"
-  echo ""
-  echo "  .gc/new-git-server.sh -s $USER@$(hostname)"
-  echo ""
+  # echo "ERROR: Failed getting sudo permission."
+  # echo ""
+  # echo "ERROR: You can grant passwordless sudo if you want by running the following command:"
+  # echo ""
+  # echo "  .gc/new-git-server.sh -s $USER@$(hostname)"
+  # echo ""
   # return $res
 fi
 
