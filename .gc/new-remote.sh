@@ -38,40 +38,23 @@ gitcid_new_remote() {
   git config --global init.defaultBranch master >/dev/null 2>&1
   # ----------
 
-
   # Convert new remote repo temporary push path 
   # to the required format, for example:
   # 
-  #   hostname:repo1 -> git:~/git/new/repo1.git
+  #   ./new-remote.sh hostname:repo1
+  #
+  # Pushes to this real path on the git server:
+  #
+  #   --> hostname:~/git/new/repo1.git
   #
   # It will be available for cloning using
-  # "git clone" at the following path shortly
-  # afterwards (typically after less than 1 
-  # minute):
+  # "git clone" and pushing using "git push" at 
+  # the following path shortly afterwards 
+  # (typically after less than 1 minute):
   #
   #   git clone git:~/git/repo1.git
   #
-
   gc_remote_repo="$(gc_remote_repo="$gc_remote_repo"; printf '%s:~/git/new/%s.git\n' "$(echo "$gc_remote_repo" | cut -d: -f1)" "$(echo "$gc_remote_repo" | cut -d: -f2 | sed 's/~\/git\/new\///' | sed 's/~\/git//' | sed 's/\.git$//')")"
-
-  #gc_remote_repo="$(echo "$(echo "$gc_remote_repo" | sed 's/~*\([^\^]\.*git\)*\(\/\)*//g' | sed 's/^.*\(\.git\)$//' | sed 's/\(^.*\:\)\/*\(.*\)\(\.git\)*$/\1~\/git\/new\/\2/').git")"
-
-
-  # echo "$gc_remote_repo" | grep -vP "^.+:~/git"
-  # if [ $? -eq 0 ]; then
-  #   # Add if missing: ~/git
-  #   gc_remote_repo="$(echo "$gc_remote_repo" | sed 's/^\(.*:\)\(\w\)\(.*\)$/\1~/git\3/')"
-  # fi
-
-  # gc_remote_repo="$(echo $gc_remote_repo | sed "s/^\(.*\):\([^]\)//g")"
-
-
-  # # Add ".git" to the end of the remote repo name if 
-  # # it's missing.
-  # echo $gc_remote_repo | grep ".git$"
-  # if [ $? -ne 0 ]; then
-  #   gc_remote_repo="${gc_remote_repo}.git"
-  # fi
 
   tmpdir=""
   tmpdir="$(mktemp -d)"
