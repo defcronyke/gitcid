@@ -175,7 +175,8 @@ gitcid_new_git_server() {
       echo ""
       echo "info: You need to use sequential mode the first time, to set up passwordless sudo so that parallel mode can work properly."
       echo ""
-      { ssh -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
+      no_sudo_hosts=( )
+      { ssh -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); res=$?; if [ $res -eq 17 ]; then 'no_sudo_hosts+=( '$USER@$(hostname)' )'; fi; exit $res'; } & tasks+=( $! )
     fi
     #  & tasks+=( $! )
   done
@@ -235,8 +236,21 @@ gitcid_new_git_server() {
 }
 
 gitcid_new_git_server $@
-# res=$?
+res=$?
+
+if [ $res -eq 17 ]; then
+  echo ""
+  echo "ERROR: no_sudo_hosts=( ${no_sudo_hosts[@]} )"
+  echo ""
+  # echo "ERROR: [ HOST: $USER@$(hostname) ]: Failed getting sudo permission."
+  # echo ""
+  echo "ERROR: You can grant passwordless sudo if you want by running the following command:"
+  echo ""
+  echo "  .gc/new-git-server.sh -s $USER@$(hostname)"
+  echo ""
+  # return $res
+fi
 
 # for i in ${tasks[@]}; do kill "$i" 2>/dev/null; done
 
-# exit $res
+exit $res
