@@ -67,7 +67,7 @@ gc_new_git_server_install_cancel() {
   echo ""
   echo "Cancelled git server installation."
   echo ""
-  return 2
+  return 20
 }
 
 gc_new_git_server_interactive() {
@@ -209,6 +209,11 @@ gitcid_new_git_server() {
 
 gitcid_new_git_server $@
 res=$?
+
+# If cancelled.
+if [ $res -eq 20 ]; then
+  exit $res
+fi
 
 if [ $res -ne 0 ]; then
   if [ $# -gt 0 ]; then
