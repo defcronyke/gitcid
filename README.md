@@ -146,11 +146,33 @@ Maybe it works on other Debian or Debian-based platforms, but this hasn't been t
 
 WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section to install a dedicated git server onto a freshly installed Linux distro which is intended to be used only as a dedicated git server! This will install some dependencies automatically and do some system configurations that you might not prefer to have on devices that are being used for other purposes. USE AT YOUR OWN RISK! YOU HAVE BEEN WARNED!!
 
+### TLDR; Let's just install the git server
+
+- Install a `git server` to a remote `ssh` location (or two as in this example), by running the following command in a `bash` terminal:
+
+  ```shell
+  source <(curl -sL https://tinyurl.com/gitcid) && .gc/new-git-server.sh -o pi@git1 $USER@gitlab
+  ```
+
+  Usually it just works, and with the `-o` flag used above, it should auto-open a web page for each git server it finds on your network after the install is finished. For more info and other options, see the next section below.
+
+- The example above will also install `gitcid`, which makes it easier to work with the git server. If you already have `gitcid` installed, you don't need to install it again, so in that case you can omit the first part of the above command, for example:
+
+  ```shell
+  .gc/new-git-server.sh -o pi@git1 $USER@gitlab
+  ```
+
+  Just make sure you're inside the `gitcid/` folder first (or any `gitcid`-enabled git repo), before trying to run any `gitcid` commands.
+
+### Git Server Installation and Usage
+
 1. Install GitCid:
 
    ```shell
    source <(curl -sL https://tinyurl.com/gitcid)
    ```
+
+   - If successful, you will now be inside the freshly downloaded `./gitcid/` folder. You need to be inside this folder for step 2.
 
 2. Install new git server(s) onto dedicated device(s) at the given `ssh` target location(s):
 
@@ -160,13 +182,13 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
    .gc/new-git-server.sh -h
    ```
 
-   - Interactive version with confirmation:
+   - Install or update some git servers, with a confirmation prompt before installing:
 
    ```shell
    .gc/new-git-server.sh git1 git2 gitlab
    ```
 
-   - Interactive version, open web browser to GitWeb pages when finished:
+   - Install or update some git servers with a confirmation prompt. Open a web browser tab for each available GitWeb server page found on your network when finished:
 
    ```shell
    .gc/new-git-server.sh -o git1 git2 gitlab
@@ -178,10 +200,28 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
    .gc/new-git-server.sh -y git1 git2 gitlab
    ```
 
-   - Non-interactive version, open web browser to GitWeb pages when finished:
+   - Non-interactive automated version, open web browser to GitWeb pages when finished:
 
    ```shell
    .gc/new-git-server.sh -yo git1 git2 gitlab
    ```
 
-3. If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details.
+   - Non-interactive sequential install. In the examples above, installs are attempted first in parallel whenever possible. To override that behaviour and perform all installs sequentially one at a time, use this command instead:
+
+   ```shell
+   .gc/new-git-server.sh -s git1 git2 gitlab
+   ```
+
+   - Non-interactive sequential install, and open a web browser to GitWeb pages when finished:
+
+   ```shell
+   .gc/new-git-server.sh -so git1 git2 gitlab
+   ```
+
+   - Specify the ssh username to log in as during install on the targets. By default, the ssh config for each hostname is used from your `~/.ssh/config` file, but if you prefer, you can add a username in the command below for each target. You can do this for any of the various commands listed above, for example:
+
+   ```shell
+   .gc/new-git-server.sh -yo pi@git1 pi@git2 $USER@gitlab
+   ```
+
+3. If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details. During parallel installs (the default behaviour unless using the `-s` flag variants), if non-interactive sudo support isn't configured on the target, the system will fall back to sequential install mode for any targets which need the sudo password typed manually. After typing the sudo password once successfully, a passwordless sudo configuration will be attempted on the target, so that any future interactions with that target can be fully-automated.

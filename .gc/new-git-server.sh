@@ -292,8 +292,8 @@ if [ $res -ne 0 ]; then
   exit $last_bad
 fi
 
-if [ $res -eq 0 ]; then
-  new_git_server_detect_other_git_servers $@
-fi
+# if [ $res -eq 0 ]; then
+#   new_git_server_detect_other_git_servers $@
+# fi
 
 exit $res
