@@ -180,11 +180,13 @@ gitcid_new_git_server() {
   # stty tostop
   # stty -tostop
   for j in $@; do
+    ping -c1 -w1 
+
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
       echo "Sequential mode: $0 -s $@"
       echo ""
-      { ssh -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; } || \
+      { ssh -o ConnectTimeout=5 -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; } || \
         return $?
       echo ""
     else
@@ -195,7 +197,7 @@ gitcid_new_git_server() {
       echo ""
       echo "info: You need to use sequential mode the first time, to set up passwordless sudo so that parallel mode can work properly."
       echo ""
-      { ssh -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
+      { ssh -o ConnectTimeout=5 -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
     fi
     #  & tasks+=( $! )
   done
@@ -264,7 +266,7 @@ if [ $res -eq 17 ]; then
   bad_hosts=( )
 
   for i in $@; do
-    { ssh -tt $i 'sudo -n cat /dev/null; res=$?; if [ $res -ne 0 ]; then echo ""; echo "ERROR: [ HOST: $USER@$(hostname) ]: Host failed running sudo non-interactively, so they cannot be used in parallel mode. Trying again in sequential mode..."; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; res=$?; fi; exit $res'; };
+    { ssh -o ConnectTimeout=5 -tt $i 'sudo -n cat /dev/null; res=$?; if [ $res -ne 0 ]; then echo ""; echo "ERROR: [ HOST: $USER@$(hostname) ]: Host failed running sudo non-interactively, so they cannot be used in parallel mode. Trying again in sequential mode..."; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; res=$?; fi; exit $res'; };
     res=$?
 
     echo "res=$res"
@@ -273,7 +275,7 @@ if [ $res -eq 17 ]; then
       echo ""
       echo "Succeeded at enabling passwordless sudo. Trying parallel mode install..."
       echo ""
-      { ssh -tt $i 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); res2=$?; exit $res2'; };
+      { ssh -o ConnectTimeout=5 -tt $i 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); res2=$?; exit $res2'; };
       res2=$?
 
       echo "res2=$res2"
@@ -284,6 +286,8 @@ if [ $res -eq 17 ]; then
         echo ""
         echo "ERROR: [ HOST: $i ]: Failed parallel mode install. Sorry, it looks like it's going to take some manual intervention to install a git server on this host, this system can't seem to do it automatically. Giving up."
         echo ""
+      else
+        new_install_success=0
       fi
 
     elif [ $res -ne 0 ]; then
