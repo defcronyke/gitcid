@@ -61,15 +61,23 @@ gitcid_new_git_server_usage() {
   echo ""
 }
 
+gc_new_git_server_install_cancel() {
+  echo ""
+  gitcid_new_git_server_usage $@
+  echo ""
+  echo "Cancelled git server installation."
+  echo ""
+  return 2
+}
+
 gc_new_git_server_interactive() {
   echo ""
   echo "Are you sure you want to install git server(s) at the ssh path(s): $@ [ y / N ] ? "
 
   read gc_new_git_server_confirm
   if [ "$gc_new_git_server_confirm" != "y" ] && [ "$gc_new_git_server_confirm" != "Y" ]; then
-    echo "Cancelled git server installation."
-    echo ""
-    return 2
+    gc_new_git_server_install_cancel $@ || \
+      return $?
   fi
 
   return 0
@@ -78,6 +86,8 @@ gc_new_git_server_interactive() {
 tasks=( )
 
 gitcid_new_git_server() {
+  trap 'gc_new_git_server_install_cancel $@ || return $?' INT
+
   gc_new_git_server_open_web_browser=1
   gc_new_git_server_setup_sudo=1
 
