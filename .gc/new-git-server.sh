@@ -162,14 +162,18 @@ gitcid_new_git_server() {
   for j in $@; do
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
-      echo "Sequential operation: $0 -s $@"
+      echo "Sequential mode: $0 -s $@"
       echo ""
       { ssh -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; } || \
         return $?
       echo ""
     else
       echo ""
-      echo "Parallel operation (for sequential instead, use flag: -s): $0 $@"
+      echo "Parallel mode: $0 $@"
+      echo ""
+      echo "info: For sequential mode, use this command instead: $0 -s $@"
+      echo ""
+      echo "info: You need to use sequential mode the first time, to set up passwordless sudo so that parallel mode can work properly."
       echo ""
       { ssh -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
     fi
