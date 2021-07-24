@@ -154,13 +154,13 @@ Install a git server at a target ssh location, using tools from this project:
 
 Currently supported target platforms:
 
+- Debian Stable (amd64)
 - Debian Testing (amd64)
 - Raspberry Pi OS (armhf)
 - Raspberry Pi OS (aarch64)
 
 Platform support wishlist (Please feel free to test and contribute fix suggestions if you'd like to help with adding support for these):
 
-- Debian Stable (amd64)
 - Arch Linux (amd64)
 
 Maybe it works on other Debian or Debian-based platforms, but this hasn't been tested yet.
