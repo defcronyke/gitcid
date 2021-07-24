@@ -1,4 +1,4 @@
-# GitCid
+# [GitCid](https://gitlab.com/defcronyke/gitcid)
 
 ---
 
