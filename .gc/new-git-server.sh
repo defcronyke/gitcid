@@ -175,13 +175,13 @@ gitcid_new_git_server() {
   echo ""
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
+
   for j in $@; do
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
       echo "Sequential mode: $0 -s $@"
       echo ""
-      { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; } || \
-        return $?
+      { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; }
       echo ""
     else
       echo ""
@@ -195,10 +195,17 @@ gitcid_new_git_server() {
     fi
   done
 
+  loop_res=0
   if [ $gc_new_git_server_setup_sudo -ne 0 ]; then
     for i in ${tasks[@]}; do
-      wait $i || \
-        return $?
+      wait $i
+      loop_res=$?
+      if [ $loop_res -eq 255 ]; then
+        echo "error: Failed connecting with ssh to host."
+        continue
+      elif [ $loop_res -ne 0 ]; then
+        return $loop_res
+      fi
     done
   fi
 
@@ -208,8 +215,7 @@ gitcid_new_git_server() {
   return 0
 }
 
-gitcid_new_git_server $@
-res=$?
+gitcid_new_git_server $@; res=$?
 
 # If cancelled.
 if [ $res -eq 20 ]; then
@@ -240,7 +246,11 @@ if [ $res -ne 0 ]; then
 
     echo "res=$res"
 
-    if [ $res -eq 19 ]; then
+    if [ $res -eq 255 ]; then
+      echo "error: Failed connecting with ssh to host: $i"
+      continue
+
+    elif [ $res -eq 19 ]; then
       echo ""
       echo "Succeeded at enabling passwordless sudo. Trying parallel mode install..."
       echo ""

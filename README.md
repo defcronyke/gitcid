@@ -138,6 +138,8 @@ There are a few more dependencies needed depending on your OS, but they should b
    .gc/init.sh -b user@host:~/remote-bare-repo1.git local-bare-repo1.git ./local-bare-repo2
    ```
 
+---
+
 ## Install a Dedicated Git Server
 
 Install a git server at a target ssh location, using tools from this project:
@@ -177,7 +179,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
   Just make sure you're inside the `gitcid/` folder first (or any `gitcid`-enabled git repo), before trying to run any `gitcid` commands.
 
-### Git Server Installation and Usage
+### Git Server Installation
 
 1. Install GitCid:
 
@@ -238,3 +240,45 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
    ```
 
 3. If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details. During parallel installs (the default behaviour unless using the `-s` flag variants), if non-interactive sudo support isn't configured on the target, the system will fall back to sequential install mode for any targets which need the sudo password typed manually. After typing the sudo password once successfully, a passwordless sudo configuration will be attempted on the target, so that any future interactions with that target can be fully-automated.
+
+### Git Server Usage
+
+Here's some examples of how to use your git server for some common git-related tasks. The following commands should be run from inside your `gitcid/` folder, or inside any `gitcid`-enabled git repo.
+
+1. Create a new git remote repo on the git server, for example, a repo named `repo1.git` at the hostname `git1`:
+
+   ```shell
+   .gc/new-remote.sh git1:repo1
+   ```
+
+   Newly created remote repos will become available for use after a short delay, typically less than 1 minute. If you receive an error when trying to use a newly created remote repo, try again after 1 minute has passed since creating it and it should work.
+
+2. Clone a local copy of your new repo from the server:
+
+   ```shell
+   git clone git1:~/git/repo1.git && \
+   cd repo1
+   ```
+
+3. Commit some changes to your new repo, then push it to the origin remote on your git server:
+
+   ```shell
+   date | tee -a test1.txt
+   git add .
+   git commit -m "A test commit."
+   git push
+   ```
+
+4. (Optional) Add `gitcid` to your local copy of your git repo if you'd like to use any `gitcid` commands while working inside your repo. Run the following command while inside your repo to install `gitcid` features:
+
+   ```shell
+   source <(curl -sL https://tinyurl.com/gitcid) -e
+   ```
+
+5. (Optional) With `gitcid` added to your repo from the previous step, you can commit and push more easily:
+
+   ```shell
+   .gc/commit-push.sh Commit message.
+   ```
+
+---
