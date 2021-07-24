@@ -256,7 +256,7 @@ Here's some examples of how to use your git server for some common git-related t
 2. Clone a local copy of your new repo from the server:
 
    ```shell
-   git clone git1:~/git/repo1.git && \
+   git clone git1:~/git/repo1.git
    cd repo1
    ```
 
