@@ -54,7 +54,20 @@ gitcid_new_remote() {
   #
   #   git clone git:~/git/repo1.git
   #
-  gc_remote_repo="$(gc_remote_repo="$gc_remote_repo"; printf '%s:~/git/new/%s.git\n' "$(echo "$gc_remote_repo" | cut -d: -f1)" "$(echo "$gc_remote_repo" | cut -d: -f2 | sed 's/~\/git\/new\///' | sed 's/~\/git//' | sed 's/\.git$//')")"
+
+  # Check if we're using a special "git server path", for example:
+  #
+  #   user@hostname:repo1.git
+  #     or
+  #   hostname:repo1
+  #
+  gc_git_server_path_detected=1
+  gc_test_repo_path="$(echo "$gc_remote_repo" | cut -d: -f2)"
+  echo "$gc_test_repo_path" | grep -P "^~|^/" || gc_git_server_path_detected=0
+  if [ $gc_git_server_path_detected -eq 0 ]; then
+    echo "note: It looks like you've supplied a \"git server path\". Creating new git remote repo using special git server behaviour..."
+    gc_remote_repo="$(gc_remote_repo="$gc_remote_repo"; printf '%s:~/git/new/%s.git\n' "$(echo "$gc_remote_repo" | cut -d: -f1)" "$(echo "$gc_remote_repo" | cut -d: -f2 | sed 's/~\/git\/new\///' | sed 's/~\/git//' | sed 's/\.git$//')")"
+  fi
 
   tmpdir=""
   tmpdir="$(mktemp -d)"

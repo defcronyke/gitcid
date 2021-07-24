@@ -5,9 +5,9 @@
 gitcid_git_servers_open() {
   in_args="$@"
 
-  .gc/git-servers.sh >/dev/null && \
+  .gc/git-servers.sh $@ >/dev/null && \
   cd .gc/discover-git-server-dns && \
-  ./git-web-open.sh && \
+  ./git-web-open.sh $@ && \
   cd ../..
 
   return $res

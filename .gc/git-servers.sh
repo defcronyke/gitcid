@@ -13,7 +13,7 @@ gitcid_git_servers() {
     git pull >/dev/null 2>&1
   fi
 
-  ./git-web.sh
+  ./git-web.sh $@
 
   res=$?
 
