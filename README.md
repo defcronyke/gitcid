@@ -148,6 +148,8 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ## Install a Dedicated Git Server
 
+---
+
 Install a git server at a target ssh location, using tools from this project:
 
 [https://gitlab.com/defcronyke/git-server](https://gitlab.com/defcronyke/git-server)
@@ -167,7 +169,11 @@ Maybe it works on other Debian or Debian-based platforms, but this hasn't been t
 
 WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section to install a dedicated git server onto a freshly installed Linux distro which is intended to be used only as a dedicated git server! This will install some dependencies automatically and do some system configurations that you might not prefer to have on devices that are being used for other purposes. USE AT YOUR OWN RISK! YOU HAVE BEEN WARNED!!
 
+---
+
 ### TLDR; Let's just install the git server
+
+---
 
 - Install a `git server` to a remote `ssh` location (or two as in this example), by running the following command in a `bash` terminal:
 
@@ -185,7 +191,11 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
   Just make sure you're inside the `gitcid/` folder first (or any `gitcid`-enabled git repo), before trying to run any `gitcid` commands.
 
+---
+
 ### Git Server Installation
+
+---
 
 1. Install GitCid:
 
@@ -193,7 +203,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
    source <(curl -sL https://tinyurl.com/gitcid)
    ```
 
-   - If successful, you will now be inside the freshly downloaded `./gitcid/` folder. You need to be inside this folder for step 2.
+   If successful, you will now be inside the freshly downloaded `./gitcid/` folder. You need to be inside this folder for step 2.
 
 2. Install new git server(s) onto dedicated device(s) at the given `ssh` target location(s):
 
@@ -245,9 +255,13 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
    .gc/new-git-server.sh -yo pi@git1 pi@git2 $USER@gitlab
    ```
 
-3. If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details. During parallel installs (the default behaviour unless using the `-s` flag variants), if non-interactive sudo support isn't configured on the target, the system will fall back to sequential install mode for any targets which need the sudo password typed manually. After typing the sudo password once successfully, a passwordless sudo configuration will be attempted on the target, so that any future interactions with that target can be fully-automated.
+   If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details. During parallel installs (the default behaviour unless using the `-s` flag variants), if non-interactive sudo support isn't configured on the target, the system will fall back to sequential install mode for any targets which need the sudo password typed manually. After typing the sudo password once successfully, a passwordless sudo configuration will be attempted on the target, so that any future interactions with that target can be fully-automated.
+
+---
 
 ### Git Server Usage
+
+---
 
 Here's some examples of how to use your git server for some common git-related tasks. The following commands should be run from inside your `gitcid/` folder, or inside any `gitcid`-enabled git repo.
 
