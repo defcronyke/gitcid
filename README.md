@@ -144,7 +144,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ---
 
-## Install a Dedicated Git Server
+## [Install a Dedicated Git Server](#install-a-dedicated-git-server)
 
 ---
 
