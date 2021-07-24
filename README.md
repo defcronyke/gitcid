@@ -17,7 +17,7 @@ Some power tools for use with [`git`](https://git-scm.com):
 - Specify your `CI/CD pipelines` in a `yaml` format that might be comfortable for you if you've used other `CI/CD` systems before.
 - Quickly deploy [`dedicated git servers`](#install-a-dedicated-git-server) to `ssh` remote locations using one command. It's recommended to install them on some dedicated devices on your LAN such as `Raspberry Pi` running `Raspberry Pi OS (aarch64 or armhf)`. Regular `Debian (amd64)` targets are also supported. Perhaps it works on some `Debian-derived` distros as well, but that hasn't been tested.
 - Plug in some removable disks to your `git server` and it will find and share any `git repos` it finds to the rest of your LAN.
-- Browse your plugged-in `git repos` with the familiar `GitWeb` UI.
+- Browse your plugged-in `git repos` with a familiar `GitWeb` UI.
 
 ---
 
