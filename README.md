@@ -8,7 +8,7 @@
 
 ## [Table of Contents](#table-of-contents)
 
-- [GitCid](/)
+- [GitCid](#gitcid)
   - [Table of Contents](#table-of-contents)
   - [Links](#links)
     - [Website](#website)
