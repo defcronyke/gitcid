@@ -1,4 +1,4 @@
-# GitCid | power tools for `git` | gitc.id
+# GitCid - power tools for `git` - gitc.id
 
 ---
 
@@ -8,7 +8,7 @@
 
 ## [Table of Contents](#table-of-contents)
 
-- [GitCid | power tools for `git` | gitc.id](#gitcid--power-tools-for-git--gitcid)
+- [GitCid - power tools for `git` - gitc.id](#gitcid---power-tools-for-git---gitcid)
   - [Table of Contents](#table-of-contents)
   - [Links](#links)
   - [Terms of Use](#terms-of-use)
