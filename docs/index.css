@@ -15,8 +15,7 @@ a:hover, a:active {
 }
 
 pre.sourceCode {
-  padding-top: 0.7em;
-  padding-bottom: 0.7em;
+  padding: 0.7em;
 }
 
 h1.title {
