@@ -6,6 +6,30 @@
 
 ---
 
+## [Table of Contents](#table-of-contents)
+
+- [GitCid ⊙ power tools for [`git`](https://git-scm.com) ⊙ [gitc.id](https://gitc.id)](#gitcid--power-tools-for-git--gitcid)
+  - [Table of Contents](#table-of-contents)
+  - [Links](#links)
+  - [Terms of Use](#terms-of-use)
+  - [Features](#features)
+  - [Dependencies](#dependencies)
+  - [Quickstart](#quickstart)
+    - [Download GitCid](#download-gitcid)
+    - [Create a new git remote with GitCid features](#create-a-new-git-remote-with-gitcid-features)
+  - [Usage Examples](#usage-examples)
+    - [Get Usage Help](#get-usage-help)
+    - [Install GitCid into an existing git repo](#install-gitcid-into-an-existing-git-repo)
+    - [Make new git repositories](#make-new-git-repositories)
+  - [Install a Dedicated Git Server](#install-a-dedicated-git-server)
+    - [TLDR; Let's just install the git server](#tldr-lets-just-install-the-git-server)
+    - [Git Server Install Instructions](#git-server-install-instructions)
+    - [Git Server Usage Examples](#git-server-usage-examples)
+
+---
+
+## [Links](#links)
+
 [https://gitc.id](https://gitc.id)
 
 [https://gitlab.com/defcronyke/gitcid](https://gitlab.com/defcronyke/gitcid)  
@@ -13,7 +37,7 @@
 
 ---
 
-## Terms of Use
+## [Terms of Use](#terms-of-use)
 
 Use of this software is governed by the terms of [the included MIT License](https://gitlab.com/defcronyke/gitcid/-/raw/master/LICENSE) ([GitHub mirror](https://raw.githubusercontent.com/defcronyke/gitcid/master/LICENSE)).
 
@@ -51,7 +75,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ---
 
-### Download GitCid
+### [Download GitCid](#download-gitcid)
 
 1. Make sure you've installed [`git`](https://git-scm.com) and
    [`curl`](https://man7.org/linux/man-pages/man1/curl.1.html) first,
@@ -69,7 +93,7 @@ There are a few more dependencies needed depending on your OS, but they should b
    git clone https://gitlab.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
    ```
 
-### Create a new git remote with GitCid CI/CD features added to it
+### [Create a new git remote with GitCid features](#create-a-new-git-remote-with-gitcid-features)
 
 1. In the `gitcid` folder, run this command:
 
@@ -109,7 +133,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ---
 
-### Get Usage Help
+### [Get Usage Help](#get-usage-help)
 
 - Run this command from the top-level directory of the GitCid repo, for usage info:
 
@@ -117,7 +141,7 @@ There are a few more dependencies needed depending on your OS, but they should b
   .gc/init.sh -h
   ```
 
-### Install GitCid into an existing git repository
+### [Install GitCid into an existing git repo](#install-gitcid-into-an-existing-git-repo)
 
 - Run this command from the top-level directory of your existing git repo that
   you'd like to install GitCid into (it works for both regular and bare repos):
@@ -126,7 +150,7 @@ There are a few more dependencies needed depending on your OS, but they should b
   source <(curl -sL https://tinyurl.com/gitcid) -e
   ```
 
-### Make new git repositories
+### [Make new git repositories](#make-new-git-repositories)
 
 - NOTE: The remote targets need to have `rsync` installed.
 
@@ -190,7 +214,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 ---
 
-### TLDR; Let's just install the git server
+### [TLDR; Let's just install the git server](#tldr-lets-just-install-the-git-server)
 
 - Install a `git server` to a remote `ssh` location (or two as in this example), by running the following command in a `bash` terminal:
 
@@ -210,7 +234,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 ---
 
-### Git Server Installation
+### [Git Server Install Instructions](#git-server-install-instructions)
 
 1. Install GitCid:
 
@@ -274,7 +298,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 ---
 
-### Git Server Usage
+### [Git Server Usage Examples](#git-server-usage-examples)
 
 Here's some examples of how to use your git server for some common git-related tasks. The following commands should be run from inside your `gitcid/` folder, or inside any `gitcid`-enabled git repo.
 

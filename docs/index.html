@@ -2,11 +2,41 @@
 <hr />
 <p><a href="https://github.com/sponsors/defcronyke"><img src="https://img.shields.io/static/v1?label=Sponsor&amp;message=%E2%9D%A4&amp;logo=GitHub&amp;link=https://github.com/sponsors/defcronyke" alt="sponsor the project" /></a> <a href="https://defcronyke.gitlab.io/epaper-idf/jeremy-profile-paint-bw.png">Copyright © 2021</a> <a href="https://eternalvoid.net">Jeremy Carter</a> <code>&lt;</code><a href="mailto:Jeremy%20Carter%20%3Cjeremy@jeremycarter.ca%3E?subject=gitcid">jeremy@jeremycarter.ca</a><code>&gt;</code></p>
 <hr />
+<h2 id="table-of-contents"><a href="#table-of-contents">Table of Contents</a></h2>
+<ul>
+<li><a href="#gitcid--power-tools-for-git--gitcid">GitCid ⊙ power tools for [<code>git</code>](https://git-scm.com) ⊙ [gitc.id](https://gitc.id)</a>
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#links">Links</a></li>
+<li><a href="#terms-of-use">Terms of Use</a></li>
+<li><a href="#features">Features</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#quickstart">Quickstart</a>
+<ul>
+<li><a href="#download-gitcid">Download GitCid</a></li>
+<li><a href="#create-a-new-git-remote-with-gitcid-features">Create a new git remote with GitCid features</a></li>
+</ul></li>
+<li><a href="#usage-examples">Usage Examples</a>
+<ul>
+<li><a href="#get-usage-help">Get Usage Help</a></li>
+<li><a href="#install-gitcid-into-an-existing-git-repo">Install GitCid into an existing git repo</a></li>
+<li><a href="#make-new-git-repositories">Make new git repositories</a></li>
+</ul></li>
+<li><a href="#install-a-dedicated-git-server">Install a Dedicated Git Server</a>
+<ul>
+<li><a href="#tldr-lets-just-install-the-git-server">TLDR; Let’s just install the git server</a></li>
+<li><a href="#git-server-install-instructions">Git Server Install Instructions</a></li>
+<li><a href="#git-server-usage-examples">Git Server Usage Examples</a></li>
+</ul></li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="links"><a href="#links">Links</a></h2>
 <p><a href="https://gitc.id">https://gitc.id</a></p>
 <p><a href="https://gitlab.com/defcronyke/gitcid">https://gitlab.com/defcronyke/gitcid</a><br />
 <a href="https://github.com/defcronyke/gitcid">https://github.com/defcronyke/gitcid</a></p>
 <hr />
-<h2 id="terms-of-use">Terms of Use</h2>
+<h2 id="terms-of-use"><a href="#terms-of-use">Terms of Use</a></h2>
 <p>Use of this software is governed by the terms of <a href="https://gitlab.com/defcronyke/gitcid/-/raw/master/LICENSE">the included MIT License</a> (<a href="https://raw.githubusercontent.com/defcronyke/gitcid/master/LICENSE">GitHub mirror</a>).</p>
 <hr />
 <h2 id="features"><a href="#features">Features</a></h2>
@@ -35,7 +65,7 @@
 <hr />
 <h2 id="quickstart"><a href="#quickstart">Quickstart</a></h2>
 <hr />
-<h3 id="download-gitcid">Download GitCid</h3>
+<h3 id="download-gitcid"><a href="#download-gitcid">Download GitCid</a></h3>
 <ol type="1">
 <li><p>Make sure you’ve installed <a href="https://git-scm.com"><code>git</code></a> and <a href="https://man7.org/linux/man-pages/man1/curl.1.html"><code>curl</code></a> first, then run the following command:</p>
 <pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid)</code></pre>
@@ -43,7 +73,7 @@
 <li><p>(Optional) Or if you prefer, you can run this command instead:</p>
 <pre class="shell"><code>git clone https://gitlab.com/defcronyke/gitcid.git &amp;&amp; cd gitcid &amp;&amp; echo &quot;&quot; &amp;&amp; .gc/init.sh -h</code></pre></li>
 </ol>
-<h3 id="create-a-new-git-remote-with-gitcid-cicd-features-added-to-it">Create a new git remote with GitCid CI/CD features added to it</h3>
+<h3 id="create-a-new-git-remote-with-gitcid-features"><a href="#create-a-new-git-remote-with-gitcid-features">Create a new git remote with GitCid features</a></h3>
 <ol type="1">
 <li><p>In the <code>gitcid</code> folder, run this command:</p>
 <pre class="shell"><code>.gc/new-remote.sh ~/repo1.git</code></pre>
@@ -64,17 +94,17 @@
 <hr />
 <h2 id="usage-examples"><a href="#usage-examples">Usage Examples</a></h2>
 <hr />
-<h3 id="get-usage-help">Get Usage Help</h3>
+<h3 id="get-usage-help"><a href="#get-usage-help">Get Usage Help</a></h3>
 <ul>
 <li><p>Run this command from the top-level directory of the GitCid repo, for usage info:</p>
 <pre class="shell"><code>.gc/init.sh -h</code></pre></li>
 </ul>
-<h3 id="install-gitcid-into-an-existing-git-repository">Install GitCid into an existing git repository</h3>
+<h3 id="install-gitcid-into-an-existing-git-repo"><a href="#install-gitcid-into-an-existing-git-repo">Install GitCid into an existing git repo</a></h3>
 <ul>
 <li><p>Run this command from the top-level directory of your existing git repo that you’d like to install GitCid into (it works for both regular and bare repos):</p>
 <pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre></li>
 </ul>
-<h3 id="make-new-git-repositories">Make new git repositories</h3>
+<h3 id="make-new-git-repositories"><a href="#make-new-git-repositories">Make new git repositories</a></h3>
 <ul>
 <li><p>NOTE: The remote targets need to have <code>rsync</code> installed.</p></li>
 <li><p>Run these <code>.gc/init.sh</code> commands from the top-level directory of the GitCid repo, to make new GitCid git repositories.</p></li>
@@ -110,7 +140,7 @@
 <p>Maybe it works on other Debian or Debian-based platforms, but this hasn’t been tested yet.</p>
 <p>WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section to install a dedicated git server onto a freshly installed Linux distro which is intended to be used only as a dedicated git server! This will install some dependencies automatically and do some system configurations that you might not prefer to have on devices that are being used for other purposes. USE AT YOUR OWN RISK! YOU HAVE BEEN WARNED!!</p>
 <hr />
-<h3 id="tldr-lets-just-install-the-git-server">TLDR; Let’s just install the git server</h3>
+<h3 id="tldr-lets-just-install-the-git-server"><a href="#tldr-lets-just-install-the-git-server">TLDR; Let’s just install the git server</a></h3>
 <ul>
 <li><p>Install a <code>git server</code> to a remote <code>ssh</code> location (or two as in this example), by running the following command in a <code>bash</code> terminal:</p>
 <pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) &amp;&amp; .gc/new-git-server.sh -o pi@git1 $USER@gitlab</code></pre>
@@ -120,7 +150,7 @@
 <p>Just make sure you’re inside the <code>gitcid/</code> folder first (or any <code>gitcid</code>-enabled git repo), before trying to run any <code>gitcid</code> commands.</p></li>
 </ul>
 <hr />
-<h3 id="git-server-installation">Git Server Installation</h3>
+<h3 id="git-server-install-instructions"><a href="#git-server-install-instructions">Git Server Install Instructions</a></h3>
 <ol type="1">
 <li><p>Install GitCid:</p>
 <pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid)</code></pre>
@@ -161,7 +191,7 @@
 <p>If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details. During parallel installs (the default behaviour unless using the <code>-s</code> flag variants), if non-interactive sudo support isn’t configured on the target, the system will fall back to sequential install mode for any targets which need the sudo password typed manually. After typing the sudo password once successfully, a passwordless sudo configuration will be attempted on the target, so that any future interactions with that target can be fully-automated.</p></li>
 </ol>
 <hr />
-<h3 id="git-server-usage">Git Server Usage</h3>
+<h3 id="git-server-usage-examples"><a href="#git-server-usage-examples">Git Server Usage Examples</a></h3>
 <p>Here’s some examples of how to use your git server for some common git-related tasks. The following commands should be run from inside your <code>gitcid/</code> folder, or inside any <code>gitcid</code>-enabled git repo.</p>
 <ol type="1">
 <li><p>Create a new git remote repo on the git server, for example, a repo named <code>repo1.git</code> at the hostname <code>git1</code>:</p>
