@@ -88,19 +88,24 @@ gitcid_new_remote() {
   remote_localname="$(echo $gc_remote_repo_clone | sed 's/.git$//g' | xargs basename)"
 
   if [ $res -eq 0 ]; then
-    echo
+    echo ""
     echo "----------"
-    echo
+    echo ""
     echo "Created a new remote git repo. To clone your new repo, run this command:"
-    echo
+    echo ""
     echo "  git clone $gc_remote_repo_clone && cd $remote_localname"
-    echo
+    echo ""
     echo "To add GitCid to your freshly cloned repo, run this command inside the repo:"
-    echo
+    echo ""
     echo "  source <(curl -sL https://tinyurl.com/gitcid) -e"
-    echo
+    echo ""
+    echo "Here's a one-line version of both the above commands together, for copy-paste convenience:"
+    echo ""
+    echo "  git clone $gc_remote_repo_clone && cd $remote_localname && \\"
+    echo "  source <(curl -sL https://tinyurl.com/gitcid) -e"
+    echo ""
     echo "----------"
-    echo
+    echo ""
   fi
 
   if [ "$tmpdir" == "/" ] || \
