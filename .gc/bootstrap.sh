@@ -43,8 +43,8 @@ gitcid_bootstrap() {
 		new_args=()
 		for arg in "$@"; do
       # If existing repo arg is set: -e
-			printf "%b\n" "-e" | grep -P "^\-.*e.*$|\-\-existing-repo" >/dev/null
-      # printf "%b\n" "$arg" | grep -P "^\-.*e.*$|\-\-existing-repo" >/dev/null
+      printf "%b\n" "$arg" | grep -P "^\-.*e.*$|\-\-existing-repo" >/dev/null
+			# printf "%b\n" "-e" | grep -P "^\-.*e.*$|\-\-existing-repo" >/dev/null
 			if [ $? -eq 0 ]; then
 				GITCID_EXISTING_REPO="y"
 
@@ -60,8 +60,8 @@ gitcid_bootstrap() {
 			fi
 
       # If dev arg is set: -d
-      printf "%b\n" "-d" | grep -P "^\-.*d.*$|\-\-dev" >/dev/null
-      # printf "%b\n" "$arg" | grep -P "^\-.*d.*$|\-\-dev" >/dev/null
+      printf "%b\n" "$arg" | grep -P "^\-.*d.*$|\-\-dev" >/dev/null
+      # printf "%b\n" "-d" | grep -P "^\-.*d.*$|\-\-dev" >/dev/null
 			if [ $? -eq 0 ]; then
         # if [ ! -z ${GITCID_EXISTING_REPO+x} ]; then
         #   echo "error: Cannot specify command line flags -e and -d together."
