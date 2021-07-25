@@ -40,6 +40,10 @@ gitcid_bootstrap() {
   # ----------
 
 	if [ $# -ge 1 ]; then
+    echo ""
+    echo "args: $@"
+    echo ""
+
 		new_args=()
 		for arg in "$@"; do
       # If existing repo arg is set: -e
