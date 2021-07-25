@@ -1,5 +1,7 @@
 body {
   background-color: rgba(147, 226, 219, 0.959);
+  margin-left: 3em;
+  margin-right: 3em;
 }
 
 body a {
@@ -13,5 +15,5 @@ a:hover, a:active {
 }
 
 .sourceCode {
-  padding: 0.8em;
+  padding: 0.7em;
 }
