@@ -82,7 +82,7 @@ There are a few more dependencies needed depending on your OS, but they should b
    then run the following command:
 
    ```shell
-   bash <(curl -sL https://tinyurl.com/gitcid)
+   source <(curl -sL https://tinyurl.com/gitcid)
    ```
 
    When this command finishes, it will have created a new folder called `gitcid` in your current directory, and then it will bring you into this new folder.
@@ -122,7 +122,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 4. When you make your new remote repo, you will also be given a command you can use to add `GitCid` features to your locally cloned repo that you cloned from the remote. Here's that same command in case you need it. Make sure you're inside your local repo when you run this command:
 
    ```shell
-   bash <(curl -sL https://tinyurl.com/gitcid) -e
+   source <(curl -sL https://tinyurl.com/gitcid) -e
    ```
 
    The above command will add GitCid to your git repo in a .gitignore'd folder called: `.gc/`
@@ -147,7 +147,7 @@ There are a few more dependencies needed depending on your OS, but they should b
   you'd like to install GitCid into (it works for both regular and bare repos):
 
   ```shell
-  bash <(curl -sL https://tinyurl.com/gitcid) -e
+  source <(curl -sL https://tinyurl.com/gitcid) -e
   ```
 
 ### [Make new git repositories](#make-new-git-repositories)
@@ -219,7 +219,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 - Install a `git server` to a remote `ssh` location (or two as in this example), by running the following command in a `bash` terminal:
 
   ```shell
-  bash <(curl -sL https://tinyurl.com/gitcid) && .gc/new-git-server.sh -o pi@git1 $USER@gitlab
+  source <(curl -sL https://tinyurl.com/gitcid) && .gc/new-git-server.sh -o pi@git1 $USER@gitlab
   ```
 
   Usually it just works, and with the `-o` flag used above, it should auto-open a web page for each git server it finds on your network after the install is finished. For more info and other options, see the next section below.
@@ -239,7 +239,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 1. Install GitCid:
 
    ```shell
-   bash <(curl -sL https://tinyurl.com/gitcid)
+   source <(curl -sL https://tinyurl.com/gitcid)
    ```
 
    If successful, you will now be inside the freshly downloaded `./gitcid/` folder. You need to be inside this folder for step 2.
@@ -329,7 +329,7 @@ Here's some examples of how to use your git server for some common git-related t
 4. (Optional) Add `gitcid` to your local copy of your git repo if you'd like to use any `gitcid` commands while working inside your repo. Run the following command while inside your repo to install `gitcid` features:
 
    ```shell
-   bash <(curl -sL https://tinyurl.com/gitcid) -e
+   source <(curl -sL https://tinyurl.com/gitcid) -e
    ```
 
 5. (Optional) With `gitcid` added to your repo from the previous step, you can commit and push more easily:

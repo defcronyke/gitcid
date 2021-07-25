@@ -68,7 +68,7 @@
 <h3 id="download-gitcid"><a href="#download-gitcid">Download GitCid</a></h3>
 <ol type="1">
 <li><p>Make sure you’ve installed <a href="https://git-scm.com"><code>git</code></a> and <a href="https://man7.org/linux/man-pages/man1/curl.1.html"><code>curl</code></a> first, then run the following command:</p>
-<pre class="shell"><code>bash &lt;(curl -sL https://tinyurl.com/gitcid)</code></pre>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid)</code></pre>
 <p>When this command finishes, it will have created a new folder called <code>gitcid</code> in your current directory, and then it will bring you into this new folder.</p></li>
 <li><p>(Optional) Or if you prefer, you can run this command instead:</p>
 <pre class="shell"><code>git clone https://gitlab.com/defcronyke/gitcid.git &amp;&amp; cd gitcid &amp;&amp; echo &quot;&quot; &amp;&amp; .gc/init.sh -h</code></pre></li>
@@ -88,7 +88,7 @@
 <pre class="shell"><code>git clone git1:~/repo1.git &amp;&amp; cd repo1</code></pre>
 <p>It’s just the regular way of cloning git repos.</p></li>
 <li><p>When you make your new remote repo, you will also be given a command you can use to add <code>GitCid</code> features to your locally cloned repo that you cloned from the remote. Here’s that same command in case you need it. Make sure you’re inside your local repo when you run this command:</p>
-<pre class="shell"><code>bash &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre>
 <p>The above command will add GitCid to your git repo in a .gitignore’d folder called: <code>.gc/</code></p></li>
 </ol>
 <hr />
@@ -102,7 +102,7 @@
 <h3 id="install-gitcid-into-an-existing-git-repo"><a href="#install-gitcid-into-an-existing-git-repo">Install GitCid into an existing git repo</a></h3>
 <ul>
 <li><p>Run this command from the top-level directory of your existing git repo that you’d like to install GitCid into (it works for both regular and bare repos):</p>
-<pre class="shell"><code>bash &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre></li>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre></li>
 </ul>
 <h3 id="make-new-git-repositories"><a href="#make-new-git-repositories">Make new git repositories</a></h3>
 <ul>
@@ -143,7 +143,7 @@
 <h3 id="tldr-lets-just-install-the-git-server"><a href="#tldr-lets-just-install-the-git-server">TLDR; Let’s just install the git server</a></h3>
 <ul>
 <li><p>Install a <code>git server</code> to a remote <code>ssh</code> location (or two as in this example), by running the following command in a <code>bash</code> terminal:</p>
-<pre class="shell"><code>bash &lt;(curl -sL https://tinyurl.com/gitcid) &amp;&amp; .gc/new-git-server.sh -o pi@git1 $USER@gitlab</code></pre>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) &amp;&amp; .gc/new-git-server.sh -o pi@git1 $USER@gitlab</code></pre>
 <p>Usually it just works, and with the <code>-o</code> flag used above, it should auto-open a web page for each git server it finds on your network after the install is finished. For more info and other options, see the next section below.</p></li>
 <li><p>The example above will also install <code>gitcid</code>, which makes it easier to work with the git server. If you already have <code>gitcid</code> installed, you don’t need to install it again, so in that case you can omit the first part of the above command, for example:</p>
 <pre class="shell"><code>.gc/new-git-server.sh -o pi@git1 $USER@gitlab</code></pre>
@@ -153,7 +153,7 @@
 <h3 id="git-server-install-instructions"><a href="#git-server-install-instructions">Git Server Install Instructions</a></h3>
 <ol type="1">
 <li><p>Install GitCid:</p>
-<pre class="shell"><code>bash &lt;(curl -sL https://tinyurl.com/gitcid)</code></pre>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid)</code></pre>
 <p>If successful, you will now be inside the freshly downloaded <code>./gitcid/</code> folder. You need to be inside this folder for step 2.</p></li>
 <li><p>Install new git server(s) onto dedicated device(s) at the given <code>ssh</code> target location(s):</p>
 <ul>
@@ -206,7 +206,7 @@ git add .
 git commit -m &quot;A test commit.&quot;
 git push</code></pre></li>
 <li><p>(Optional) Add <code>gitcid</code> to your local copy of your git repo if you’d like to use any <code>gitcid</code> commands while working inside your repo. Run the following command while inside your repo to install <code>gitcid</code> features:</p>
-<pre class="shell"><code>bash &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre></li>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre></li>
 <li><p>(Optional) With <code>gitcid</code> added to your repo from the previous step, you can commit and push more easily:</p>
 <pre class="shell"><code>.gc/commit-push.sh Commit message.</code></pre></li>
 </ol>
