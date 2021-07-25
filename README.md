@@ -1,14 +1,14 @@
-# GitCid ⊙ power tools for `git` ⊙ gitc.id
+# GitCid | power tools for `git` | gitc.id
 
 ---
 
-[![sponsor the project](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/defcronyke)](https://github.com/sponsors/defcronyke) [Copyright © 2021](https://defcronyke.gitlab.io/epaper-idf/jeremy-profile-paint-bw.png) [Jeremy Carter](https://eternalvoid.net) `<`[jeremy@jeremycarter.ca](mailto:Jeremy%20Carter%20<jeremy@jeremycarter.ca>?subject=gitcid)`>`
+⊙ [![sponsor the project](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/defcronyke)](https://github.com/sponsors/defcronyke) ⊙ [Copyright © 2021](https://defcronyke.gitlab.io/epaper-idf/jeremy-profile-paint-bw.png) [Jeremy Carter](https://eternalvoid.net) `<`[jeremy@jeremycarter.ca](mailto:Jeremy%20Carter%20<jeremy@jeremycarter.ca>?subject=gitcid)`>` ⊙
 
 ---
 
 ## [Table of Contents](#table-of-contents)
 
-- [GitCid ⊙ power tools for `git` ⊙ gitc.id](#gitcid--power-tools-for-git--gitcid)
+- [GitCid | power tools for `git` | gitc.id](#gitcid--power-tools-for-git--gitcid)
   - [Table of Contents](#table-of-contents)
   - [Links](#links)
   - [Terms of Use](#terms-of-use)
