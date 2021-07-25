@@ -9,6 +9,19 @@
 gitcid_debian_fix_docker_stuck() {
   docker ps >/dev/null 2>&1
   if [ $? -ne 0 ]; then
+    # Skip everything in here if we're in Windows WSL2
+    # because Docker works differently on Windows.
+    uname -a | grep "microsoft" >/dev/null
+    if [ $? -eq 0 ]; then
+      echo ""
+      echo ""
+      echo "NOTICE: You appear to be on Windows ( maybe WSL2 ? ), and Docker isn't running."
+      echo "For CI/CD features to work, you'll need to start Docker first on your own."
+      echo ""
+      echo ""
+      return 28
+    fi
+
     echo ""
     echo ""
     echo "info: Poking docker in case maybe it's stuck. Starting dockerd..."
