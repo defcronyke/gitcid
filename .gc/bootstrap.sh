@@ -190,6 +190,8 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
     cd ..; \
     echo ""
 
+    cd gitcid
+
     return 0
   fi
 
