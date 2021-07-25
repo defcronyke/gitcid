@@ -1,4 +1,4 @@
-# [GitCid](https://gitlab.com/defcronyke/gitcid) - [https://gitc.id](https://gitc.id) - power tools for [`git`](https://git-scm.com)
+# [GitCid](https://gitlab.com/defcronyke/gitcid) ⊙ [https://gitc.id](https://gitc.id) ⊙ power tools for [`git`](https://git-scm.com)
 
 ---
 
