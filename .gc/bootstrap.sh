@@ -63,10 +63,10 @@ gitcid_bootstrap() {
       printf "%b\n" "-d" | grep -P "^\-.*d.*$|\-\-dev" >/dev/null
       # printf "%b\n" "$arg" | grep -P "^\-.*d.*$|\-\-dev" >/dev/null
 			if [ $? -eq 0 ]; then
-        if [ ! -z ${GITCID_EXISTING_REPO+x} ]; then
-          echo "error: Cannot specify command line flags -e and -d together."
-          return 2
-        fi
+        # if [ ! -z ${GITCID_EXISTING_REPO+x} ]; then
+        #   echo "error: Cannot specify command line flags -e and -d together."
+        #   return 2
+        # fi
 
 				GITCID_DEV_REPO="y"
 
