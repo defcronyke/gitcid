@@ -19,9 +19,9 @@ a:hover, a:active {
 }
 
 h1.title {
-  font-size: 2.7em;
+  font-size: 2.5em;
 }
 
-#table-of-contents ul {
-  padding-left: 1em;
+ul {
+  padding-left: 0.6em;
 }
