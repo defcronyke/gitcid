@@ -14,7 +14,7 @@ a:hover, a:active {
   text-decoration: underline;
 }
 
-.sourceCode {
+pre.sourceCode {
   padding-top: 0.7em;
   padding-bottom: 0.7em;
 }
