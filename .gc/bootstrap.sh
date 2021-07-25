@@ -14,7 +14,6 @@
 #   source <(curl -sL https://tinyurl.com/gitcid) -d
 #
 
-
 gitcid_bootstrap() {
   GITCID_OVERRIDE_REPO_TYPE=${GITCID_OVERRIDE_REPO_TYPE:-""}
   
