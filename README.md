@@ -32,6 +32,8 @@
 ## [Links](#links)
 
 [https://gitc.id](https://gitc.id)
+[https://gitcid.org](https://gitcid.org)
+[https://gitcid.com](https://gitcid.com)
 
 [https://gitlab.com/defcronyke/gitcid](https://gitlab.com/defcronyke/gitcid)  
 [https://github.com/defcronyke/gitcid](https://github.com/defcronyke/gitcid)
