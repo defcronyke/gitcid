@@ -12,6 +12,20 @@ gc_git_hook_client_pre_commit() {
 
 	gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Invoked client git hook: ${BASH_SOURCE[0]} $@"
 
+  gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Checking if we are the gitcid repository..."
+
+  if [ "$(basename `pwd`)" == "gitcid" ]; then
+    # Create GitLab and GitHub Pages HTML site from README.md.
+    mkdir -p public
+    mkdir -p docs
+
+    pandoc -f markdown -t html5 -o public/index.html README.md  # -c style.css
+    pandoc -f markdown -t html5 -o docs/index.html README.md  # -c style.css
+
+  else
+    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "We aren't the gitcid repository. Skipping some gitcid-specific tasks."
+  fi
+
 	gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "The client git hook finished successfully: ${BASH_SOURCE[0]} $@"
 }
 
