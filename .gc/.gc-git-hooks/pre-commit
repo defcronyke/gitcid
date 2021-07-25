@@ -12,6 +12,14 @@ gc_git_hook_client_pre_commit() {
 
 	gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Invoked client git hook: ${BASH_SOURCE[0]} $@"
 
+  GC_EPOCH_TXT_FILE_PATH=".gc-epoch.txt"
+  if [ -f "$GC_EPOCH_TXT_FILE_PATH" ]; then
+    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Removing an initial commit file that was created by gitcid, because we don't need it anymore: $GC_EPOCH_TXT_FILE_PATH"
+    rm "$GC_EPOCH_TXT_FILE_PATH"
+    git add "$GC_EPOCH_TXT_FILE_PATH"
+    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Initial commit file created by gitcid has been removed: $GC_EPOCH_TXT_FILE_PATH"
+  fi
+
   gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Checking if we are the gitcid repository..."
 
   if [ "$(basename `pwd`)" == "gitcid" ]; then
