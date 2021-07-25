@@ -11,3 +11,7 @@ a:hover, a:active {
   color: black;
   text-decoration: underline;
 }
+
+.sourceCode {
+  padding: 1.5em;
+}
