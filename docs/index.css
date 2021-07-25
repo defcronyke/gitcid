@@ -9,6 +9,10 @@ body a {
   text-decoration: none;
 }
 
+h1.title {
+  font-size: x-large;
+}
+
 a:hover, a:active {
   color: black;
   text-decoration: underline;
