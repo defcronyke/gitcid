@@ -157,8 +157,6 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
 
     echo ""
 
-    return 0
-
   elif [ ! -z ${GITCID_DEV_REPO+x} ]; then
     echo ""
     echo "note: GitCid is being installed as well as any related project git repos, for development purposes."
@@ -192,13 +190,15 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
 
     cd gitcid
 
-    return 0
+  else
+    git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
+    .gc/init.sh -h $@
+
+    echo ""  
   fi
 
-  git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
-  .gc/init.sh -h $@
-
-  echo ""
+  unset GITCID_EXISTING_REPO
+  unset GITCID_DEV_REPO
 }
 
 gitcid_bootstrap $@
