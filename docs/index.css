@@ -4,13 +4,9 @@ body {
   margin-right: 3em;
 }
 
-body a {
+a {
   color: black;
   text-decoration: none;
-}
-
-h1.title {
-  font-size: 2.8em;
 }
 
 a:hover, a:active {
@@ -20,4 +16,12 @@ a:hover, a:active {
 
 .sourceCode {
   padding: 0.7em;
+}
+
+h1.title {
+  font-size: 2.8em;
+}
+
+#table-of-contents li {
+  margin-left: 1em;
 }
