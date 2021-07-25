@@ -15,15 +15,21 @@ gc_git_hook_client_pre_commit() {
   gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Checking if we are the gitcid repository..."
 
   if [ "$(basename `pwd`)" == "gitcid" ]; then
+    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "We are the gitcid repository. Running some gitcid-specific tasks."
+
     # Create GitLab and GitHub Pages HTML site from README.md.
+    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "gitcid task: Generating GitLab and GitHub Pages websites from README.md."
+
     mkdir -p public
     mkdir -p docs
 
     pandoc -f markdown -t html5 -o public/index.html README.md  # -c style.css
-    pandoc -f markdown -t html5 -o docs/index.html README.md  # -c style.css
+    cp -r public/* docs/
 
     git add public/.
     git add docs/.
+
+    gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "gitcid task: GitLab and GitHub Pages websites generated successfully from README.md, and added in folders: public/ docs/"
 
   else
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "We aren't the gitcid repository. Skipping some gitcid-specific tasks."
