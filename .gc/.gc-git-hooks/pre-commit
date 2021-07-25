@@ -31,7 +31,7 @@ gc_git_hook_client_pre_commit() {
     mkdir -p public
     mkdir -p docs
 
-    pandoc -s --no-check-certificate -f markdown -t html5 -c index.css --shift-heading-level-by=-1 --highlight-style=breezeDark -o public/index.html README.md
+    pandoc -s --no-check-certificate -f markdown -t html5 -c index.css --shift-heading-level-by=-1 -o public/index.html README.md
     cp -r public/* docs/
 
     git add public/.
