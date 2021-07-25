@@ -25,6 +25,7 @@
     - [TLDR; Let's just install the git server](#tldr-lets-just-install-the-git-server)
     - [Git Server Install Instructions](#git-server-install-instructions)
     - [Git Server Usage Examples](#git-server-usage-examples)
+    - [Git Server Development](#git-server-development)
 
 ---
 
@@ -337,5 +338,17 @@ Here's some examples of how to use your git server for some common git-related t
    ```shell
    .gc/commit-push.sh Commit message.
    ```
+
+---
+
+### [Git Server Development](#git-server-development)
+
+If you'd like to contribute to the development of the `git server`, you can run this command if you want, to help you set up your dev environment for this purpose:
+
+```shell
+source <(curl -sL https://tinyurl.com/gitcid) -e
+```
+
+It will clone all related project git repositories, and it will install `gitcid` into them for convenience.
 
 ---
