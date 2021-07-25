@@ -31,7 +31,7 @@ gc_git_hook_client_pre_commit() {
     mkdir -p public
     mkdir -p docs
 
-    pandoc -f markdown -t html5 -o public/index.html README.md  # -c style.css
+    pandoc -s -f markdown -t html5 -o public/index.html README.md -c public/index.css
     cp -r public/* docs/
 
     git add public/.
