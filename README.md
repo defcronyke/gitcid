@@ -19,7 +19,7 @@ Use of this software is governed by the terms of [the included MIT License](http
 
 ---
 
-## Features
+## [Features](#features)
 
 - Quickly deploy new `git` remotes using `ssh` and `rsync` that you can push to, with `gitcid` tools activated inside them.
 - Quickly commit, push, or clone `git` repos, and add `gitcid` tools inside them.
@@ -32,7 +32,7 @@ Use of this software is governed by the terms of [the included MIT License](http
 
 ---
 
-## Dependencies
+## [Dependencies](#dependencies)
 
 GitCid will try to install these for you automatically if they're missing from your system, but if it fails, you might need to install them yourself:
 
@@ -47,7 +47,9 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ---
 
-## Quickstart
+## [Quickstart](#quickstart)
+
+---
 
 ### Download GitCid
 
@@ -103,7 +105,9 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ---
 
-## Usage Examples
+## [Usage Examples](#usage-examples)
+
+---
 
 ### Get Usage Help
 
