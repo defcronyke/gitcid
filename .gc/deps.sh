@@ -285,14 +285,17 @@ doesn't have official Docker builds for it. You will have to try installing Dock
 
 	docker ps >/dev/null
 	if [ $? -ne 0 ]; then
-		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Adding user \"$USER\" to the \"docker\" group."
-		$SUDO_CMD gpasswd -a $USER docker
+    cat /etc/group | grep docker | grep $USER
+    if [ $? -eq 0 ]; then
+      gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Adding user \"$USER\" to the \"docker\" group."
+      $SUDO_CMD gpasswd -a $USER docker
+    fi
 
 		docker ps >/dev/null
 		if [ $? -ne 0 ]; then
 			gitcid_log_notice "${BASH_SOURCE[0]}" $LINENO "Your user account \"$USER\" doesn't have permission to use Docker. \
 Logging out and back in should fix the issue."
-			return 83
+			# return 83
 		fi
 	fi
 
