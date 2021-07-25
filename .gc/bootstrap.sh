@@ -70,16 +70,16 @@ gitcid_bootstrap() {
 
 				GITCID_DEV_REPO="y"
 
-				if [ "$arg" != "--dev" ]; then
-					new_arg=$(printf "%b" "$arg" | sed -E "s/^(\-.*)(d)(.*)$/\1\3/g")
+			# 	if [ "$arg" != "--dev" ]; then
+			# 		new_arg=$(printf "%b" "$arg" | sed -E "s/^(\-.*)(d)(.*)$/\1\3/g")
 
-					if [ "$new_arg" != "-" ]; then
-						new_args+=("$new_arg")
-					fi
-				fi
-			else
-				new_args+=("$arg")
-			fi
+			# 		if [ "$new_arg" != "-" ]; then
+			# 			new_args+=("$new_arg")
+			# 		fi
+			# 	fi
+			# else
+			# 	new_args+=("$arg")
+			# fi
 		done
 
 		set -- "${new_args[@]}"
