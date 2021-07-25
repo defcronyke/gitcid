@@ -1,0 +1,178 @@
+<h1 id="gitcid---some-power-tools-for-use-with-git"><a href="https://gitlab.com/defcronyke/gitcid">GitCid</a> - some power tools for use with <a href="https://git-scm.com"><code>git</code></a></h1>
+<hr />
+<p><a href="https://github.com/sponsors/defcronyke"><img src="https://img.shields.io/static/v1?label=Sponsor&amp;message=%E2%9D%A4&amp;logo=GitHub&amp;link=https://github.com/sponsors/defcronyke" alt="sponsor the project" /></a> <a href="https://defcronyke.gitlab.io/epaper-idf/jeremy-profile-paint-bw.png">Copyright © 2021</a> <a href="https://eternalvoid.net">Jeremy Carter</a> <code>&lt;</code><a href="mailto:Jeremy%20Carter%20%3Cjeremy@jeremycarter.ca%3E?subject=gitcid">jeremy@jeremycarter.ca</a><code>&gt;</code></p>
+<p><a href="https://gitlab.com/defcronyke/gitcid">https://gitlab.com/defcronyke/gitcid</a><br />
+<a href="https://github.com/defcronyke/gitcid">https://github.com/defcronyke/gitcid</a></p>
+<p>Use of this software is permitted by the terms of <a href="https://gitlab.com/defcronyke/gitcid/-/raw/master/LICENSE">the included MIT License</a> (<a href="https://raw.githubusercontent.com/defcronyke/gitcid/master/LICENSE">GitHub mirror</a>).</p>
+<hr />
+<h2 id="features">Features</h2>
+<ul>
+<li>Quickly deploy new <code>git</code> remotes using <code>ssh</code> and <code>rsync</code> that you can push to, with <code>gitcid</code> tools activated inside them.</li>
+<li>Quickly commit, push, or clone <code>git</code> repos, and add <code>gitcid</code> tools inside them.</li>
+<li>The <code>gitcid</code> tools live inside each local or remote <code>git</code> repo, you can add them to any of your existing repos with one command.</li>
+<li>When you add <code>gitcid</code> to your repo, it gains built-in <code>CI/CD</code> features with a bit of help from <code>docker-compose</code> (work-in-progress).</li>
+<li>Specify your <code>CI/CD pipelines</code> in a <code>yaml</code> format that might be comfortable for you if you’ve used other <code>CI/CD</code> systems before.</li>
+<li>Quickly deploy <a href="#install-a-dedicated-git-server"><code>dedicated git servers</code></a> to <code>ssh</code> remote locations using one command. It’s recommended to install them on some dedicated devices on your LAN such as <code>Raspberry Pi</code> running <code>Raspberry Pi OS (aarch64 or armhf)</code>. Regular <code>Debian (amd64)</code> targets are also supported. Perhaps it works on some <code>Debian-derived</code> distros as well, but that hasn’t been tested.</li>
+<li>Plug in some removable disks to your <code>git server</code> and it will find and share any <code>git repos</code> it finds to the rest of your LAN.</li>
+<li>Browse your plugged-in <code>git repos</code> with a familiar <code>GitWeb</code> UI.</li>
+</ul>
+<hr />
+<h2 id="dependencies">Dependencies</h2>
+<p>GitCid will try to install these for you automatically if they’re missing from your system, but if it fails, you might need to install them yourself:</p>
+<ul>
+<li>curl</li>
+<li>rsync</li>
+<li>git</li>
+<li>docker</li>
+<li>docker-compose - Usually the version found in <code>pip</code> or <code>pip3</code> (python’s package manager) is the one that works properly.</li>
+<li>yq ( <a href="https://github.com/mikefarah/yq">https://github.com/mikefarah/yq</a> )</li>
+</ul>
+<p>There are a few more dependencies needed depending on your OS, but they should be installed automatically in most cases. See the files in <code>.gc/.gc-deps</code> for full details.</p>
+<h2 id="quickstart">Quickstart</h2>
+<h3 id="download-gitcid">Download GitCid</h3>
+<ol type="1">
+<li><p>Make sure you’ve installed <a href="https://git-scm.com"><code>git</code></a> and <a href="https://man7.org/linux/man-pages/man1/curl.1.html"><code>curl</code></a> first, then run the following command:</p>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid)</code></pre>
+<p>When this command finishes, it will have created a new folder called <code>gitcid</code> in your current directory, and then it will bring you into this new folder.</p></li>
+<li><p>(Optional) Or if you prefer, you can run this command instead:</p>
+<pre class="shell"><code>git clone https://gitlab.com/defcronyke/gitcid.git &amp;&amp; cd gitcid &amp;&amp; echo &quot;&quot; &amp;&amp; .gc/init.sh -h</code></pre></li>
+</ol>
+<h3 id="create-a-new-git-remote-with-gitcid-cicd-features-added-to-it">Create a new git remote with GitCid CI/CD features added to it</h3>
+<ol type="1">
+<li><p>In the <code>gitcid</code> folder, run this command:</p>
+<pre class="shell"><code>.gc/new-remote.sh ~/repo1.git</code></pre>
+<ul>
+<li>It should output some details, and if successful, it will have created a new git remote repo at the path: <code>~/repo1.git</code></li>
+<li>It will tell you the proper <code>git clone</code> command that you can use to clone your new repo at the bottom of the output if everything worked properly.</li>
+<li>If it didn’t work properly for some reason, it will mention some errors which can help you figure out what went wrong.</li>
+</ul></li>
+<li><p>You can use remote <code>ssh</code> paths for the new remote repo location also, instead of a local path, for example:</p>
+<pre class="shell"><code>.gc/new-remote.sh git1:~/repo1.git</code></pre></li>
+<li><p>An example <code>git clone</code> command to clone your git repo might look something like this:</p>
+<pre class="shell"><code>git clone git1:~/repo1.git &amp;&amp; cd repo1</code></pre>
+<p>It’s just the regular way of cloning git repos.</p></li>
+<li><p>When you make your new remote repo, you will also be given a command you can use to add <code>GitCid</code> features to your locally cloned repo that you cloned from the remote. Here’s that same command in case you need it. Make sure you’re inside your local repo when you run this command:</p>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre>
+<p>The above command will add GitCid to your git repo in a .gitignore’d folder called: <code>.gc/</code></p></li>
+</ol>
+<h2 id="usage-examples">Usage Examples</h2>
+<h3 id="get-usage-help">Get Usage Help</h3>
+<ul>
+<li><p>Run this command from the top-level directory of the GitCid repo, for usage info:</p>
+<pre class="shell"><code>.gc/init.sh -h</code></pre></li>
+</ul>
+<h3 id="install-gitcid-into-an-existing-git-repository">Install GitCid into an existing git repository</h3>
+<ul>
+<li><p>Run this command from the top-level directory of your existing git repo that you’d like to install GitCid into (it works for both regular and bare repos):</p>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre></li>
+</ul>
+<h3 id="make-new-git-repositories">Make new git repositories</h3>
+<ul>
+<li><p>NOTE: The remote targets need to have <code>rsync</code> installed.</p></li>
+<li><p>Run these <code>.gc/init.sh</code> commands from the top-level directory of the GitCid repo, to make new GitCid git repositories.</p></li>
+</ul>
+<ol type="1">
+<li><p>Make a new local git repo with the default name of “<code>repo</code>” in the current directory:</p>
+<pre class="shell"><code>.gc/init.sh</code></pre></li>
+<li><p>Make a new local git repo:</p>
+<pre class="shell"><code>.gc/init.sh ./local-repo</code></pre></li>
+<li><p>Make a new remote git repo at a target ssh server path:</p>
+<pre class="shell"><code>.gc/init.sh user@host:~/remote-repo</code></pre></li>
+<li><p>Make several new git repos at once, local and/or remote ones:</p>
+<pre class="shell"><code>.gc/init.sh local-repo1 user@host:~/remote-repo1 user@host:~/remote-repo2 ./local-repo2</code></pre></li>
+<li><p>Make several new bare git repos at once (suitable for using as git remotes), local and/or remote ones:</p>
+<pre class="shell"><code>.gc/init.sh -b user@host:~/remote-bare-repo1.git local-bare-repo1.git ./local-bare-repo2</code></pre></li>
+</ol>
+<hr />
+<h2 id="install-a-dedicated-git-server"><a href="#install-a-dedicated-git-server">Install a Dedicated Git Server</a></h2>
+<hr />
+<p>Install a git server at a target ssh location, using tools from this project:</p>
+<p><a href="https://gitlab.com/defcronyke/git-server">https://gitlab.com/defcronyke/git-server</a></p>
+<p>Currently supported target platforms:</p>
+<ul>
+<li>Debian Stable (amd64)</li>
+<li>Debian Testing (amd64)</li>
+<li>Raspberry Pi OS (armhf)</li>
+<li>Raspberry Pi OS (aarch64)</li>
+</ul>
+<p>Platform support wishlist (Please feel free to test and contribute fix suggestions if you’d like to help with adding support for these):</p>
+<ul>
+<li>Arch Linux (amd64)</li>
+</ul>
+<p>Maybe it works on other Debian or Debian-based platforms, but this hasn’t been tested yet.</p>
+<p>WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section to install a dedicated git server onto a freshly installed Linux distro which is intended to be used only as a dedicated git server! This will install some dependencies automatically and do some system configurations that you might not prefer to have on devices that are being used for other purposes. USE AT YOUR OWN RISK! YOU HAVE BEEN WARNED!!</p>
+<hr />
+<h3 id="tldr-lets-just-install-the-git-server">TLDR; Let’s just install the git server</h3>
+<hr />
+<ul>
+<li><p>Install a <code>git server</code> to a remote <code>ssh</code> location (or two as in this example), by running the following command in a <code>bash</code> terminal:</p>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) &amp;&amp; .gc/new-git-server.sh -o pi@git1 $USER@gitlab</code></pre>
+<p>Usually it just works, and with the <code>-o</code> flag used above, it should auto-open a web page for each git server it finds on your network after the install is finished. For more info and other options, see the next section below.</p></li>
+<li><p>The example above will also install <code>gitcid</code>, which makes it easier to work with the git server. If you already have <code>gitcid</code> installed, you don’t need to install it again, so in that case you can omit the first part of the above command, for example:</p>
+<pre class="shell"><code>.gc/new-git-server.sh -o pi@git1 $USER@gitlab</code></pre>
+<p>Just make sure you’re inside the <code>gitcid/</code> folder first (or any <code>gitcid</code>-enabled git repo), before trying to run any <code>gitcid</code> commands.</p></li>
+</ul>
+<hr />
+<h3 id="git-server-installation">Git Server Installation</h3>
+<hr />
+<ol type="1">
+<li><p>Install GitCid:</p>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid)</code></pre>
+<p>If successful, you will now be inside the freshly downloaded <code>./gitcid/</code> folder. You need to be inside this folder for step 2.</p></li>
+<li><p>Install new git server(s) onto dedicated device(s) at the given <code>ssh</code> target location(s):</p>
+<ul>
+<li>Usage details:</li>
+</ul>
+<pre class="shell"><code>.gc/new-git-server.sh -h</code></pre>
+<ul>
+<li>Install or update some git servers, with a confirmation prompt before installing:</li>
+</ul>
+<pre class="shell"><code>.gc/new-git-server.sh git1 git2 gitlab</code></pre>
+<ul>
+<li>Install or update some git servers with a confirmation prompt. Open a web browser tab for each available GitWeb server page found on your network when finished:</li>
+</ul>
+<pre class="shell"><code>.gc/new-git-server.sh -o git1 git2 gitlab</code></pre>
+<ul>
+<li>Non-interactive automated version:</li>
+</ul>
+<pre class="shell"><code>.gc/new-git-server.sh -y git1 git2 gitlab</code></pre>
+<ul>
+<li>Non-interactive automated version, open web browser to GitWeb pages when finished:</li>
+</ul>
+<pre class="shell"><code>.gc/new-git-server.sh -yo git1 git2 gitlab</code></pre>
+<ul>
+<li>Non-interactive sequential install. In the examples above, installs are attempted first in parallel whenever possible. To override that behaviour and perform all installs sequentially one at a time, use this command instead:</li>
+</ul>
+<pre class="shell"><code>.gc/new-git-server.sh -s git1 git2 gitlab</code></pre>
+<ul>
+<li>Non-interactive sequential install, and open a web browser to GitWeb pages when finished:</li>
+</ul>
+<pre class="shell"><code>.gc/new-git-server.sh -so git1 git2 gitlab</code></pre>
+<ul>
+<li>Specify the ssh username to log in as during install on the targets. By default, the ssh config for each hostname is used from your <code>~/.ssh/config</code> file, but if you prefer, you can add a username in the command below for each target. You can do this for any of the various commands listed above, for example:</li>
+</ul>
+<pre class="shell"><code>.gc/new-git-server.sh -yo pi@git1 pi@git2 $USER@gitlab</code></pre>
+<p>If everything worked as intended, your git server(s) are now ready to use. See the output in your terminal for more details. During parallel installs (the default behaviour unless using the <code>-s</code> flag variants), if non-interactive sudo support isn’t configured on the target, the system will fall back to sequential install mode for any targets which need the sudo password typed manually. After typing the sudo password once successfully, a passwordless sudo configuration will be attempted on the target, so that any future interactions with that target can be fully-automated.</p></li>
+</ol>
+<hr />
+<h3 id="git-server-usage">Git Server Usage</h3>
+<hr />
+<p>Here’s some examples of how to use your git server for some common git-related tasks. The following commands should be run from inside your <code>gitcid/</code> folder, or inside any <code>gitcid</code>-enabled git repo.</p>
+<ol type="1">
+<li><p>Create a new git remote repo on the git server, for example, a repo named <code>repo1.git</code> at the hostname <code>git1</code>:</p>
+<pre class="shell"><code>.gc/new-remote.sh git1:repo1</code></pre>
+<p>Newly created remote repos will become available for use after a short delay, typically less than 1 minute. If you receive an error when trying to use a newly created remote repo, try again after 1 minute has passed since creating it and it should work.</p></li>
+<li><p>Clone a local copy of your new repo from the server:</p>
+<pre class="shell"><code>git clone git1:~/git/repo1.git
+cd repo1</code></pre></li>
+<li><p>Commit some changes to your new repo, then push it to the origin remote on your git server:</p>
+<pre class="shell"><code>date | tee -a test1.txt
+git add .
+git commit -m &quot;A test commit.&quot;
+git push</code></pre></li>
+<li><p>(Optional) Add <code>gitcid</code> to your local copy of your git repo if you’d like to use any <code>gitcid</code> commands while working inside your repo. Run the following command while inside your repo to install <code>gitcid</code> features:</p>
+<pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre></li>
+<li><p>(Optional) With <code>gitcid</code> added to your repo from the previous step, you can commit and push more easily:</p>
+<pre class="shell"><code>.gc/commit-push.sh Commit message.</code></pre></li>
+</ol>
+<hr />

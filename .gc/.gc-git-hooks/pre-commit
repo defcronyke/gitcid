@@ -22,6 +22,9 @@ gc_git_hook_client_pre_commit() {
     pandoc -f markdown -t html5 -o public/index.html README.md  # -c style.css
     pandoc -f markdown -t html5 -o docs/index.html README.md  # -c style.css
 
+    git add public/.
+    git add docs/.
+
   else
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "We aren't the gitcid repository. Skipping some gitcid-specific tasks."
   fi
