@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This git hook will run on the client before a commit is made.
 
 gc_git_hook_client_pre_commit() {

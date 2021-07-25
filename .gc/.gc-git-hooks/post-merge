@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This git hook will run on the client after a merge or a pull.
 
 gc_git_hook_client_post_merge() {
