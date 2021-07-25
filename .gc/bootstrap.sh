@@ -79,7 +79,7 @@ gitcid_bootstrap() {
 			# 	fi
 			# else
 			# 	new_args+=("$arg")
-			# fi
+			fi
 		done
 
 		set -- "${new_args[@]}"
