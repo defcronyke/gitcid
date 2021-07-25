@@ -65,8 +65,10 @@ gitcid_new_remote() {
   gc_test_repo_path="$(echo "$gc_remote_repo" | cut -d: -f2)"
   echo "$gc_test_repo_path" | grep -P "^~|^/" || gc_git_server_path_detected=0
   if [ $gc_git_server_path_detected -eq 0 ]; then
+    echo ""
     echo "note: It looks like you've supplied a \"git server path\". Creating new git remote repo using special git server behaviour..."
     gc_remote_repo="$(gc_remote_repo="$gc_remote_repo"; printf '%s:~/git/new/%s.git\n' "$(echo "$gc_remote_repo" | cut -d: -f1)" "$(echo "$gc_remote_repo" | cut -d: -f2 | sed 's/~\/git\/new\///' | sed 's/~\/git//' | sed 's/\.git$//')")"
+    echo ""
   fi
 
   tmpdir=""
@@ -99,7 +101,7 @@ gitcid_new_remote() {
     echo ""
     echo "  source <(curl -sL https://tinyurl.com/gitcid) -e"
     echo ""
-    echo "Here's a one-line version of both the above commands together, for copy-paste convenience:"
+    echo "Here's a one-line version of above commands, for copy-paste convenience:"
     echo ""
     echo "  git clone $gc_remote_repo_clone && cd $remote_localname && \\"
     echo "  source <(curl -sL https://tinyurl.com/gitcid) -e"
