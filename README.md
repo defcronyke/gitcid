@@ -92,7 +92,7 @@ There are a few more dependencies needed depending on your OS, but they should b
    [`curl`](https://man7.org/linux/man-pages/man1/curl.1.html) first,
    then run the following command:
 
-   ```shell
+   ```bash
    source <(curl -sL https://tinyurl.com/gitcid)
    ```
 
@@ -100,7 +100,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 2. (Optional) Or if you prefer, you can run this command instead:
 
-   ```shell
+   ```bash
    git clone https://gitlab.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
    ```
 
@@ -108,7 +108,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 1. In the `gitcid` folder, run this command:
 
-   ```shell
+   ```bash
    .gc/new-remote.sh ~/repo1.git
    ```
 
@@ -118,13 +118,13 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 2. You can use remote `ssh` paths for the new remote repo location also, instead of a local path, for example:
 
-   ```shell
+   ```bash
    .gc/new-remote.sh git1:~/repo1.git
    ```
 
 3. An example `git clone` command to clone your git repo might look something like this:
 
-   ```shell
+   ```bash
    git clone git1:~/repo1.git && cd repo1
    ```
 
@@ -132,7 +132,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 4. When you make your new remote repo, you will also be given a command you can use to add `GitCid` features to your locally cloned repo that you cloned from the remote. Here's that same command in case you need it. Make sure you're inside your local repo when you run this command:
 
-   ```shell
+   ```bash
    source <(curl -sL https://tinyurl.com/gitcid) -e
    ```
 
@@ -148,7 +148,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 - Run this command from the top-level directory of the GitCid repo, for usage info:
 
-  ```shell
+  ```bash
   .gc/init.sh -h
   ```
 
@@ -157,7 +157,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 - Run this command from the top-level directory of your existing git repo that
   you'd like to install GitCid into (it works for both regular and bare repos):
 
-  ```shell
+  ```bash
   source <(curl -sL https://tinyurl.com/gitcid) -e
   ```
 
@@ -170,31 +170,31 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 1. Make a new local git repo with the default name of "`repo`" in the current directory:
 
-   ```shell
+   ```bash
    .gc/init.sh
    ```
 
 1. Make a new local git repo:
 
-   ```shell
+   ```bash
    .gc/init.sh ./local-repo
    ```
 
 1. Make a new remote git repo at a target ssh server path:
 
-   ```shell
+   ```bash
    .gc/init.sh user@host:~/remote-repo
    ```
 
 1. Make several new git repos at once, local and/or remote ones:
 
-   ```shell
+   ```bash
    .gc/init.sh local-repo1 user@host:~/remote-repo1 user@host:~/remote-repo2 ./local-repo2
    ```
 
 1. Make several new bare git repos at once (suitable for using as git remotes), local and/or remote ones:
 
-   ```shell
+   ```bash
    .gc/init.sh -b user@host:~/remote-bare-repo1.git local-bare-repo1.git ./local-bare-repo2
    ```
 
@@ -229,7 +229,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 - Install a `git server` to a remote `ssh` location (or two as in this example), by running the following command in a `bash` terminal:
 
-  ```shell
+  ```bash
   source <(curl -sL https://tinyurl.com/gitcid) && .gc/new-git-server.sh -o pi@git1 $USER@gitlab
   ```
 
@@ -237,7 +237,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 - The example above will also install `gitcid`, which makes it easier to work with the git server. If you already have `gitcid` installed, you don't need to install it again, so in that case you can omit the first part of the above command, for example:
 
-  ```shell
+  ```bash
   .gc/new-git-server.sh -o pi@git1 $USER@gitlab
   ```
 
@@ -249,7 +249,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 1. Install GitCid:
 
-   ```shell
+   ```bash
    source <(curl -sL https://tinyurl.com/gitcid)
    ```
 
@@ -259,49 +259,49 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
    - Usage details:
 
-   ```shell
+   ```bash
    .gc/new-git-server.sh -h
    ```
 
    - Install or update some git servers, with a confirmation prompt before installing:
 
-   ```shell
+   ```bash
    .gc/new-git-server.sh git1 git2 gitlab
    ```
 
    - Install or update some git servers with a confirmation prompt. Open a web browser tab for each available GitWeb server page found on your network when finished:
 
-   ```shell
+   ```bash
    .gc/new-git-server.sh -o git1 git2 gitlab
    ```
 
    - Non-interactive automated version:
 
-   ```shell
+   ```bash
    .gc/new-git-server.sh -y git1 git2 gitlab
    ```
 
    - Non-interactive automated version, open web browser to GitWeb pages when finished:
 
-   ```shell
+   ```bash
    .gc/new-git-server.sh -yo git1 git2 gitlab
    ```
 
    - Non-interactive sequential install. In the examples above, installs are attempted first in parallel whenever possible. To override that behaviour and perform all installs sequentially one at a time, use this command instead:
 
-   ```shell
+   ```bash
    .gc/new-git-server.sh -s git1 git2 gitlab
    ```
 
    - Non-interactive sequential install, and open a web browser to GitWeb pages when finished:
 
-   ```shell
+   ```bash
    .gc/new-git-server.sh -so git1 git2 gitlab
    ```
 
    - Specify the ssh username to log in as during install on the targets. By default, the ssh config for each hostname is used from your `~/.ssh/config` file, but if you prefer, you can add a username in the command below for each target. You can do this for any of the various commands listed above, for example:
 
-   ```shell
+   ```bash
    .gc/new-git-server.sh -yo pi@git1 pi@git2 $USER@gitlab
    ```
 
@@ -315,7 +315,7 @@ Here's some examples of how to use your git server for some common git-related t
 
 1. Create a new git remote repo on the git server, for example, a repo named `repo1.git` at the hostname `git1`:
 
-   ```shell
+   ```bash
    .gc/new-remote.sh git1:repo1
    ```
 
@@ -323,14 +323,14 @@ Here's some examples of how to use your git server for some common git-related t
 
 2. Clone a local copy of your new repo from the server:
 
-   ```shell
+   ```bash
    git clone git1:~/git/repo1.git
    cd repo1
    ```
 
 3. Commit some changes to your new repo, then push it to the origin remote on your git server:
 
-   ```shell
+   ```bash
    date | tee -a test1.txt
    git add .
    git commit -m "A test commit."
@@ -339,13 +339,13 @@ Here's some examples of how to use your git server for some common git-related t
 
 4. (Optional) Add `gitcid` to your local copy of your git repo if you'd like to use any `gitcid` commands while working inside your repo. Run the following command while inside your repo to install `gitcid` features:
 
-   ```shell
+   ```bash
    source <(curl -sL https://tinyurl.com/gitcid) -e
    ```
 
 5. (Optional) With `gitcid` added to your repo from the previous step, you can commit and push more easily:
 
-   ```shell
+   ```bash
    .gc/commit-push.sh Commit message.
    ```
 
@@ -355,7 +355,7 @@ Here's some examples of how to use your git server for some common git-related t
 
 If you'd like to contribute to the development of the `git server`, you can run this command if you want, to help you set up your dev environment for this purpose:
 
-```shell
+```bash
 source <(curl -sL https://tinyurl.com/gitcid) -e
 ```
 
