@@ -11,6 +11,8 @@
 - [GitCid](#gitcid)
   - [Table of Contents](#table-of-contents)
   - [Links](#links)
+    - [Website](#website)
+    - [Source Code](#source-code)
   - [Terms of Use](#terms-of-use)
   - [Features](#features)
   - [Dependencies](#dependencies)
@@ -31,18 +33,18 @@
 
 ## [Links](#links)
 
-- Website:
+### [Website](#website)
 
-  - [https://gitc.id](https://gitc.id)
-  - [https://gitcid.org](https://gitcid.org)
-  - [https://gitcid.com](https://gitcid.com)
-  - [https://defcronyke.gitlab.io/gitcid](https://defcronyke.gitlab.io/gitcid)
-  - [https://defcronyke.github.io/gitcid](https://defcronyke.github.io/gitcid)
+- [https://gitc.id](https://gitc.id)
+- [https://gitcid.org](https://gitcid.org)
+- [https://gitcid.com](https://gitcid.com)
+- [https://defcronyke.gitlab.io/gitcid](https://defcronyke.gitlab.io/gitcid)
+- [https://defcronyke.github.io/gitcid](https://defcronyke.github.io/gitcid)
 
-- Source Code:
+### [Source Code](#source-code)
 
-  - [https://gitlab.com/defcronyke/gitcid](https://gitlab.com/defcronyke/gitcid)
-  - [https://github.com/defcronyke/gitcid](https://github.com/defcronyke/gitcid)
+- [https://gitlab.com/defcronyke/gitcid](https://gitlab.com/defcronyke/gitcid)
+- [https://github.com/defcronyke/gitcid](https://github.com/defcronyke/gitcid)
 
 ---
 
