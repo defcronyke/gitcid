@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../git-server"
+		},
+		{
+			"path": "../usb-mount-git"
+		},
+		{
+			"path": "../discover-git-server-dns"
+		}
+	],
+	"settings": {
+		"markdown.extension.toc.levels": "2..6"
+	}
+}

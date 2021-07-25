@@ -10,5 +10,3 @@ repo1/
 repo2.git/
 repo2/
 .gc/.gc-docker-compose/*/Dockerfile
-
-*.code-workspace
