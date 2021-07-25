@@ -2,16 +2,16 @@
 #
 # To use this to install GitCid, run the following command:
 #
-#   source <(curl -sL https://tinyurl.com/gitcid)
+#   bash <(curl -sL https://tinyurl.com/gitcid)
 #
 # If you want to add GitCid to an existing git repo, run this instead:
 #
-#   source <(curl -sL https://tinyurl.com/gitcid) -e
+#   bash <(curl -sL https://tinyurl.com/gitcid) -e
 #
 # To clone GitCid and any other related project git repos, for 
 # developing or contributing to GitCid, use this command:
 #
-#   source <(curl -sL https://tinyurl.com/gitcid) -d
+#   bash <(curl -sL https://tinyurl.com/gitcid) -d
 #
 
 gitcid_bootstrap() {
@@ -160,28 +160,31 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
     return 0
 
   elif [ ! -z ${GITCID_DEV_REPO+x} ]; then
+    echo ""
     echo "note: GitCid is being installed as well as any related project git repos, for development purposes."
+    echo ""
 
     git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
     .gc/init.sh -h $@; \
-    cd ..
+    cd ..; \
+    echo ""
 
     git clone ${GITCID_GIT_PROJECT_SOURCE_GIT_SERVER} && cd git-server && echo "" && \
-    source <(curl -sL https://tinyurl.com/gitcid) -e && \
+    /bin/bash <(curl -sL https://tinyurl.com/gitcid) -e && \
     echo "" && \
     .gc/init.sh -h $@; \
     cd ..; \
     echo ""
 
     git clone ${GITCID_GIT_PROJECT_SOURCE_USB_MOUNT_GIT} && cd usb-mount-git && echo "" && \
-    source <(curl -sL https://tinyurl.com/gitcid) -e && \
+    /bin/bash <(curl -sL https://tinyurl.com/gitcid) -e && \
     echo "" && \
     .gc/init.sh -h $@; \
     cd ..; \
     echo ""
     
     git clone ${GITCID_GIT_PROJECT_SOURCE_DISCOVER_GIT_SERVER_DNS} && cd discover-git-server-dns && echo "" && \
-    source <(curl -sL https://tinyurl.com/gitcid) -e && \
+    /bin/bash <(curl -sL https://tinyurl.com/gitcid) -e && \
     echo "" && \
     .gc/init.sh -h $@; \
     cd ..; \
