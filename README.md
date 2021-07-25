@@ -11,7 +11,11 @@
 [https://gitlab.com/defcronyke/gitcid](https://gitlab.com/defcronyke/gitcid)  
 [https://github.com/defcronyke/gitcid](https://github.com/defcronyke/gitcid)
 
-Use of this software is permitted by the terms of [the included MIT License](https://gitlab.com/defcronyke/gitcid/-/raw/master/LICENSE) ([GitHub mirror](https://raw.githubusercontent.com/defcronyke/gitcid/master/LICENSE)).
+---
+
+## Terms of Use
+
+Use of this software is governed by the terms of [the included MIT License](https://gitlab.com/defcronyke/gitcid/-/raw/master/LICENSE) ([GitHub mirror](https://raw.githubusercontent.com/defcronyke/gitcid/master/LICENSE)).
 
 ---
 
