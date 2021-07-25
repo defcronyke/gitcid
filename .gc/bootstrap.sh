@@ -1,13 +1,30 @@
 #!/usr/bin/env bash
+#
 # To use this to install GitCid, run the following command:
+#
 #   source <(curl -sL https://tinyurl.com/gitcid)
 #
 # If you want to add GitCid to an existing git repo, run this instead:
+#
 #   source <(curl -sL https://tinyurl.com/gitcid) -e
+#
+# To clone GitCid and any other related project git repos, for 
+# developing or contributing to GitCid, use this command:
+#
+#   source <(curl -sL https://tinyurl.com/gitcid) -d
+#
+
 
 gitcid_bootstrap() {
-	GITCID_GIT_PROJECT_SOURCE="https://gitlab.com/defcronyke/gitcid.git"
 	GITCID_OVERRIDE_REPO_TYPE=${GITCID_OVERRIDE_REPO_TYPE:-""}
+	
+  # GitCid git repo.
+  GITCID_GIT_PROJECT_SOURCE="https://gitlab.com/defcronyke/gitcid.git"
+
+  # Related project git repos.
+  GITCID_GIT_PROJECT_SOURCE_GIT_SERVER="https://gitlab.com/defcronyke/git-server.git"
+  GITCID_GIT_PROJECT_SOURCE_USB_MOUNT_GIT="https://gitlab.com/defcronyke/usb-mount-git.git"
+  GITCID_GIT_PROJECT_SOURCE_DISCOVER_GIT_SERVER_DNS="https://gitlab.com/defcronyke/discover-git-server-dns.git"
 
   # ----------
   # Do some minimal git config setup to make some annoying yellow warning text stop 
@@ -25,12 +42,35 @@ gitcid_bootstrap() {
 	if [ $# -ge 1 ]; then
 		new_args=()
 		for arg in "$@"; do
-			printf "%b\n" "-e" | grep -P "^\-.*e.*$|\-\-existing-repo" >/dev/null
+      # If existing repo arg is set: -e
+      printf "%b\n" "$arg" | grep -P "^\-.*e.*$|\-\-existing-repo" >/dev/null
+			# printf "%b\n" "-e" | grep -P "^\-.*e.*$|\-\-existing-repo" >/dev/null
 			if [ $? -eq 0 ]; then
 				GITCID_EXISTING_REPO="y"
 
 				if [ "$arg" != "--existing-repo" ]; then
 					new_arg=$(printf "%b" "$arg" | sed -E "s/^(\-.*)(e)(.*)$/\1\3/g")
+
+					if [ "$new_arg" != "-" ]; then
+						new_args+=("$new_arg")
+					fi
+				fi
+			else
+				new_args+=("$arg")
+			fi
+
+      # If dev arg is set: -d
+      printf "%b\n" "$arg" | grep -P "^\-.*d.*$|\-\-dev" >/dev/null
+			if [ $? -eq 0 ]; then
+        if [ ! -z ${GITCID_EXISTING_REPO+x} ]; then
+          echo "error: Cannot specify command line flags -e and -d together."
+          return 2
+        fi
+
+				GITCID_DEV_REPO="y"
+
+				if [ "$arg" != "--dev" ]; then
+					new_arg=$(printf "%b" "$arg" | sed -E "s/^(\-.*)(d)(.*)$/\1\3/g")
 
 					if [ "$new_arg" != "-" ]; then
 						new_args+=("$new_arg")
@@ -114,6 +154,36 @@ GITCID_OVERRIDE_REPO_TYPE=\"y\"\n"
     echo ""
 
 		return 0
+
+  elif [ ! -z ${GITCID_DEV_REPO+x} ]; then
+		echo "note: GitCid is being installed as well as any related project git repos, for development purposes."
+
+    git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
+	  .gc/init.sh -h $@; \
+    cd ..
+
+    git clone ${GITCID_GIT_PROJECT_SOURCE_GIT_SERVER} && cd git-server && echo "" && \
+    source <(curl -sL https://tinyurl.com/gitcid) -e && \
+    echo "" && \
+	  .gc/init.sh -h $@; \
+    cd ..; \
+    echo ""
+
+    git clone ${GITCID_GIT_PROJECT_SOURCE_USB_MOUNT_GIT} && cd usb-mount-git && echo "" && \
+    source <(curl -sL https://tinyurl.com/gitcid) -e && \
+    echo "" && \
+	  .gc/init.sh -h $@; \
+    cd ..; \
+    echo ""
+    
+    git clone ${GITCID_GIT_PROJECT_SOURCE_DISCOVER_GIT_SERVER_DNS} && cd discover-git-server-dns && echo "" && \
+    source <(curl -sL https://tinyurl.com/gitcid) -e && \
+    echo "" && \
+	  .gc/init.sh -h $@; \
+    cd ..; \
+    echo ""
+
+    return 0
 	fi
 
 	git clone ${GITCID_GIT_PROJECT_SOURCE} && cd gitcid && echo "" && \
