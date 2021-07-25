@@ -28,6 +28,7 @@
 <li>yq ( <a href="https://github.com/mikefarah/yq">https://github.com/mikefarah/yq</a> )</li>
 </ul>
 <p>There are a few more dependencies needed depending on your OS, but they should be installed automatically in most cases. See the files in <code>.gc/.gc-deps</code> for full details.</p>
+<hr />
 <h2 id="quickstart">Quickstart</h2>
 <h3 id="download-gitcid">Download GitCid</h3>
 <ol type="1">
@@ -55,6 +56,7 @@
 <pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) -e</code></pre>
 <p>The above command will add GitCid to your git repo in a .gitignore’d folder called: <code>.gc/</code></p></li>
 </ol>
+<hr />
 <h2 id="usage-examples">Usage Examples</h2>
 <h3 id="get-usage-help">Get Usage Help</h3>
 <ul>
@@ -103,7 +105,6 @@
 <p>WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section to install a dedicated git server onto a freshly installed Linux distro which is intended to be used only as a dedicated git server! This will install some dependencies automatically and do some system configurations that you might not prefer to have on devices that are being used for other purposes. USE AT YOUR OWN RISK! YOU HAVE BEEN WARNED!!</p>
 <hr />
 <h3 id="tldr-lets-just-install-the-git-server">TLDR; Let’s just install the git server</h3>
-<hr />
 <ul>
 <li><p>Install a <code>git server</code> to a remote <code>ssh</code> location (or two as in this example), by running the following command in a <code>bash</code> terminal:</p>
 <pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid) &amp;&amp; .gc/new-git-server.sh -o pi@git1 $USER@gitlab</code></pre>
@@ -114,7 +115,6 @@
 </ul>
 <hr />
 <h3 id="git-server-installation">Git Server Installation</h3>
-<hr />
 <ol type="1">
 <li><p>Install GitCid:</p>
 <pre class="shell"><code>source &lt;(curl -sL https://tinyurl.com/gitcid)</code></pre>
@@ -156,7 +156,6 @@
 </ol>
 <hr />
 <h3 id="git-server-usage">Git Server Usage</h3>
-<hr />
 <p>Here’s some examples of how to use your git server for some common git-related tasks. The following commands should be run from inside your <code>gitcid/</code> folder, or inside any <code>gitcid</code>-enabled git repo.</p>
 <ol type="1">
 <li><p>Create a new git remote repo on the git server, for example, a repo named <code>repo1.git</code> at the hostname <code>git1</code>:</p>

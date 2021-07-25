@@ -37,6 +37,8 @@ GitCid will try to install these for you automatically if they're missing from y
 
 There are a few more dependencies needed depending on your OS, but they should be installed automatically in most cases. See the files in `.gc/.gc-deps` for full details.
 
+---
+
 ## Quickstart
 
 ### Download GitCid
@@ -90,6 +92,8 @@ There are a few more dependencies needed depending on your OS, but they should b
    ```
 
    The above command will add GitCid to your git repo in a .gitignore'd folder called: `.gc/`
+
+---
 
 ## Usage Examples
 
@@ -176,8 +180,6 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 ### TLDR; Let's just install the git server
 
----
-
 - Install a `git server` to a remote `ssh` location (or two as in this example), by running the following command in a `bash` terminal:
 
   ```shell
@@ -197,8 +199,6 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 ---
 
 ### Git Server Installation
-
----
 
 1. Install GitCid:
 
@@ -263,8 +263,6 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 ---
 
 ### Git Server Usage
-
----
 
 Here's some examples of how to use your git server for some common git-related tasks. The following commands should be run from inside your `gitcid/` folder, or inside any `gitcid`-enabled git repo.
 
