@@ -221,6 +221,7 @@ gitcid_new_git_server() {
 
   current_dir="$PWD"
   cd ../discover-git-server-dns
+  git fetch --all
   git pull
   ./git-update-srv.sh $@
   cd "$current_dir"
@@ -318,6 +319,7 @@ if [ $res -ne 0 ]; then
 
   current_dir="$PWD"
   cd ../discover-git-server-dns
+  git fetch --all
   git pull
   ./git-update-srv.sh $@
   cd "$current_dir"
