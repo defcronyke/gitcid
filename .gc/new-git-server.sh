@@ -310,6 +310,14 @@ if [ $res -ne 0 ]; then
     echo ""
   fi
 
+  current_dir="$PWD"
+
+  cd discover-git-server-dns
+
+  ./git-update-srv.sh
+
+  cd "$current_dir"
+
   exit $last_bad
 fi
 
