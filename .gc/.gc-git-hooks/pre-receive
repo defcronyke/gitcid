@@ -2,79 +2,79 @@
 
 gc_pre_receive_get_ref_name() {
     # --- Arguments
-	oldrev=$(git rev-parse $1)
-	newrev=$(git rev-parse $2)
-	refname="$3"
+  oldrev=$(git rev-parse $1)
+  newrev=$(git rev-parse $2)
+  refname="$3"
 
-	# --- Interpret
-	# 0000->1234 (create)
-	# 1234->2345 (update)
-	# 2345->0000 (delete)
-	if expr "$oldrev" : '0*$' >/dev/null
-	then
-		change_type="create"
-	else
-		if expr "$newrev" : '0*$' >/dev/null
-		then
-			change_type="delete"
-		else
-			change_type="update"
-		fi
-	fi
+  # --- Interpret
+  # 0000->1234 (create)
+  # 1234->2345 (update)
+  # 2345->0000 (delete)
+  if expr "$oldrev" : '0*$' >/dev/null
+  then
+    change_type="create"
+  else
+    if expr "$newrev" : '0*$' >/dev/null
+    then
+      change_type="delete"
+    else
+      change_type="update"
+    fi
+  fi
 
     # --- Get the revision types
-	newrev_type=$(git cat-file -t $newrev 2> /dev/null)
-	oldrev_type=$(git cat-file -t "$oldrev" 2> /dev/null)
-	case "$change_type" in
-	create|update)
-		rev="$newrev"
-		rev_type="$newrev_type"
-		;;
-	delete)
-		rev="$oldrev"
-		rev_type="$oldrev_type"
-		;;
-	esac
+  newrev_type=$(git cat-file -t $newrev 2> /dev/null)
+  oldrev_type=$(git cat-file -t "$oldrev" 2> /dev/null)
+  case "$change_type" in
+  create|update)
+    rev="$newrev"
+    rev_type="$newrev_type"
+    ;;
+  delete)
+    rev="$oldrev"
+    rev_type="$oldrev_type"
+    ;;
+  esac
 
-	# The revision type tells us what type the commit is, combined with
-	# the location of the ref we can decide between
-	#  - working branch
-	#  - tracking branch
-	#  - unannoted tag
-	#  - annotated tag
-	case "$refname","$rev_type" in
-		refs/tags/*,commit)
-			# un-annotated tag
-			refname_type="tag"
-			short_refname=${refname##refs/tags/}
-			;;
-		refs/tags/*,tag)
-			# annotated tag
-			refname_type="annotated tag"
-			short_refname=${refname##refs/tags/}
-			# change recipients
-			if [ -n "$announcerecipients" ]; then
-				recipients="$announcerecipients"
-			fi
-			;;
-		refs/heads/*,commit)
-			# branch
-			refname_type="branch"
-			short_refname=${refname##refs/heads/}
-			;;
-		refs/remotes/*,commit)
-			# tracking branch
-			refname_type="tracking branch"
-			short_refname=${refname##refs/remotes/}
-			echo >&2 "*** Push-update of tracking branch, $refname"
-			return 1
-			;;
-		*)
-			# Anything else (is there anything else?)
-			echo >&2 "*** Unknown type of update to $refname ($rev_type)"
-			return 1
-			;;
-	esac
+  # The revision type tells us what type the commit is, combined with
+  # the location of the ref we can decide between
+  #  - working branch
+  #  - tracking branch
+  #  - unannoted tag
+  #  - annotated tag
+  case "$refname","$rev_type" in
+    refs/tags/*,commit)
+      # un-annotated tag
+      refname_type="tag"
+      short_refname=${refname##refs/tags/}
+      ;;
+    refs/tags/*,tag)
+      # annotated tag
+      refname_type="annotated tag"
+      short_refname=${refname##refs/tags/}
+      # change recipients
+      if [ -n "$announcerecipients" ]; then
+        recipients="$announcerecipients"
+      fi
+      ;;
+    refs/heads/*,commit)
+      # branch
+      refname_type="branch"
+      short_refname=${refname##refs/heads/}
+      ;;
+    refs/remotes/*,commit)
+      # tracking branch
+      refname_type="tracking branch"
+      short_refname=${refname##refs/remotes/}
+      echo >&2 "*** Push-update of tracking branch, $refname"
+      return 1
+      ;;
+    *)
+      # Anything else (is there anything else?)
+      echo >&2 "*** Unknown type of update to $refname ($rev_type)"
+      return 1
+      ;;
+  esac
 
     GITCID_REF_NAME="${short_refname}"
 
@@ -82,17 +82,20 @@ gc_pre_receive_get_ref_name() {
 }
 
 gc_git_hook_pre_receive() {
-    GITCID_VERBOSE_OUTPUT="y"
+  GITCID_VERBOSE_OUTPUT="y"
 
-	GITCID_DIR=${GITCID_DIR:-".gc/"}
+  sudo chown -R $USER: .
+  sudo chown -R $USER: *
 
-	source "${GITCID_DIR}deps.sh" $@
-	res_import_deps=$?
-	if [ $res_import_deps -ne 0 ]; then
-		gitcid_log_warn "${BASH_SOURCE[0]}" $LINENO "Failed importing GitCid dependencies. Things might not work properly, so you might want to address the issue."
-	fi
+  GITCID_DIR=${GITCID_DIR:-".gc/"}
 
-	gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Invoked git hook: ${BASH_SOURCE[0]} $@"
+  source "${GITCID_DIR}deps.sh" $@
+  res_import_deps=$?
+  if [ $res_import_deps -ne 0 ]; then
+    gitcid_log_warn "${BASH_SOURCE[0]}" $LINENO "Failed importing GitCid dependencies. Things might not work properly, so you might want to address the issue."
+  fi
+
+  gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Invoked git hook: ${BASH_SOURCE[0]} $@"
 
     if [ -n "$1" -a -n "$2" -a -n "$3" ]; then
         GITCID_REF_NAME="$(gc_pre_receive_get_ref_name $2 $3 $1)"
@@ -106,14 +109,14 @@ gc_git_hook_pre_receive() {
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Got ref name: ${GITCID_REF_NAME}"
 
     source "${GITCID_DIR}run.sh" -d $@
-	res_import_deps=$?
-	if [ $res_import_deps -ne 0 ]; then
-		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed running GitCid pipeline. Exiting with error code:\n\
+  res_import_deps=$?
+  if [ $res_import_deps -ne 0 ]; then
+    gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed running GitCid pipeline. Exiting with error code:\n\
 ${res_import_deps}"
         return ${res_import_deps}
-	fi
+  fi
 
-	gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "The git hook finished successfully: ${BASH_SOURCE[0]} $@"
+  gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "The git hook finished successfully: ${BASH_SOURCE[0]} $@"
 }
 
 gc_git_hook_pre_receive "$@"
