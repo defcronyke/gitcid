@@ -311,17 +311,19 @@ if [ $res -ne 0 ]; then
   fi
 
   current_dir="$PWD"
-
   cd discover-git-server-dns
-
   git pull
-
   ./git-update-srv.sh $@
-
   cd "$current_dir"
 
   exit $last_bad
 fi
+
+current_dir="$PWD"
+cd discover-git-server-dns
+git pull
+./git-update-srv.sh $@
+cd "$current_dir"
 
 # if [ $res -eq 0 ]; then
 #   new_git_server_detect_other_git_servers $@
