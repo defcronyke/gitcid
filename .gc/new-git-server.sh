@@ -316,7 +316,7 @@ if [ $res -ne 0 ]; then
 
   git pull
 
-  ./git-update-srv.sh
+  ./git-update-srv.sh $@
 
   cd "$current_dir"
 
