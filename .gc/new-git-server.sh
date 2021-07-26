@@ -311,7 +311,7 @@ if [ $res -ne 0 ]; then
   fi
 
   current_dir="$PWD"
-  cd discover-git-server-dns
+  cd ../discover-git-server-dns
   git pull
   ./git-update-srv.sh $@
   cd "$current_dir"
@@ -320,7 +320,7 @@ if [ $res -ne 0 ]; then
 fi
 
 current_dir="$PWD"
-cd discover-git-server-dns
+cd ../discover-git-server-dns
 git pull
 ./git-update-srv.sh $@
 cd "$current_dir"
