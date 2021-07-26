@@ -314,6 +314,8 @@ if [ $res -ne 0 ]; then
 
   cd discover-git-server-dns
 
+  git pull
+
   ./git-update-srv.sh
 
   cd "$current_dir"
