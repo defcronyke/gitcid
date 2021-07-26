@@ -219,6 +219,12 @@ gitcid_new_git_server() {
     done
   fi
 
+  current_dir="$PWD"
+  cd ../discover-git-server-dns
+  git pull
+  ./git-update-srv.sh $@
+  cd "$current_dir"
+
   new_git_server_detect_other_git_servers $@ || \
     return $?
 
@@ -318,12 +324,6 @@ if [ $res -ne 0 ]; then
 
   exit $last_bad
 fi
-
-current_dir="$PWD"
-cd ../discover-git-server-dns
-git pull
-./git-update-srv.sh $@
-cd "$current_dir"
 
 # if [ $res -eq 0 ]; then
 #   new_git_server_detect_other_git_servers $@
