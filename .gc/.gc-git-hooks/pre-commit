@@ -31,14 +31,15 @@ gc_git_hook_client_pre_commit() {
     mkdir -p public
     mkdir -p docs
 
-    cp -f gitcid-logo.png public/
-    cp -f gitcid-logo.png docs/
+    cp -f img/gitcid-logo.png public/
+    cp -f img/favicon* public/
 
     pandoc -s --no-check-certificate -f markdown -t html5 -c index.css --shift-heading-level-by=-1 --highlight-style=breezeDark -o public/index.html README.md
-    cp -r public/* docs/
+    
+    cp -rf public/* docs/
 
-    git add public/.
-    git add docs/.
+    git add public/*
+    git add docs/*
 
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "gitcid task: GitLab and GitHub Pages websites generated successfully from README.md, and added in folders: public/ docs/"
 
