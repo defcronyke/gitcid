@@ -205,7 +205,7 @@ gitcid_new_git_server() {
   for j in $@; do
     echo ""
     echo "Adding git-server key to local ssh config: $HOME/.ssh/git-server.key >> $HOME/.ssh/config"
-    cat $HOME/.ssh/config | grep -v "Host $j" && printf "%b\n" "\nHost $j\n\tHostName $j\n\tUser $USER\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null
+    cat $HOME/.ssh/config | grep "Host $j" >/dev/null || printf "%b\n" "\nHost $j\n\tHostName $j\n\tUser $USER\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null
     echo ""
     echo "Added key to local $HOME:/.ssh/config for host: $USER@$j"
 
@@ -219,7 +219,7 @@ gitcid_new_git_server() {
     
     echo ""
     echo "Activating ssh key config on host: $j"
-    { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep -v "$(cat $HOME/.ssh/git-server.key.pub)" && cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -v "Host '$j'" && printf "%b\n" "\nHost '$j'\n\tHostName '$j'\n\tUser $USER\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; };
+    { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep "Host '$j'" >/dev/null || printf "%b\n" "\nHost '$j'\n\tHostName '$j'\n\tUser $USER\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; };
     echo ""
     echo "Finished installing ssh key on host: $j"
     echo ""
