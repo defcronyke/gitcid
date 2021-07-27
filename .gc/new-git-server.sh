@@ -213,15 +213,17 @@ gitcid_new_git_server() {
     echo "Verifying host: $j"
     ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null
     
+    gc_ssh_username="$(cat $HOME/.ssh/config | grep -A2 -P "^Host $j$" | tail -n1 | awk '{print $NF}')"
     echo ""
-    echo "Installing ssh key onto host: $j"
-    scp $HOME/.ssh/git-server.key* $j:~/.ssh/
+    echo "Installing ssh key onto host: $gc_ssh_username@$j"
+
+    scp $HOME/.ssh/git-server.key* $j:/home/$gc_ssh_username/.ssh/
     
     echo ""
-    echo "Activating ssh key config on host: $j"
-    { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep "Host '$j'" >/dev/null || printf "%b\n" "\nHost '$j'\n\tHostName '$j'\n\tUser $USER\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; };
+    echo "Activating ssh key config on host: $gc_ssh_username@$j"
+    { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $j 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -P "^Host '$j'$" >/dev/null || printf "%b\n" "\nHost '$j'\n\tHostName '$j'\n\tUser '$gc_ssh_username'\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; };
     echo ""
-    echo "Finished installing ssh key on host: $j"
+    echo "Finished installing ssh key on host: $gc_ssh_username@$j"
     echo ""
   done
 
@@ -230,7 +232,7 @@ gitcid_new_git_server() {
   echo ""
 
   for j in $@; do
-    # ssh-keygen -F "$j" || ssh-keyscan "$j" >>$HOME/.ssh/known_hosts
+    gc_ssh_username="$(cat $HOME/.ssh/config | grep -A2 -P "^Host $j$" | tail -n1 | awk '{print $NF}')"
 
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
