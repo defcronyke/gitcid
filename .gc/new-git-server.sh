@@ -142,8 +142,8 @@ gitcid_new_git_server() {
   cd "${HOME}/.ssh"
 
   if [ ! -f "git-server.key" ]; then
-    ssh-keygen -t rsa -b 4096 -q -f "git-server.key" -N "" -C git-server
-    chmod 600 git-server.key*
+    ssh-keygen -t rsa -b 4096 -q -f $HOME/.ssh/git-server.key -N "" -C git-server
+    chmod 600 $HOME/.ssh/git-server.key*
   fi
 
   if [ $# -eq 1 ] && [ "$1" == "-h" ]; then
@@ -203,6 +203,12 @@ gitcid_new_git_server() {
   echo ""
   echo "Installing ssh keys if they aren't added yet."
   for j in $@; do
+    echo ""
+    echo "Adding git-server key to local ssh config: $HOME/.ssh/git-server.key >> $HOME/.ssh/config"
+    cat $HOME/.ssh/config | grep -v "Host $j" && printf "%b\n" "\nHost $j\n\tHostName $j\n\tUser $USER\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null
+    echo ""
+    echo "Added key to local $HOME:/.ssh/config for host: $USER@$j"
+
     echo ""
     echo "Verifying host: $j"
     ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null
