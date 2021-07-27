@@ -135,6 +135,17 @@ gitcid_new_git_server() {
   git config --global init.defaultBranch master >/dev/null 2>&1
   # ----------
 
+  # Install new SSH key for git servers to update DNS.
+  start_dir="$PWD"
+  mkdir -p "${HOME}/.ssh"
+  chmod 700 "${HOME}/.ssh"
+  cd "${HOME}/.ssh"
+
+  if [ ! -f "git-server.key" ]; then
+    ssh-keygen -t rsa -b 4096 -q -f "git-server.key" -N "" -C git-server
+    chmod 600 git-server.key*
+  fi
+
   if [ $# -eq 1 ] && [ "$1" == "-h" ]; then
     shift 1
     gitcid_new_git_server_usage
@@ -183,13 +194,37 @@ gitcid_new_git_server() {
   fi
 
   echo ""
+  echo ""
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
 
+  # Install ssh keys on servers
+  echo ""
+  echo ""
+  echo "Installing ssh keys if they aren't added yet."
   for j in $@; do
-    mkdir -p $HOME/.ssh
-    chmod 700 $HOME/.ssh
-    ssh-keygen -F "$j" || ssh-keyscan "$j" >>$HOME/.ssh/known_hosts
+    echo ""
+    echo "Verifying host: $j"
+    ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null
+    
+    echo ""
+    echo "Installing ssh key onto host: $j"
+    scp $HOME/.ssh/git-server.key* $j:~/.ssh/
+    
+    echo ""
+    echo "Activating ssh key config on host: $j"
+    { ssh -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep -v "$(cat $HOME/.ssh/git-server.key.pub)" && cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -v "Host '$j'" && printf "%b\n" "\nHost '$j'\n\tHostName '$j'\n\tUser $USER\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; };
+    echo ""
+    echo "Finished installing ssh key on host: $j"
+    echo ""
+  done
+
+  echo "Finished installing ssh keys on hosts."
+  echo ""
+  echo ""
+
+  for j in $@; do
+    # ssh-keygen -F "$j" || ssh-keyscan "$j" >>$HOME/.ssh/known_hosts
 
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
