@@ -233,7 +233,7 @@ gitcid_new_git_server() {
 }
 
 gitcid_new_git_server $@; res=$?
-gitcid_new_git_server $@; res=$?  # Run it twice for best effect.
+# gitcid_new_git_server $@; res=$?
 
 # If cancelled.
 if [ $res -eq 20 ]; then
