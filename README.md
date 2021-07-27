@@ -1,4 +1,4 @@
-# ![gitcid logo](img/gitcid-logo-s.png) [GitCid](#table-of-contents)
+# [![gitcid logo](img/gitcid-logo-s.png)](img/gitcid-logo.png) [GitCid](#table-of-contents)
 
 [gitc.id](https://gitc.id) ⊙ _"power tools for [`git`](https://git-scm.com)"_ ⊙ [Copyright © 2021](https://defcronyke.gitlab.io/epaper-idf/jeremy-profile-paint-bw.png) [Jeremy Carter](https://eternalvoid.net) `<`[jeremy@jeremycarter.ca](mailto:Jeremy%20Carter%20<jeremy@jeremycarter.ca>?subject=gitcid)`>`
 
