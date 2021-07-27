@@ -219,12 +219,12 @@ gitcid_new_git_server() {
     done
   fi
 
-  current_dir="$PWD"
-  cd ../discover-git-server-dns
-  # git fetch --all
-  git pull
-  ./git-update-srv.sh $@
-  cd "$current_dir"
+  # current_dir="$PWD"
+  # cd ../discover-git-server-dns
+  # # git fetch --all
+  # git pull
+  # ./git-update-srv.sh $@
+  # cd "$current_dir"
 
   new_git_server_detect_other_git_servers $@ || \
     return $?
@@ -317,12 +317,12 @@ if [ $res -ne 0 ]; then
     echo ""
   fi
 
-  current_dir="$PWD"
-  cd ../discover-git-server-dns
-  # git fetch --all
-  git pull
-  ./git-update-srv.sh $@
-  cd "$current_dir"
+  # current_dir="$PWD"
+  # cd ../discover-git-server-dns
+  # # git fetch --all
+  # git pull
+  # ./git-update-srv.sh $@
+  # cd "$current_dir"
 
   exit $last_bad
 fi
