@@ -34,6 +34,7 @@ gc_git_hook_client_pre_commit() {
     mkdir -p public/img
     cp -f img/gitcid-logo*.png public/img/
     cp -f img/favicon* public/img/
+    cp -f img/favicon.ico public/
 
     pandoc -s --no-check-certificate -f markdown -t html5 -c index.css --shift-heading-level-by=-1 --highlight-style=breezeDark -o public/index.html README.md
     
