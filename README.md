@@ -8,7 +8,7 @@
 
 ## [Table of Contents](#table-of-contents)
 
-- [GitCid ![gitcid logo](img/gitcid-logo-s.png)](#gitcid-)
+- [!gitcid logo [GitCid](#table-of-contents)](#-gitcid)
   - [Table of Contents](#table-of-contents)
   - [Links](#links)
     - [Website](#website)
