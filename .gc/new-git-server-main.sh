@@ -80,13 +80,23 @@ gc_new_git_server_install_cancel() {
   return 20
 }
 
+gc_new_git_server_get_raspios_lite_armhf_download_latest_version_zip_url() {
+  GC_RASPIOS_LITE_ARMHF_DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_lite_armhf/images/"; \
+  GC_RASPIOS_LITE_ARMHF_DOWNLOAD_VERSIONS=( ); \
+  GC_RASPIOS_LITE_ARMHF_DOWNLOAD_VERSIONS+=( "$(curl -sL $GC_RASPIOS_LITE_ARMHF_DOWNLOAD_BASE_URL | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g')" ); \
+  GC_RASPIOS_LITE_ARMHF_DOWNLOAD_LATEST_VERSION_DIR="$(echo "${GC_RASPIOS_LITE_ARMHF_DOWNLOAD_VERSIONS[@]}" | tail -n1)"; \
+  GC_RASPIOS_LITE_ARMHF_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME="$(printf '%s\n' "$(curl -sL ${GC_RASPIOS_LITE_ARMHF_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARMHF_DOWNLOAD_LATEST_VERSION_DIR}/ | grep -P "^.*href=\".*raspios.*.zip\".*$" | sed 's@.*\(.*href=\"\)\(.*raspios.*.zip\)\(\".*\).*@\2@g')")"; \
+  GC_RASPIOS_LITE_ARMHF_DOWNLOAD_LATEST_VERSION_ZIP_URL="$(printf '%s\n' "${GC_RASPIOS_LITE_ARMHF_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARMHF_DOWNLOAD_LATEST_VERSION_DIR}${GC_RASPIOS_LITE_ARMHF_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME}")"; \
+  echo "$GC_RASPIOS_LITE_ARMHF_DOWNLOAD_LATEST_VERSION_ZIP_URL"
+}
+
 gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url() {
-  GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_lite_arm64/images/"; \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_lite_armhf/images/"; \
   GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS=( ); \
-  GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS+=( "$(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/ | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g')" ); \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS+=( "$(curl -sL $GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g')" ); \
   GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR="$(echo "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS[@]}" | tail -n1)"; \
-  GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME="$(printf '%s\n' "$(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}/ | grep -P "^.*href=\".*raspios.*.zip\".*$" | sed 's@.*\(.*href=\"\)\(.*raspios.*.zip\)\(\".*\).*@\2@g')")"; \
-  GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL="$(printf '%s\n' "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME}")"
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME="$(printf '%s\n' "$(curl -sL ${GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}/ | grep -P "^.*href=\".*raspios.*.zip\".*$" | sed 's@.*\(.*href=\"\)\(.*raspios.*.zip\)\(\".*\).*@\2@g')")"; \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL="$(printf '%s\n' "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME}")"; \
   echo "$GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL"
 }
 
@@ -217,34 +227,8 @@ gitcid_new_git_server_post() {
   return $last_bad
 }
 
-gitcid_new_git_server_main() {
-  tasks=( )
-
-  trap 'for i in ${tasks[@]}; do kill $i 2>/dev/null; done; for i in $(jobs -p); do kill $i 2>/dev/null; done; gc_new_git_server_install_cancel $@ || return $?' INT
-
-  GITCID_DIR=${GITCID_DIR:-".gc/"}
-	GITCID_NEW_REPO_PERMISSIONS=${GITCID_NEW_REPO_PERMISSIONS:-"0640"}
-
-  # ----------
-  # Do some minimal git config setup to make some annoying yellow warning text stop 
-  # showing on newer versions of git.
-
-  # When doing "git pull", merge by default instead of rebase.
-  git config --global pull.rebase >/dev/null 2>&1 || \
-  git config --global pull.rebase false >/dev/null 2>&1
-
-  # When doing "git init", use "master" for the default branch name.
-  git config --global init.defaultBranch >/dev/null 2>&1 || \
-  git config --global init.defaultBranch master >/dev/null 2>&1
-  # ----------
-
-  "${GITCID_DIR}deps.sh" >/dev/null
-	res_import_deps=$?
-	if [ $res_import_deps -ne 0 ]; then
-		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed importing GitCid dependencies. I guess it's not going to work, sorry!"
-		return $res_import_deps
-	fi
-
+# Install a new OS to a locally-connected disk.
+gc_new_git_server_install_os() {
   if [ $# -ge 1 ]; then
     if [[ "$1" =~ ^\-[Rr]f?F?$ ]]; then
       if [ $# -lt 2 ]; then
@@ -254,7 +238,8 @@ gitcid_new_git_server_main() {
         echo "error: Path needs to be similar to: /dev/sdx"
         echo ""
 
-        # exit 1
+        return 20
+
       else
         echo "$2" | grep -P "^/dev/.+$"
         if [ $? -ne 0 ]; then
@@ -264,7 +249,7 @@ gitcid_new_git_server_main() {
           echo "error: Path needs to be similar to: /dev/sdx"
           echo ""
 
-          exit 2
+          return 20
         fi
 
         if [[ ! "$1" =~ ^\-[Rr]fF$ ]]; then
@@ -343,12 +328,19 @@ gitcid_new_git_server_main() {
         echo "Retreiving the latest Raspberry Pi OS image from their official server if necessary..."
         echo ""
         
-        gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url
+        if [[ "$1" =~ ^\-rf?F?$ ]]; then
+          gc_new_git_server_get_raspios_lite_armhf_download_latest_version_zip_url $@
+        elif [[ "$1" =~ ^\-Ff?F?$ ]]; then
+          gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url $@
+        else
+          echo "error: Unexpected option. Not installing."
+          return 20
+        fi
         
         echo ""
       fi
       
-      exit 0
+      return 21
     else
       echo ""
       printf "error: invalid args supplied to command: $0 $@"
@@ -357,6 +349,92 @@ gitcid_new_git_server_main() {
       return $?
     fi
   fi
+}
+
+gitcid_new_git_server_main() {
+  tasks=( )
+
+  trap 'for i in ${tasks[@]}; do kill $i 2>/dev/null; done; for i in $(jobs -p); do kill $i 2>/dev/null; done; gc_new_git_server_install_cancel $@ || return $?' INT
+
+  GITCID_DIR=${GITCID_DIR:-".gc/"}
+	GITCID_NEW_REPO_PERMISSIONS=${GITCID_NEW_REPO_PERMISSIONS:-"0640"}
+
+  # ----------
+  # Do some minimal git config setup to make some annoying yellow warning text stop 
+  # showing on newer versions of git.
+
+  # When doing "git pull", merge by default instead of rebase.
+  git config --global pull.rebase >/dev/null 2>&1 || \
+  git config --global pull.rebase false >/dev/null 2>&1
+
+  # When doing "git init", use "master" for the default branch name.
+  git config --global init.defaultBranch >/dev/null 2>&1 || \
+  git config --global init.defaultBranch master >/dev/null 2>&1
+  # ----------
+
+  "${GITCID_DIR}deps.sh" >/dev/null
+	res_import_deps=$?
+	if [ $res_import_deps -ne 0 ]; then
+		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed importing GitCid dependencies. I guess it's not going to work, sorry!"
+		return $res_import_deps
+	fi
+
+
+
+  ####
+  # --------------------  #
+  # Install a new OS to a locally-connected disk if 
+  # requested,by passing any of the following flags.
+  #
+  # WARNING: THIS WILL PERMANENTLY ERASE ANY DATA ON 
+  # SPECIFIED THE DISK! IT WILL INSTALL A NEW OPERATING
+  # SYSTEM ON IT, AND NOTHING WHICH WAS ON IT BEFORE
+  # WILL BE RECOVERABLE! You have been warned.
+  #
+  # --------------------  #
+  #
+  # Install a new OS to a locally connected disk:
+  # 
+  #   ./new-git-server.sh [-r[f] | -R[f]] </path/to/device>
+  #
+  #   -r    Raspberry Pi OS Light armhf (32-bit stable version)
+  #
+  #   -R    Raspberry Pi OS Light aarch64 (64-bit beta version)
+  #
+  #   -rf   (WARNING: DANGEROUS!) Install Raspberry Pi OS 
+  #         Light armhf, without prompting for confirmation.
+  #
+  #   -Rf   (WARNING: DANGEROUS!) Install Raspberry Pi OS 
+  #         Light aarch64, without prompting for confirmation.
+  #
+  # --------------------  #
+  #
+  # Unsupported dangerous options for automation purposes:
+  #
+  #   ./new-git-server.sh [-rF | -RF] </path/to/device>
+  #
+  #   -rF   (WARNING: VERY DANGEROUS!) Install Raspberry 
+  #         Pi OS Light armhf, without any prompt and with all 
+  #         failsafe delays disabled.
+  #
+  #   -RF   (WARNING: VERY DANGEROUS!) Install Raspberry 
+  #         Pi OS Light aarch64, without any prompt and with all 
+  #         failsafe delays disabled.
+  #
+  # --------------------  #
+  #
+  gc_new_git_server_install_os $@
+  res=$?
+  if [ $res -ne 0 ]; then
+    if [ $res -eq 21 ]; then
+      exit 0
+    fi
+    return $res
+  fi
+  # -------------------- #
+  ####
+
+
 
   gc_new_git_server_open_web_browser=1
   gc_new_git_server_setup_sudo=1
