@@ -80,6 +80,16 @@ gc_new_git_server_install_cancel() {
   return 20
 }
 
+gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url() {
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_lite_arm64/images/"; \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS=( ); \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS+=( "$(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/ | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g')" ); \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR="$(echo "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS[@]}" | tail -n1)"; \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME="$(printf '%s\n' "$(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}/ | grep -P "^.*href=\".*raspios.*.zip\".*$" | sed 's@.*\(.*href=\"\)\(.*raspios.*.zip\)\(\".*\).*@\2@g')")"; \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL="$(printf '%s\n' "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME}")"
+  echo "$GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL"
+}
+
 gc_new_git_server_interactive() {
   echo ""
   echo "Are you sure you want to install git server(s) at the ssh path(s): $@ [ y / N ] ? "
@@ -292,6 +302,28 @@ gitcid_new_git_server_main() {
         fi
         echo "Retreiving the latest Raspberry Pi OS image from their official server if necessary..."
         echo ""
+        
+        gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url
+
+        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_lite_arm64/images/"; \
+        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS=( ); \
+        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS+=( "$(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/ | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g')" ); \
+        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR="$(echo "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS[@]}" | tail -n1)"; \
+        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME="$(printf '%s\n' "$(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}/ | grep -P "^.*href=\".*raspios.*.zip\".*$" | sed 's@.*\(.*href=\"\)\(.*raspios.*.zip\)\(\".*\).*@\2@g')")"; \
+        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL="$(printf '%s\n' "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME}")"
+        # echo "$GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL"
+
+        # count=1
+        # for i in ${GC_RPI_OS_DOWNLOAD_VERSIONS_AARCH64[@]}; do
+        #   echo "$count: $i"
+        #   ((count++))
+        # done
+        # count=0
+
+        # for i in $(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/ | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g'); do
+
+        # done
+        # GC_RPI_OS_DOWNLOAD_LINK_AARCH64
         
         echo ""
       fi
