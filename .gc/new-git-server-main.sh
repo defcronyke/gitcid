@@ -230,7 +230,7 @@ gitcid_new_git_server_post() {
 # Install a new OS to a locally-connected disk.
 gc_new_git_server_install_os() {
   if [ $# -ge 1 ]; then
-    if [[ "$1" =~ ^\-[Rr]f?F?$ ]]; then
+    if [[ "$1" =~ ^\-[Rr]F?f?$ ]]; then
       if [ $# -lt 2 ]; then
         echo ""
         echo "error: New git server installation on a Raspberry Pi requested without a target device path."
@@ -252,7 +252,7 @@ gc_new_git_server_install_os() {
           return 20
         fi
 
-        if [[ ! "$1" =~ ^\-[Rr]fF$ ]]; then
+        if [[ ! "$1" =~ ^\-[Rr]Ff$ ]]; then
           sleep 2
         fi
         echo ""
@@ -268,7 +268,7 @@ gc_new_git_server_install_os() {
         echo "WARNING: ----- !! --- !! BIG WARNING !! --- !! -----"
         echo ""
         
-        if [[ ! "$1" =~ ^\-[Rr]fF?$ ]]; then
+        if [[ ! "$1" =~ ^\-[Rr]F?f$ ]]; then
           echo "Are you sure you want to install a new git server at this local device path?: $2"
           printf "[ y / N ] ? "
           read gitcid_new_git_server_confirm_destroy_all_data_on_target_device
@@ -283,7 +283,7 @@ gc_new_git_server_install_os() {
             return $?
           fi
         else
-          if [[ ! "$1" =~ ^\-[Rr]fF$ ]]; then
+          if [[ ! "$1" =~ ^\-[Rr]Ff$ ]]; then
             sleep 5
           fi
           echo "WARNING: ***** !! *** !! MASSIVELY HUGE WARNING !! *** !! *****"
@@ -298,7 +298,7 @@ gc_new_git_server_install_os() {
           echo "WARNING:"
           echo "WARNING: ***** !! *** !! MASSIVELY HUGE WARNING !! *** !! *****"
           echo ""
-          if [[ ! "$1" =~ ^\-[Rr]fF$ ]]; then
+          if [[ ! "$1" =~ ^\-[Rr]Ff$ ]]; then
             sleep 2
             echo "To abort this data destroying operation, press CTRL-C within the next 10 seconds."
             echo "Waiting now for 10 seconds, in case you want to abort the operation before it starts..."
@@ -311,7 +311,7 @@ gc_new_git_server_install_os() {
           
           echo "WARNING: Okay, it looks like you're sure you want to erase this device without confirmation: $2"
 
-          if [[ ! "$1" =~ ^\-[Rr]fF$ ]]; then
+          if [[ ! "$1" =~ ^\-[Rr]Ff$ ]]; then
             echo "WARNING: If it was a mistake, this is your last chance to cancel. Waiting 5 more seconds..."
             sleep 2
             echo ""
@@ -328,9 +328,9 @@ gc_new_git_server_install_os() {
         echo "Retreiving the latest Raspberry Pi OS image from their official server if necessary..."
         echo ""
         
-        if [[ "$1" =~ ^\-rf?F?$ ]]; then
+        if [[ "$1" =~ ^\-rF?f?$ ]]; then
           GC_RASPIOS_INSTALL_LINK="$(gc_new_git_server_get_raspios_lite_armhf_download_latest_version_zip_url $@)"
-        elif [[ "$1" =~ ^\-Rf?F?$ ]]; then
+        elif [[ "$1" =~ ^\-RF?f?$ ]]; then
           GC_RASPIOS_INSTALL_LINK="$(gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url $@)"
         else
           echo "error: Unexpected option. Not installing."
@@ -413,13 +413,13 @@ gitcid_new_git_server_main() {
   #
   # Unsupported dangerous options for automation purposes:
   #
-  #   ./new-git-server.sh [-rfF | -RfF] </path/to/device>
+  #   ./new-git-server.sh [-rFf | -RFf] </path/to/device>
   #
-  #   -rfF  (WARNING: VERY DANGEROUS!) Install Raspberry 
+  #   -rFf  (WARNING: VERY DANGEROUS!) Install Raspberry 
   #         Pi OS Light armhf, without any prompt and with all 
   #         failsafe delays disabled.
   #
-  #   -RfF  (WARNING: VERY DANGEROUS!) Install Raspberry 
+  #   -RFf  (WARNING: VERY DANGEROUS!) Install Raspberry 
   #         Pi OS Light aarch64, without any prompt and with all 
   #         failsafe delays disabled.
   #
