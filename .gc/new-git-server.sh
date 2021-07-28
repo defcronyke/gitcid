@@ -33,9 +33,7 @@ gitcid_new_git_server() {
   git config --global init.defaultBranch master >/dev/null 2>&1
   # ----------
 
-
-  git commit -n -m "Automatic commit by script: $0 $@" >/dev/null 2>&1 && \
-  git pull 2>/dev/null
+  git pull >/dev/null 2>&1
 
   ${GITCID_DIR}new-git-server-main.sh $@
 
