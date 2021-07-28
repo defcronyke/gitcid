@@ -91,7 +91,7 @@ gc_new_git_server_get_raspios_lite_armhf_download_latest_version_zip_url() {
 }
 
 gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url() {
-  GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_lite_armhf/images/"; \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_lite_arm64/images/"; \
   GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS=( ); \
   GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS+=( "$(curl -sL $GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g')" ); \
   GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR="$(echo "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS[@]}" | tail -n1)"; \
@@ -330,7 +330,7 @@ gc_new_git_server_install_os() {
         
         if [[ "$1" =~ ^\-rf?F?$ ]]; then
           gc_new_git_server_get_raspios_lite_armhf_download_latest_version_zip_url $@
-        elif [[ "$1" =~ ^\-Ff?F?$ ]]; then
+        elif [[ "$1" =~ ^\-Rf?F?$ ]]; then
           gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url $@
         else
           echo "error: Unexpected option. Not installing."
@@ -411,13 +411,13 @@ gitcid_new_git_server_main() {
   #
   # Unsupported dangerous options for automation purposes:
   #
-  #   ./new-git-server.sh [-rF | -RF] </path/to/device>
+  #   ./new-git-server.sh [-rfF | -RfF] </path/to/device>
   #
-  #   -rF   (WARNING: VERY DANGEROUS!) Install Raspberry 
+  #   -rfF  (WARNING: VERY DANGEROUS!) Install Raspberry 
   #         Pi OS Light armhf, without any prompt and with all 
   #         failsafe delays disabled.
   #
-  #   -RF   (WARNING: VERY DANGEROUS!) Install Raspberry 
+  #   -RfF  (WARNING: VERY DANGEROUS!) Install Raspberry 
   #         Pi OS Light aarch64, without any prompt and with all 
   #         failsafe delays disabled.
   #
