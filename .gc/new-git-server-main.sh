@@ -126,7 +126,7 @@ new_git_server_detect_other_git_servers() {
 }
 
 gitcid_new_git_server_post() {
-    if [ $# -gt 0 ]; then
+  if [ $# -gt 0 ]; then
     echo ""
     echo "args at return: $@"
     echo ""
@@ -238,7 +238,7 @@ gitcid_new_git_server_main() {
   git config --global init.defaultBranch master >/dev/null 2>&1
   # ----------
 
-  source "${GITCID_DIR}deps.sh" >/dev/null
+  "${GITCID_DIR}deps.sh" >/dev/null
 	res_import_deps=$?
 	if [ $res_import_deps -ne 0 ]; then
 		gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed importing GitCid dependencies. I guess it's not going to work, sorry!"
@@ -246,7 +246,7 @@ gitcid_new_git_server_main() {
 	fi
 
   if [ $# -ge 1 ]; then
-    if [ "$1" == "-r" ]; then
+    if [[ "$1" =~ ^\-[Rr]f?F?$ ]]; then
       if [ $# -lt 2 ]; then
         echo ""
         echo "error: New git server installation on a Raspberry Pi requested without a target device path."
@@ -267,68 +267,94 @@ gitcid_new_git_server_main() {
           exit 2
         fi
 
+        if [[ ! "$1" =~ ^\-[Rr]fF$ ]]; then
+          sleep 2
+        fi
         echo ""
         echo "New git server installation on a Raspberry Pi requested at target device path: $2"
         echo ""
-        echo ""
-        echo "----- !! --- !! BIG WARNING !! --- !! -----"
-        echo "----- !! --- !! BIG WARNING !! --- !! -----"
-        echo ""
-        echo "WARNING: !! This procedure will DESTROY ALL DATA ON THE TARGET DEVICE at the path you specified!"
-        echo ""
+        echo "WARNING: ----- !! --- !! BIG WARNING !! --- !! -----"
+        echo "WARNING:"
+        echo "WARNING: This procedure will DESTROY ALL DATA ON THE TARGET DEVICE at the path you specified!"
         echo "WARNING: All data on the target device will be permanently lost and unrecoverable!"
-        echo ""
         echo "WARNING: The device you're about to erase is: $2"
+        echo "WARNING: YOU HAVE BEEN WARNED !!"
+        echo "WARNING:"
+        echo "WARNING: ----- !! --- !! BIG WARNING !! --- !! -----"
         echo ""
-        echo "WARNING: !! YOU HAVE BEEN WARNED !!"
-        echo ""
-        echo "----- !! --- !! BIG WARNING !! --- !! -----"
-        echo "----- !! --- !! BIG WARNING !! --- !! -----"
-        echo ""
-        echo ""
-        echo "Are you sure you want to install a new git server at this local device path?: $2"
-        echo ""
-        printf "[ y / N ] ? "
-        read gitcid_new_git_server_confirm_destroy_all_data_on_target_device
-        echo ""
+        
+        if [[ ! "$1" =~ ^\-[Rr]fF?$ ]]; then
+          echo "Are you sure you want to install a new git server at this local device path?: $2"
+          printf "[ y / N ] ? "
+          read gitcid_new_git_server_confirm_destroy_all_data_on_target_device
+          echo ""
 
-        if [ "$gitcid_new_git_server_confirm_destroy_all_data_on_target_device" != "y" ] && \
-          [ "$gitcid_new_git_server_confirm_destroy_all_data_on_target_device" != "Y" ]; then
+          if [ "$gitcid_new_git_server_confirm_destroy_all_data_on_target_device" != "y" ] && \
+            [ "$gitcid_new_git_server_confirm_destroy_all_data_on_target_device" != "Y" ]; then
+            echo ""
+            echo "Cancelling..."
+            echo ""
+            gc_new_git_server_install_cancel $@
+            return $?
+          fi
+        else
+          if [[ ! "$1" =~ ^\-[Rr]fF$ ]]; then
+            sleep 5
+          fi
+          echo "WARNING: ***** !! *** !! MASSIVELY HUGE WARNING !! *** !! *****"
+          echo "WARNING:"
+          echo "WARNING: You invoked this command with the NO CONFIRMATION REQUIRED option selected:"
+          echo "WARNING:   $0 $@"
+          echo "WARNING:"
+          echo "WARNING: ALL DATA ON THE FOLLOWING DEVICE WILL BE PERMANENTLY ERASED WITHOUT ASKING FIRST:"
+          echo "WARNING:   $0 $2"
+          echo "WARNING:"
+          echo "WARNING: You have been warned."
+          echo "WARNING:"
+          echo "WARNING: ***** !! *** !! MASSIVELY HUGE WARNING !! *** !! *****"
           echo ""
-          echo "Cancelling..."
+          if [[ ! "$1" =~ ^\-[Rr]fF$ ]]; then
+            sleep 2
+            echo "To abort this data destroying operation, press CTRL-C within the next 10 seconds."
+            echo "Waiting now for 10 seconds, in case you want to abort the operation before it starts..."
+            sleep 5
+            echo ""
+            echo "Waiting.........."
+            echo ""
+            sleep 15
+          fi
+          
+          echo "WARNING: Okay, it looks like you're sure you want to erase this device without confirmation: $2"
+
+          if [[ ! "$1" =~ ^\-[Rr]fF$ ]]; then
+            echo "WARNING: If it was a mistake, this is your last chance to cancel. Waiting 5 more seconds..."
+            sleep 2
+            echo ""
+            echo "Waiting.........."
+            echo ""
+            sleep 10
+          fi
+
           echo ""
-          gc_new_git_server_install_cancel $@
-          return $?
+          echo "Understood. Erasing data now... Please don't cancel. It would only cause problems and it's too late to stop now."
+          echo ""
         fi
+
         echo "Retreiving the latest Raspberry Pi OS image from their official server if necessary..."
         echo ""
         
         gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url
-
-        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_lite_arm64/images/"; \
-        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS=( ); \
-        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS+=( "$(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/ | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g')" ); \
-        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR="$(echo "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS[@]}" | tail -n1)"; \
-        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME="$(printf '%s\n' "$(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}/ | grep -P "^.*href=\".*raspios.*.zip\".*$" | sed 's@.*\(.*href=\"\)\(.*raspios.*.zip\)\(\".*\).*@\2@g')")"; \
-        # GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL="$(printf '%s\n' "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME}")"
-        # echo "$GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL"
-
-        # count=1
-        # for i in ${GC_RPI_OS_DOWNLOAD_VERSIONS_AARCH64[@]}; do
-        #   echo "$count: $i"
-        #   ((count++))
-        # done
-        # count=0
-
-        # for i in $(curl -sL https://downloads.raspberrypi.org/raspios_lite_arm64/images/ | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g'); do
-
-        # done
-        # GC_RPI_OS_DOWNLOAD_LINK_AARCH64
         
         echo ""
       fi
       
       exit 0
+    else
+      echo ""
+      printf "error: invalid args supplied to command: $0 $@"
+
+      gc_new_git_server_install_cancel $@
+      return $?
     fi
   fi
 
