@@ -284,14 +284,16 @@ gc_new_git_server_install_os() {
           fi
         else
           if [[ ! "$1" =~ ^\-[Rr]Ff$ ]]; then
-            sleep 5
+            sleep 3
           fi
           echo "WARNING: ***** !! *** !! MASSIVELY HUGE WARNING !! *** !! *****"
           echo "WARNING:"
           echo "WARNING: You invoked this command with the NO CONFIRMATION REQUIRED option selected:"
+          echo "WARNING:"
           echo "WARNING:   $0 $@"
           echo "WARNING:"
           echo "WARNING: ALL DATA ON THE FOLLOWING DEVICE WILL BE PERMANENTLY ERASED WITHOUT ASKING FIRST:"
+          echo "WARNING:"
           echo "WARNING:   $0 $2"
           echo "WARNING:"
           echo "WARNING: You have been warned."
@@ -302,14 +304,17 @@ gc_new_git_server_install_os() {
             sleep 2
             echo "To abort this data destroying operation, press CTRL-C within the next 10 seconds."
             echo "Waiting now for 10 seconds, in case you want to abort the operation before it starts..."
-            sleep 5
+            sleep 3
             echo ""
             echo "Waiting.........."
             echo ""
-            sleep 15
+            sleep 12
           fi
           
-          echo "WARNING: Okay, it looks like you're sure you want to erase this device without confirmation: $2"
+          echo "WARNING: Okay, it looks like you're sure you want to erase this device without confirmation:"
+          echo ""
+          echo "  $2"
+          echo ""
 
           if [[ ! "$1" =~ ^\-[Rr]Ff$ ]]; then
             echo "WARNING: If it was a mistake, this is your last chance to cancel. Waiting 5 more seconds..."
@@ -317,7 +322,7 @@ gc_new_git_server_install_os() {
             echo ""
             echo "Waiting.........."
             echo ""
-            sleep 10
+            sleep 7
           fi
 
           echo ""
