@@ -35,7 +35,7 @@ gitcid_new_git_server() {
 
 
   git commit -n -m "Automatic commit by script: $0 $@" >/dev/null 2>&1 && \
-  git pull >/dev/null 2>&1
+  git pull 2>/dev/null
 
   ${GITCID_DIR}new-git-server-main.sh $@
 
