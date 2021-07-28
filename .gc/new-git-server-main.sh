@@ -329,13 +329,15 @@ gc_new_git_server_install_os() {
         echo ""
         
         if [[ "$1" =~ ^\-rf?F?$ ]]; then
-          gc_new_git_server_get_raspios_lite_armhf_download_latest_version_zip_url $@
+          GC_RASPIOS_INSTALL_LINK="$(gc_new_git_server_get_raspios_lite_armhf_download_latest_version_zip_url $@)"
         elif [[ "$1" =~ ^\-Rf?F?$ ]]; then
-          gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url $@
+          GC_RASPIOS_INSTALL_LINK="$(gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url $@)"
         else
           echo "error: Unexpected option. Not installing."
           return 20
         fi
+
+        echo "$GC_RASPIOS_INSTALL_LINK"
         
         echo ""
       fi
@@ -397,9 +399,9 @@ gitcid_new_git_server_main() {
   # 
   #   ./new-git-server.sh [-r[f] | -R[f]] </path/to/device>
   #
-  #   -r    Raspberry Pi OS Light armhf (32-bit stable version)
+  #   -r    Raspberry Pi OS Light armhf (32-bit)
   #
-  #   -R    Raspberry Pi OS Light aarch64 (64-bit beta version)
+  #   -R    Raspberry Pi OS Light aarch64 (64-bit beta)
   #
   #   -rf   (WARNING: DANGEROUS!) Install Raspberry Pi OS 
   #         Light armhf, without prompting for confirmation.
