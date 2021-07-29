@@ -808,7 +808,7 @@ gitcid_new_git_server_main() {
       echo "INFO: No ssh config for user found. Trying Raspberry Pi auto-config..."
       echo ""
 
-      .gc/.gc-util/provision-git-server-rpi.sh "$gc_ssh_host"
+      ${GITCID_DIR}.gc-util/provision-git-server-rpi.sh "$gc_ssh_host"
 
       # gitcid_install_new_git_server_rpi_auto_provision "$gc_ssh_host"
 
