@@ -494,10 +494,10 @@ gc_new_git_server_install_os() {
         echo "info: Installing OS. Please wait.........."
         echo ""
 
-        sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=256 status=progress && sync
+        sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=256 status=progress
         res2=$?
-        
-        if [ $res2 -ne 0 ]; then
+
+        if [ $res2 -eq 0 ]; then
           echo ""
           echo "info: The OS installation appears to have succeeded! YAY!! :)"
           echo ""
@@ -506,13 +506,16 @@ gc_new_git_server_install_os() {
           echo "back in if you can."
           echo ""
 
-          res=20
+          sync
+
+          res=21
+          
         else
           echo ""
           echo "error: Failed installing OS. The \"dd\" command returned with error code: $res2"
           echo ""
 
-          res=21
+          res=20
         fi
 
         if [ ! -f "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" ]; then
