@@ -1,34 +1,32 @@
-# [GitCid](#table-of-contents)
+# [GitCid](https://gitc.id)
 
 [gitc.id](https://gitc.id) ⊙ _"power tools for [`git`](https://git-scm.com)"_ ⊙ [Copyright © 2021](https://defcronyke.gitlab.io/epaper-idf/jeremy-profile-paint-bw.png) [Jeremy Carter](https://eternalvoid.net) `<`[jeremy@jeremycarter.ca](mailto:Jeremy%20Carter%20<jeremy@jeremycarter.ca>?subject=gitcid)`>`
-
-[![pipeline status](https://gitlab.com/defcronyke/gitcid/badges/master/pipeline.svg)](https://gitlab.com/defcronyke/gitcid/-/commits/master) [![sponsor the project](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/defcronyke)](https://github.com/sponsors/defcronyke)
 
 ---
 
 [![gitcid logo](img/gitcid-logo-s.png)](img/gitcid-logo.png)
 
-## [Table of Contents](#table-of-contents)
+[![pipeline status](https://gitlab.com/defcronyke/gitcid/badges/master/pipeline.svg)](https://gitlab.com/defcronyke/gitcid/-/commits/master) [![sponsor the project](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/defcronyke)](https://github.com/sponsors/defcronyke)
 
-- [Table of Contents](#table-of-contents)
-- [Links](#links)
-  - [Website](#website)
-  - [Source Code](#source-code)
-- [Terms of Use](#terms-of-use)
-- [Features](#features)
-- [Dependencies](#dependencies)
-- [Quickstart](#quickstart)
-  - [Download GitCid](#download-gitcid)
-  - [Create a new git remote with GitCid features](#create-a-new-git-remote-with-gitcid-features)
-- [Usage Examples](#usage-examples)
-  - [Get Usage Help](#get-usage-help)
-  - [Install GitCid into an existing git repo](#install-gitcid-into-an-existing-git-repo)
-  - [Make new git repositories](#make-new-git-repositories)
-- [Install a Dedicated Git Server](#install-a-dedicated-git-server)
-  - [TLDR; Let's just install the git server](#tldr-lets-just-install-the-git-server)
-  - [Git Server Install Instructions](#git-server-install-instructions)
-  - [Git Server Usage Examples](#git-server-usage-examples)
-  - [Git Server Development](#git-server-development)
+- [GitCid](#gitcid)
+  - [Links](#links)
+    - [Website](#website)
+    - [Source Code](#source-code)
+  - [Terms of Use](#terms-of-use)
+  - [Features](#features)
+  - [Dependencies](#dependencies)
+  - [Quickstart](#quickstart)
+    - [Download GitCid](#download-gitcid)
+    - [Create a new git remote with GitCid features](#create-a-new-git-remote-with-gitcid-features)
+  - [Usage Examples](#usage-examples)
+    - [Get Usage Help](#get-usage-help)
+    - [Install GitCid into an existing git repo](#install-gitcid-into-an-existing-git-repo)
+    - [Make new git repositories](#make-new-git-repositories)
+  - [Install a Dedicated Git Server](#install-a-dedicated-git-server)
+    - [TLDR; Let's just install the git server](#tldr-lets-just-install-the-git-server)
+    - [Git Server Install Instructions](#git-server-install-instructions)
+    - [Git Server Usage Examples](#git-server-usage-examples)
+    - [Git Server Development](#git-server-development)
 
 ---
 
