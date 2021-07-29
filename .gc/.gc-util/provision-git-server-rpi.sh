@@ -12,6 +12,8 @@ gitcid_install_new_git_server_rpi_auto_provision() {
   sshpass -p 'raspberry' scp -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${gc_ssh_host}:"/home/${gc_ssh_username}/.ssh/"
   if [ $? -ne 0 ]; then
     sed -i "s/^${gc_ssh_host} .*$//g" "${HOME}/.ssh/known_hosts"
+    sed -i "s/^\n$//g" "${HOME}/.ssh/known_hosts"
+    cat 
     sshpass -p 'raspberry' scp -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${gc_ssh_host}:"/home/${gc_ssh_username}/.ssh/"
   fi
   
