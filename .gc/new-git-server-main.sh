@@ -484,11 +484,32 @@ gc_new_git_server_install_os() {
         echo ""
         echo "info: This might take several minutes. Please don't remove or mount"
         echo "the target disk."
+
+
+        # Install the OS onto the target device.
         echo ""
         echo "info: Installing OS. Please wait.........."
         echo ""
 
+        sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=256 status=progress && sync
+        res2=$?
+        if [ $res2 -ne 0 ]; then
+          echo ""
+          echo "info: The OS installation appears to have succeeded! YAY!! :)"
+          echo ""
+          echo "info: You will need to re-mount the installed disk yourself if"
+          echo "you want to access it again. So maybe unplug it and plug it"
+          echo "back in if you can."
+          echo ""
 
+          res=20
+        else
+          echo ""
+          echo "error: Failed installing OS. The \"dd\" command returned with error code: $res2"
+          echo ""
+
+          res=21
+        fi
 
         if [ ! -f "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" ]; then
           echo ""
@@ -540,10 +561,9 @@ gc_new_git_server_install_os() {
             echo ""
           fi
         fi
-
       fi
       
-      return 21
+      return $res
 
     else
       echo ""
