@@ -767,16 +767,6 @@ gitcid_new_git_server_main() {
   echo ""
   echo "Installing ssh keys if they aren't added yet."
   for j in $@; do
-    echo ""
-    echo "Adding git-server key to local ssh config: \"${HOME}/.ssh/git-server.key\" >> \"${HOME}/.ssh/config\""
-    cat "${HOME}/.ssh/config" | grep -P "^Host $j" >/dev/null || printf "%b\n" "\nHost ${j}\n\tHostName ${j}\n\tUser ${USER}\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a "${HOME}/.ssh/config" >/dev/null
-    echo ""
-    echo "Added key to local \"${HOME}/.ssh/config\" for host: ${USER}@${j}"
-
-    echo ""
-    echo "Verifying host: $j"
-    ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
-    
     gc_ssh_username="$(cat "${HOME}/.ssh/config" | grep -A2 -P "^Host ${j}$" | tail -n1 | awk '{print $NF}')"
 
     if [ -z "$gc_ssh_username" ]; then
@@ -799,9 +789,22 @@ gitcid_new_git_server_main() {
       echo "Finished installing ssh key on host: ${gc_ssh_username}@${j}"
       echo ""
 
+      echo ""
+      echo "Finished auto-installing ssh key onto a Raspberry Pi OS host: ${gc_ssh_username}@${j}"
+      echo ""
 
-      gc_ssh_username="$USER"
+      # gc_ssh_username="$USER"
     fi
+
+    echo ""
+    echo "Adding git-server key to local ssh config: \"${HOME}/.ssh/git-server.key\" >> \"${HOME}/.ssh/config\""
+    cat "${HOME}/.ssh/config" | grep -P "^Host $j" >/dev/null || printf "%b\n" "\nHost ${j}\n\tHostName ${j}\n\tUser ${gc_ssh_username}\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a "${HOME}/.ssh/config" >/dev/null
+    echo ""
+    echo "Added key to local \"${HOME}/.ssh/config\" for host: ${gc_ssh_username}@${j}"
+
+    echo ""
+    echo "Verifying host: $j"
+    ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
     echo ""
     echo "Installing ssh key onto host: ${gc_ssh_username}@${j}"
@@ -810,7 +813,7 @@ gitcid_new_git_server_main() {
     
     echo ""
     echo "Activating ssh key config on host: ${gc_ssh_username}@${j}"
-    { ssh -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${j} 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -P "^Host '$j'$" >/dev/null || printf "%b\n" "\nHost '$j'\n\tHostName '$j'\n\tUser '$gc_ssh_username'\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; };
+    { ssh -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${j} 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -P "^Host '${j}'$" >/dev/null || printf "%b\n" "\nHost '${j}'\n\tHostName '${j}'\n\tUser '${gc_ssh_username}'\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; };
     echo ""
     echo "Finished installing ssh key on host: ${gc_ssh_username}@${j}"
     echo ""
