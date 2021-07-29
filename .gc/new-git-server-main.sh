@@ -797,6 +797,9 @@ gitcid_new_git_server_main() {
   echo ""
   echo ""
   echo "Installing ssh keys if they aren't added yet."
+  
+  rpi_auto_res=1
+  
   for j in $@; do
     gc_ssh_host="$(echo "$j" | cut -d@ -f2)"
 
@@ -807,9 +810,8 @@ gitcid_new_git_server_main() {
       gc_ssh_username="$(cat "${HOME}/.ssh/config" | grep -A2 -P "^Host ${gc_ssh_host}$" | tail -n1 | awk '{print $NF}')"
     fi
 
-    rpi_auto_res=1
 
-    if [ -z "$gc_ssh_username" ]; then
+    if [ $rpi_auto_res -eq 1 ] && [ -z "$gc_ssh_username" ]; then
       echo ""
       echo "INFO: No ssh config for user found. Trying Raspberry Pi auto-config..."
       echo ""
