@@ -466,10 +466,17 @@ gc_new_git_server_install_os() {
         echo ""
         echo "  $GITCID_OS_INSTALL_IMAGE_FILE"
         echo ""
+        echo "info: Installing OS onto device (ERASING ALL CONTENTS ON IT IN THE PROCESS):"
+        echo ""
+        echo "  $2"
+        echo ""
         echo "info: This might take several minutes. Please don't remove or mount"
-        echo "the target disk, and please wait..."
+        echo "the target disk."
+        echo ""
+        echo "info: Installing OS. Please wait.........."
+        echo ""
 
-
+        
 
         if [ ! -f "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" ]; then
           echo ""
