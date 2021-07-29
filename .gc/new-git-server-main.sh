@@ -816,7 +816,9 @@ gitcid_new_git_server_main() {
       # gitcid_install_new_git_server_rpi_auto_provision "$gc_ssh_host"
 
       # gc_ssh_username="$USER"
+    fi
 
+    if [ $rpi_auto_res -ne 0 ]; then
       gc_ssh_host="$(echo "$j" | cut -d@ -f2)"
 
       echo "$j" | grep "@" >/dev/null
@@ -831,13 +833,11 @@ gitcid_new_git_server_main() {
       fi
     fi
 
-    # if [ $rpi_auto_res -ne 0 ]; then
     echo ""
     echo "Adding git-server key to local ssh config: \"${HOME}/.ssh/git-server.key\" >> \"${HOME}/.ssh/config\""
     cat "${HOME}/.ssh/config" | grep -P "^Host $gc_ssh_host" >/dev/null || printf "%b\n" "\nHost ${gc_ssh_host}\n\tHostName ${gc_ssh_host}\n\tUser ${gc_ssh_username}\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a "${HOME}/.ssh/config" >/dev/null
     echo ""
     echo "Added key to local \"${HOME}/.ssh/config\" for host: ${gc_ssh_username}@${gc_ssh_host}"
-    # fi
 
     echo ""
     echo "Verifying host: $gc_ssh_host"
