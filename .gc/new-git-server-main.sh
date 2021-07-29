@@ -807,6 +807,8 @@ gitcid_new_git_server_main() {
       gc_ssh_username="$(cat "${HOME}/.ssh/config" | grep -A2 -P "^Host ${gc_ssh_host}$" | tail -n1 | awk '{print $NF}')"
     fi
 
+    rpi_auto_res=1
+
     if [ -z "$gc_ssh_username" ]; then
       echo ""
       echo "INFO: No ssh config for user found. Trying Raspberry Pi auto-config..."
