@@ -363,7 +363,7 @@ gc_new_git_server_install_os() {
         echo "Entered temp dir: $GITCID_OS_INSTALL_TMP_DIR"
         echo ""
 
-        echo "Retreiving the latest Raspberry Pi OS image from their official server if necessary..."
+        echo "Retreiving the latest \"Raspberry Pi OS Lite\" image from their official server if necessary..."
         echo ""
         
         if [ -f "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" ]; then
@@ -405,13 +405,71 @@ gc_new_git_server_install_os() {
           echo "error: Extracting OS install file using the 7z command failed. Not installing OS."
           return 20
         fi
-        
+
+        sudo eject "$2"
+
+        if [ $? -ne 0 ]; then
+          echo "error: Failed ejecting disk we wanted to install the OS onto. Not installing OS."
+          return 20
+        fi
+
+        lsblk -lpno NAME,MOUNTPOINT | grep -P "^$2[0-9]*\s+\S+$"
+
+        if [ $? -eq 0 ]; then
+          echo "error: The disk we wanted to install the OS onto is still mounted. It needs to be" 
+          echo "unmounted first and we seem to have failed at unmounting it. Not installing OS."
+          return 20
+        fi
+
+        GITCID_OS_INSTALL_IMAGE_FILE="$(ls *.img | head -n1)"
+
+        if [ -z "$GITCID_OS_INSTALL_IMAGE_FILE" ]; then
+          echo ""
+          echo ""
+          echo "error: Failed determining the OS install image filename to install. Not installing OS."
+          echo ""
+          echo "DEBUG: Files available in the current directory, which are possible install candidates:"
+          echo ""
+          echo "---------"
+          echo ""
+          echo "Directory: $PWD"
+          echo "---------"
+          echo ""
+          ls -al
+          echo ""
+          echo "---------"
+          echo ""
+          echo "DEBUG: Please file a bug report with this portion of your log output included, if you'd"
+          echo "like this OS to work."
+          echo ""
+          echo "DEBUG: You can file a new bug report here:"
+          echo ""
+          echo "  https://gitlab.com/defcronyke/gitcid/-/issues/new"
+          echo ""
+          echo ""
+          return 20
+        fi
+
         echo ""
         echo ""
-        echo "$PWD"
+        echo "---------"
+        echo ""
+        echo "Directory: $PWD"
+        echo "---------"
         echo ""
         ls -al
         echo ""
+        echo "---------"
+        echo ""
+        echo ""
+        echo "info: Installing OS from disk image file:"
+        echo ""
+        echo "  $GITCID_OS_INSTALL_IMAGE_FILE"
+        echo ""
+        echo "info: This might take several minutes. Please don't remove or mount"
+        echo "the target disk, and please wait..."
+
+
 
         if [ ! -f "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" ]; then
           echo ""
