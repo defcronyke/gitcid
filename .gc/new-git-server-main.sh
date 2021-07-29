@@ -418,14 +418,17 @@ gc_new_git_server_install_os() {
           return 20
         fi
 
-        sudo eject "$2"
+        for gc_os_install_target_device_mounted in "$(lsblk -lpno NAME,MOUNTPOINT | grep -P "^$2[0-9]+\s+\S+$" | awk '{print $1}')"; do
+          umount "$gc_os_install_target_device_mounted" || \
+          sudo umount "$gc_os_install_target_device_mounted" 
+        
+          if [ $? -ne 0 ]; then
+            echo "error: Failed unmounting partition \"$gc_os_install_target_device_mounted\" on disk we wanted to install the OS onto. Not installing OS."
+            return 20
+          fi
+        done
 
-        if [ $? -ne 0 ]; then
-          echo "error: Failed ejecting disk we wanted to install the OS onto. Not installing OS."
-          return 20
-        fi
-
-        lsblk -lpno NAME,MOUNTPOINT | grep -P "^$2[0-9]*\s+\S+$"
+        lsblk -lpno NAME,MOUNTPOINT | grep -P "^$2[0-9]+\s+\S+$"
 
         if [ $? -eq 0 ]; then
           echo "error: The disk we wanted to install the OS onto is still mounted. It needs to be" 
@@ -493,6 +496,7 @@ gc_new_git_server_install_os() {
 
         sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=256 status=progress && sync
         res2=$?
+        
         if [ $res2 -ne 0 ]; then
           echo ""
           echo "info: The OS installation appears to have succeeded! YAY!! :)"
