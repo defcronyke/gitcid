@@ -268,7 +268,8 @@ gc_new_git_server_install_os() {
         echo "WARNING: ----- !! --- !! BIG WARNING !! --- !! -----"
         echo ""
 
-        if [ ! -f "$2" ]; then
+        ls "$2"
+        if [ $? -ne 0 ]; then
           echo ""
           echo "error: Target device path not found on local system, or an invalid target:"
           echo ""
