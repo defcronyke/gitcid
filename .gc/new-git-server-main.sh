@@ -384,7 +384,9 @@ gc_new_git_server_install_os() {
 
         else
           echo ""
-          echo "info: Retreiving the OS we will be installing, from URL: $GITCID_OS_INSTALL_LINK"
+          echo "info: Retreiving the OS we will be installing, from URL:"
+          echo ""
+          echo "$GITCID_OS_INSTALL_LINK"
           echo ""
           echo "It might take several minutes. Please wait..."
           echo ""
