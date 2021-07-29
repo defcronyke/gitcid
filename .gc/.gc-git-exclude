@@ -13,6 +13,8 @@ repo1/
 repo2.git/
 repo2/
 
-README-gitcid.md
+tmp_os_mount_dir/
 
 gc_install_os_file_*
+
+README-gitcid.md

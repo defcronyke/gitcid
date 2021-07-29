@@ -498,23 +498,35 @@ gc_new_git_server_install_os() {
         res2=$?
 
         if [ $res2 -eq 0 ]; then
+          sync
+          res=21
+
           echo ""
           echo "info: The OS installation appears to have succeeded! YAY!! :)"
           echo ""
-          echo "info: You will need to re-mount the installed disk yourself if"
-          echo "you want to access it again. So maybe unplug it and plug it"
-          echo "back in if you can."
+
+          echo ""
+          echo "info: Performing initial git server setup on newly installed OS..."
           echo ""
 
-          sync
-
-          res=21
+          mkdir -p tmp_os_mount_dir && \
+          sudo mount "${2}1" tmp_os_mount_dir && \
+          cd tmp_os_mount_dir && \
+          sudo touch ssh && \
+          cd .. && \
+          sudo umount "${2}1"
           
+          if [ $? -ne 0 ]; then
+            echo ""
+            echo "error: Failed inital git server setup on newly installed OS."
+            echo ""
+            return 20
+          fi
+
         else
           echo ""
           echo "error: Failed installing OS. The \"dd\" command returned with error code: $res2"
           echo ""
-
           res=20
         fi
 
