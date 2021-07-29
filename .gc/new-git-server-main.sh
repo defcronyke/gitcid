@@ -626,7 +626,7 @@ gitcid_new_git_server_main() {
 
   trap 'for i in ${tasks[@]}; do kill $i 2>/dev/null; done; for i in $(jobs -p); do kill $i 2>/dev/null; done; gc_new_git_server_install_cancel $@ || return $?' INT
 
-  GITCID_DIR=${GITCID_DIR:-".gc/"}
+  GITCID_DIR=${GITCID_DIR:-"${PWD}/.gc/"}
 	GITCID_NEW_REPO_PERMISSIONS=${GITCID_NEW_REPO_PERMISSIONS:-"0640"}
 
   # ----------
@@ -725,6 +725,8 @@ gitcid_new_git_server_main() {
   git config --global init.defaultBranch >/dev/null 2>&1 || \
   git config --global init.defaultBranch master >/dev/null 2>&1
   # ----------
+
+  # last_dir="$PWD"
 
   # Install new SSH key for git servers to update DNS.
   start_dir="$PWD"
@@ -857,7 +859,7 @@ gitcid_new_git_server_main() {
       echo "INFO: No ssh config for user found. Trying Raspberry Pi auto-config..."
       echo ""
 
-      .gc/.gc-util/provision-git-server-rpi.sh "$gc_ssh_host"
+      ${GITCID_DIR}.gc-util/provision-git-server-rpi.sh "$gc_ssh_host"
 
       # gc_ssh_username="$USER"
     fi
