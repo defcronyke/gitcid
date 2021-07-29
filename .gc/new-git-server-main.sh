@@ -888,13 +888,16 @@ gitcid_new_git_server_main() {
     #   gc_ssh_username="$USER"
     # fi
 
+    loop_res=0
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
       echo "NOTICE: Sequential mode: $0 -s $@"
       echo ""
       echo "NOTICE: Installing git server on host: ${gc_ssh_username}@${gc_ssh_host}"
       echo ""
-      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; }
+      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; };
+      loop_res=$?
+
       echo ""
     else
       echo ""
@@ -911,11 +914,12 @@ gitcid_new_git_server_main() {
     fi
   done
 
-  loop_res=0
+  # TODO: Maybe uncomment this?
+  # loop_res=0
   if [ $gc_new_git_server_setup_sudo -ne 0 ]; then
     for i in ${tasks[@]}; do
       if [ -z "$(jobs -p)" ]; then
-        return 0
+        return $loop_res
       fi
 
       wait $i
@@ -930,7 +934,7 @@ gitcid_new_git_server_main() {
       fi
 
       if [ -z "$(jobs -p)" ]; then
-        return 0
+        return $loop_res
       fi
     done
   fi
@@ -958,8 +962,12 @@ if [ $res -ne 0 ]; then
   fi
 
   gitcid_new_git_server_post $@; res2=$?
+  if [ $res -eq 20 ]; then
+    exit $res2
+  fi
 
-  exit $res2
+  new_git_server_detect_other_git_servers $@ || \
+    exit $?
 fi
 
 exit $res
