@@ -418,7 +418,7 @@ gc_new_git_server_install_os() {
           return 20
         fi
 
-        for gc_os_install_target_device_mounted in "$(lsblk -lpno NAME,MOUNTPOINT | grep -P "^$2[0-9]+\s+\S+$" | awk '{print $1}')"; do
+        for gc_os_install_target_device_mounted in $(lsblk -lpno NAME,MOUNTPOINT | grep -P "^$2[0-9]+\s+\S+$" | awk '{print $1}'); do
           umount "$gc_os_install_target_device_mounted" || \
           sudo umount "$gc_os_install_target_device_mounted" 
         
