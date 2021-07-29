@@ -811,17 +811,33 @@ gitcid_new_git_server_main() {
       echo ""
 
       ${GITCID_DIR}.gc-util/provision-git-server-rpi.sh "$gc_ssh_host"
+      rpi_auto_res=$?
 
       # gitcid_install_new_git_server_rpi_auto_provision "$gc_ssh_host"
 
       # gc_ssh_username="$USER"
+
+      gc_ssh_host="$(echo "$j" | cut -d@ -f2)"
+
+      echo "$j" | grep "@" >/dev/null
+      if [ $? -eq 0 ]; then
+        gc_ssh_username="$(echo "$j" | cut -d@ -f1)"
+      else
+        gc_ssh_username="$(cat "${HOME}/.ssh/config" | grep -A2 -P "^Host ${gc_ssh_host}$" | tail -n1 | awk '{print $NF}')"
+      fi
+
+      if [ -z "$gc_ssh_username" ]; then
+        gc_ssh_username="$USER"
+      fi
     fi
 
+    # if [ $rpi_auto_res -ne 0 ]; then
     echo ""
     echo "Adding git-server key to local ssh config: \"${HOME}/.ssh/git-server.key\" >> \"${HOME}/.ssh/config\""
     cat "${HOME}/.ssh/config" | grep -P "^Host $gc_ssh_host" >/dev/null || printf "%b\n" "\nHost ${gc_ssh_host}\n\tHostName ${gc_ssh_host}\n\tUser ${gc_ssh_username}\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a "${HOME}/.ssh/config" >/dev/null
     echo ""
     echo "Added key to local \"${HOME}/.ssh/config\" for host: ${gc_ssh_username}@${gc_ssh_host}"
+    # fi
 
     echo ""
     echo "Verifying host: $gc_ssh_host"
