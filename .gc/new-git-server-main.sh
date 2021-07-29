@@ -156,7 +156,7 @@ gitcid_new_git_server_post() {
   for i in $@; do
     mkdir -p $HOME/.ssh
     chmod 700 $HOME/.ssh
-    ssh-keygen -F "$i" || ssh-keyscan "$i" >>$HOME/.ssh/known_hosts
+    # ssh-keygen -F "$i" || ssh-keyscan "$i" >>$HOME/.ssh/known_hosts
 
     ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $i 'sudo -n cat /dev/null; res=$?; if [ $res -ne 0 ]; then echo ""; echo "ERROR: [ HOST: $USER@$(hostname) ]: Host failed running sudo non-interactively, so they cannot be used in parallel mode. Trying again in sequential mode..."; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; res=$?; fi; exit $res'
     res=$?
