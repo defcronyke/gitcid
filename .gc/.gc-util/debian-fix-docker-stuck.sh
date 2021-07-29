@@ -22,6 +22,14 @@ gitcid_debian_fix_docker_stuck() {
       return 28
     fi
 
+
+    curl https://get.docker.com | sh
+
+    docker ps >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      return 0
+    fi
+
     echo ""
     echo ""
     echo "info: Poking docker in case maybe it's stuck. Starting dockerd..."
@@ -75,6 +83,8 @@ gitcid_debian_fix_docker_stuck() {
     fi
     echo ""
   fi
+
+  return 0
 }
 
 gitcid_debian_fix_docker_stuck
