@@ -158,8 +158,8 @@ gitcid_new_git_server_post() {
     chmod 700 $HOME/.ssh
     ssh-keygen -F "$i" || ssh-keyscan "$i" >>$HOME/.ssh/known_hosts
 
-    { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $i 'sudo -n cat /dev/null; res=$?; if [ $res -ne 0 ]; then echo ""; echo "ERROR: [ HOST: $USER@$(hostname) ]: Host failed running sudo non-interactively, so they cannot be used in parallel mode. Trying again in sequential mode..."; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; res=$?; fi; exit $res'; };
-    res=$?
+    { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $i 'sudo -n cat /dev/null; res=$?; if [ $res -ne 0 ]; then echo ""; echo "ERROR: [ HOST: $USER@$(hostname) ]: Host failed running sudo non-interactively, so they cannot be used in parallel mode. Trying again in sequential mode..."; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; res=$?; fi; exit $res'; res=$?; };
+    # res=$?
 
     echo "res=$res"
 
@@ -171,8 +171,8 @@ gitcid_new_git_server_post() {
       echo ""
       echo "Succeeded at enabling passwordless sudo. Trying parallel mode install..."
       echo ""
-      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $i 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); res2=$?; exit $res2'; };
-      res2=$?
+      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $i 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); res2=$?; exit $res2'; res2=$?; };
+      # res2=$?
 
       echo "res2=$res2"
 
@@ -895,8 +895,8 @@ gitcid_new_git_server_main() {
       echo ""
       echo "NOTICE: Installing git server on host: ${gc_ssh_username}@${gc_ssh_host}"
       echo ""
-      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; };
-      loop_res=$?
+      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; loop_res=?; };
+      # loop_res=$?
 
       echo ""
     else
@@ -914,29 +914,32 @@ gitcid_new_git_server_main() {
     fi
   done
 
-  # TODO: Maybe uncomment this?
-  # loop_res=0
+  loop_res2=0
   if [ $gc_new_git_server_setup_sudo -ne 0 ]; then
     for i in ${tasks[@]}; do
       if [ -z "$(jobs -p)" ]; then
-        return $loop_res
+        return $loop_res2
       fi
 
       wait $i
-      loop_res=$?
+      loop_res2=$?
 
-      if [ $loop_res -eq 255 ]; then
+      if [ $loop_res2 -eq 255 ]; then
         echo "error: Failed connecting with ssh to host."
         continue
 
-      elif [ $loop_res -ne 0 ]; then
-        return $loop_res
+      elif [ $loop_res2 -ne 0 ]; then
+        return $loop_res2
       fi
 
       if [ -z "$(jobs -p)" ]; then
-        return $loop_res
+        return $loop_res2
       fi
     done
+
+    new_git_server_detect_other_git_servers $@
+
+    return $loop_res2
   fi
 
   # current_dir="$PWD"
@@ -946,8 +949,10 @@ gitcid_new_git_server_main() {
   # ./git-update-srv.sh $@
   # cd "$current_dir"
 
-  new_git_server_detect_other_git_servers $@ || \
-    return $?
+  new_git_server_detect_other_git_servers $@
+
+  # || \
+  #   return $?
 
   return $loop_res
   # return 0
@@ -966,8 +971,10 @@ if [ $res -ne 0 ]; then
     exit $res2
   fi
 
-  new_git_server_detect_other_git_servers $@ || \
-    exit $?
+  new_git_server_detect_other_git_servers $@ 
+  exit $res2
+  # || \
+    # exit $?
 fi
 
 exit $res
