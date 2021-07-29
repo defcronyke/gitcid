@@ -270,7 +270,7 @@ gc_new_git_server_install_os() {
 
         if [ ! -f "$2" ]; then
           echo ""
-          echo "error: Target device path not found on local system:"
+          echo "error: Target device path not found on local system, or an invalid target:"
           echo ""
           echo "  $2"
           echo ""
