@@ -137,15 +137,24 @@ ${res_import_deps}"
   echo ""
   echo "USER=$(whoami)"
   echo ""
-  ls -ald ${GITCID_DIR}/..
+  ls -ald ${GITCID_DIR}..
   echo ""
-  ls -al ${GITCID_DIR}/..
+  ls -al ${GITCID_DIR}..
   echo ""
-  ls -al ${GITCID_DIR}/../.git/
+
+  ls -al ${GITCID_DIR}../.git/ 2>/dev/null
+  
+  if [ $? -eq 0 ]; then
+    echo ""
+    echo "NOTICE: Fixing permissions in and under dir: ${GITCID_DIR}../.git/"
+    echo ""
+    sudo chown -R $USER: ${GITCID_DIR}../.git/
+    echo ""
+  fi
+
   echo ""
   echo ""
 
-  sudo chown -R $USER: ${GITCID_DIR}/../.git
 }
 
 gc_git_hook_pre_receive "$@"
