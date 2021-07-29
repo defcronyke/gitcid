@@ -818,6 +818,13 @@ gitcid_new_git_server_main() {
 
 
       echo ""
+      echo "Adding git-server key to local ssh config: \"${HOME}/.ssh/git-server.key\" >> \"${HOME}/.ssh/config\""
+      cat "${HOME}/.ssh/config" | grep -P "^Host $gc_ssh_host" >/dev/null || printf "%b\n" "\nHost ${gc_ssh_host}\n\tHostName ${gc_ssh_host}\n\tUser ${gc_ssh_username}\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a "${HOME}/.ssh/config" >/dev/null
+      echo ""
+      echo "Added key to local \"${HOME}/.ssh/config\" for host: ${gc_ssh_username}@${gc_ssh_host}"
+
+
+      echo ""
       echo "Verifying host: $gc_ssh_host"
       ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
@@ -844,16 +851,18 @@ gitcid_new_git_server_main() {
         gc_ssh_username="$USER"
       fi
 
+      
+      echo ""
+      echo "Adding git-server key to local ssh config: \"${HOME}/.ssh/git-server.key\" >> \"${HOME}/.ssh/config\""
+      cat "${HOME}/.ssh/config" | grep -P "^Host $gc_ssh_host" >/dev/null || printf "%b\n" "\nHost ${gc_ssh_host}\n\tHostName ${gc_ssh_host}\n\tUser ${gc_ssh_username}\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a "${HOME}/.ssh/config" >/dev/null
+      echo ""
+      echo "Added key to local \"${HOME}/.ssh/config\" for host: ${gc_ssh_username}@${gc_ssh_host}"
+      
       echo ""
       echo "Verifying host: $gc_ssh_host"
       ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
     fi
 
-    echo ""
-    echo "Adding git-server key to local ssh config: \"${HOME}/.ssh/git-server.key\" >> \"${HOME}/.ssh/config\""
-    cat "${HOME}/.ssh/config" | grep -P "^Host $gc_ssh_host" >/dev/null || printf "%b\n" "\nHost ${gc_ssh_host}\n\tHostName ${gc_ssh_host}\n\tUser ${gc_ssh_username}\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a "${HOME}/.ssh/config" >/dev/null
-    echo ""
-    echo "Added key to local \"${HOME}/.ssh/config\" for host: ${gc_ssh_username}@${gc_ssh_host}"
 
     # echo ""
     # echo "Verifying host: $gc_ssh_host"
