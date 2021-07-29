@@ -762,7 +762,7 @@ gitcid_new_git_server_main() {
   echo "Installing new git server(s) at the following ssh path(s): $@"
 
 
-  # Install ssh keys on servers
+  # Install ssh keys on servers.
   echo ""
   echo ""
   echo "Installing ssh keys if they aren't added yet."
@@ -780,17 +780,37 @@ gitcid_new_git_server_main() {
     gc_ssh_username="$(cat "${HOME}/.ssh/config" | grep -A2 -P "^Host ${j}$" | tail -n1 | awk '{print $NF}')"
 
     if [ -z "$gc_ssh_username" ]; then
+      echo ""
+      echo "INFO: No ssh config found. Trying Raspberry Pi auto-config..."
+      echo ""
+
+      gc_ssh_username="pi"
+
+      echo ""
+      echo "NOTICE: Trying to auto-install our ssh key onto a host which is maybe a Raspberry Pi: ${gc_ssh_username}@${j}"
+      echo ""
+
+      sshpass -p 'raspberry' scp "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${j}:"/home/${gc_ssh_username}/.ssh/"
+      
+      echo ""
+      echo "Activating ssh key config on host: ${gc_ssh_username}@${j}"
+      { sshpass -p 'raspberry' ssh -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${j} 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -P "^Host '$j'$" >/dev/null || printf "%b\n" "\nHost '$j'\n\tHostName '$j'\n\tUser '$gc_ssh_username'\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; echo "": echo "This seems to be a freshly installed Raspberry Pi OS device. It is required for better security that you change your user and root account passwords on this device. You will be prompted to change your passwords during an upcoming step soon."; echo ""; exit 0;'; };
+      echo ""
+      echo "Finished installing ssh key on host: ${gc_ssh_username}@${j}"
+      echo ""
+
+
       gc_ssh_username="$USER"
     fi
 
     echo ""
     echo "Installing ssh key onto host: ${gc_ssh_username}@${j}"
 
-    scp "${HOME}/.ssh/git-server.key"* "${j}:/home/${gc_ssh_username}/.ssh/"
+    scp "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${j}:"/home/${gc_ssh_username}/.ssh/"
     
     echo ""
     echo "Activating ssh key config on host: ${gc_ssh_username}@${j}"
-    { ssh -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $j 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -P "^Host '$j'$" >/dev/null || printf "%b\n" "\nHost '$j'\n\tHostName '$j'\n\tUser '$gc_ssh_username'\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; };
+    { ssh -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${j} 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -P "^Host '$j'$" >/dev/null || printf "%b\n" "\nHost '$j'\n\tHostName '$j'\n\tUser '$gc_ssh_username'\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$j" || ssh-keyscan "$j" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; };
     echo ""
     echo "Finished installing ssh key on host: ${gc_ssh_username}@${j}"
     echo ""
@@ -809,19 +829,24 @@ gitcid_new_git_server_main() {
 
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
-      echo "Sequential mode: $0 -s $@"
+      echo "NOTICE: Sequential mode: $0 -s $@"
       echo ""
-      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $j 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; }
+      echo "NOTICE: Installing git server on host: ${gc_ssh_username}@${j}"
+      echo ""
+      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${j} 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; }
       echo ""
     else
       echo ""
-      echo "Parallel mode: $0 $@"
+      echo "NOTICE: Parallel mode: $0 $@"
+      echo ""
+      echo "NOTICE: Installing git server on host: ${gc_ssh_username}@${j}"
       echo ""
       echo "info: For sequential mode, use this command instead: $0 -s $@"
       echo ""
       echo "info: You need to use sequential mode the first time, to set up passwordless sudo so that parallel mode can work properly."
       echo ""
-      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $j 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; exit $?; } & tasks+=( $! )
+      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${j} 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
+      # { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${j} 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; exit $?; } & tasks+=( $! )
     fi
   done
 
