@@ -666,13 +666,17 @@ gitcid_new_git_server_main() {
   #
   # --------------------  #
   #
-  gc_new_git_server_install_os $@
-  res=$?
-  if [ $res -ne 0 ]; then
-    if [ $res -eq 21 ]; then
-      exit 0
+  if [ $# -ge 1 ]; then
+    if [ "$1" =~ ^-[Rr]F?f?$ ]; then
+      gc_new_git_server_install_os $@
+      res=$?
+      if [ $res -ne 0 ]; then
+        if [ $res -eq 21 ]; then
+          exit 0
+        fi
+        return $res
+      fi
     fi
-    return $res
   fi
   # -------------------- #
   ####
