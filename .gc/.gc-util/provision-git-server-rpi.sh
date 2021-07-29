@@ -9,6 +9,11 @@ gitcid_install_new_git_server_rpi_auto_provision() {
   echo "NOTICE: Trying to auto-install our ssh key onto a host which is maybe a Raspberry Pi: ${gc_ssh_username}@${gc_ssh_host}"
   echo ""
 
+  echo ""
+  echo "Pre-activating ssh key config on host: ${gc_ssh_username}@${gc_ssh_host}"
+  { sshpass -p 'raspberry' ssh -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; echo "": echo "This seems to be a freshly installed Raspberry Pi OS device. Creating .ssh/ directory and files."; echo ""; exit 0;'; };
+  echo ""
+
   sshpass -p 'raspberry' scp -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${gc_ssh_host}:"/home/${gc_ssh_username}/.ssh/"
   if [ $? -ne 0 ]; then
     sed -i "s/^${gc_ssh_host} .*$//g" "${HOME}/.ssh/known_hosts"
