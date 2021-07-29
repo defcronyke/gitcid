@@ -816,6 +816,12 @@ gitcid_new_git_server_main() {
 
       gc_ssh_username="pi"
 
+
+      echo ""
+      echo "Verifying host: $gc_ssh_host"
+      ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
+
+
       ${GITCID_DIR}.gc-util/provision-git-server-rpi.sh "$gc_ssh_host"
       rpi_auto_res=$?
 
@@ -837,6 +843,10 @@ gitcid_new_git_server_main() {
       if [ -z "$gc_ssh_username" ]; then
         gc_ssh_username="$USER"
       fi
+
+      echo ""
+      echo "Verifying host: $gc_ssh_host"
+      ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
     fi
 
     echo ""
@@ -845,9 +855,9 @@ gitcid_new_git_server_main() {
     echo ""
     echo "Added key to local \"${HOME}/.ssh/config\" for host: ${gc_ssh_username}@${gc_ssh_host}"
 
-    echo ""
-    echo "Verifying host: $gc_ssh_host"
-    ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
+    # echo ""
+    # echo "Verifying host: $gc_ssh_host"
+    # ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
     echo ""
     echo "Installing ssh key onto host: ${gc_ssh_username}@${gc_ssh_host}"
