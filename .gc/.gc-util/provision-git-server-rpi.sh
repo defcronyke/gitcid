@@ -1,0 +1,26 @@
+#!/bin/bash
+
+gitcid_install_new_git_server_rpi_auto_provision() {
+  gc_ssh_host="$@"
+
+  gc_ssh_username="pi"
+
+  echo ""
+  echo "NOTICE: Trying to auto-install our ssh key onto a host which is maybe a Raspberry Pi: ${gc_ssh_username}@${gc_ssh_host}"
+  echo ""
+
+  sshpass -p 'raspberry' scp -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${gc_ssh_host}:"/home/${gc_ssh_username}/.ssh/"
+  
+  echo ""
+  echo "Activating ssh key config on host: ${gc_ssh_username}@${gc_ssh_host}"
+  { sshpass -p 'raspberry' ssh -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -P "^Host '$gc_ssh_host'$" >/dev/null || printf "%b\n" "\nHost '$gc_ssh_host'\n\tHostName '$gc_ssh_host'\n\tUser '$gc_ssh_username'\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a $HOME/.ssh/known_hosts >/dev/null; echo "": echo "This seems to be a freshly installed Raspberry Pi OS device. It is required for better security that you change your user and root account passwords on this device. You will be prompted to change your passwords during an upcoming step soon."; echo ""; exit 0;'; };
+  echo ""
+  echo "Finished installing ssh key on host: ${gc_ssh_username}@${gc_ssh_host}"
+  echo ""
+
+  echo ""
+  echo "Finished auto-installing ssh key onto a Raspberry Pi OS host: ${gc_ssh_username}@${gc_ssh_host}"
+  echo ""
+}
+
+gitcid_install_new_git_server_rpi_auto_provision $@
