@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Run this to list all detected git servers on 
 # your network.
 

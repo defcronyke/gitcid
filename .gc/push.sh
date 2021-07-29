@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Try to push twice, just in case the first time
 # failed for some unusual reason and might work
 # on second try.

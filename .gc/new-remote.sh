@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Run this to make a new remote git repo:
 #
 #   Usage:

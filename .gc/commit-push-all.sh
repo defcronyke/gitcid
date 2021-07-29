@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Commit and push a git repo.
 #
 #   Usage:

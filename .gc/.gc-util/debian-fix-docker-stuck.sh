@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Fix docker getting stuck sometimes after install on Debian.
 #
 # TODO: Need to add a fix for Raspberry Pi Zero W, similar to:
