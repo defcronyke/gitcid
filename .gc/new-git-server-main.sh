@@ -889,13 +889,23 @@ gitcid_new_git_server_main() {
   loop_res=0
   if [ $gc_new_git_server_setup_sudo -ne 0 ]; then
     for i in ${tasks[@]}; do
+      if [ -z "$(jobs -p)" ]; then
+        return 0
+      fi
+
       wait $i
       loop_res=$?
+
       if [ $loop_res -eq 255 ]; then
         echo "error: Failed connecting with ssh to host."
         continue
+
       elif [ $loop_res -ne 0 ]; then
         return $loop_res
+      fi
+
+      if [ -z "$(jobs -p)" ]; then
+        return 0
       fi
     done
   fi
