@@ -780,7 +780,7 @@ gitcid_new_git_server_main() {
       echo "NOTICE: Trying to auto-install our ssh key onto a host which is maybe a Raspberry Pi: ${gc_ssh_username}@${j}"
       echo ""
 
-      sshpass -p 'raspberry' scp "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${j}:"/home/${gc_ssh_username}/.ssh/"
+      sshpass -p 'raspberry' scp -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${j}:"/home/${gc_ssh_username}/.ssh/"
       
       echo ""
       echo "Activating ssh key config on host: ${gc_ssh_username}@${j}"
@@ -809,7 +809,7 @@ gitcid_new_git_server_main() {
     echo ""
     echo "Installing ssh key onto host: ${gc_ssh_username}@${j}"
 
-    scp "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${j}:"/home/${gc_ssh_username}/.ssh/"
+    scp -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 "${HOME}/.ssh/git-server.key"* ${gc_ssh_username}@${j}:"/home/${gc_ssh_username}/.ssh/"
     
     echo ""
     echo "Activating ssh key config on host: ${gc_ssh_username}@${j}"
