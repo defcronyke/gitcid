@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 gitcid_install_new_git_server_rpi_auto_provision() {
   gc_ssh_host="$@"
