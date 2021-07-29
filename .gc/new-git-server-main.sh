@@ -667,7 +667,7 @@ gitcid_new_git_server_main() {
   # --------------------  #
   #
   if [ $# -ge 1 ]; then
-    if [ "$1" =~ ^-[Rr]F?f?$ ]; then
+    if [[ "$1" =~ ^-[Rr]F?f?$ ]]; then
       gc_new_git_server_install_os $@
       res=$?
       if [ $res -ne 0 ]; then
