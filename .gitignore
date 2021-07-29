@@ -1,12 +1,13 @@
-.gc/discover-git-server-dns
-
 .gc/.gc-logs/
 .gc/.gc-last-update-check.txt
 .gc/.gc-update-available
+.gc/.gc-docker-compose/*/Dockerfile
+.gc/discover-git-server-dns
 repo.git/
 repo/
 repo1.git/
 repo1/
 repo2.git/
 repo2/
-.gc/.gc-docker-compose/*/Dockerfile
+
+gc_install_os_file_*

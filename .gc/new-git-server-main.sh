@@ -330,24 +330,142 @@ gc_new_git_server_install_os() {
           echo ""
         fi
 
-        echo "Retreiving the latest Raspberry Pi OS image from their official server if necessary..."
-        echo ""
-        
         if [[ "$1" =~ ^\-rF?f?$ ]]; then
-          GC_RASPIOS_INSTALL_LINK="$(gc_new_git_server_get_raspios_lite_armhf_download_latest_version_zip_url $@)"
+          GITCID_OS_INSTALL_ARCH="armhf"
+          GITCID_OS_INSTALL_LINK="$(gc_new_git_server_get_raspios_lite_armhf_download_latest_version_zip_url $@)"
         elif [[ "$1" =~ ^\-RF?f?$ ]]; then
-          GC_RASPIOS_INSTALL_LINK="$(gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url $@)"
+          GITCID_OS_INSTALL_ARCH="aarch64"
+          GITCID_OS_INSTALL_LINK="$(gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url $@)"
         else
           echo "error: Unexpected option. Not installing."
           return 20
         fi
 
-        echo "$GC_RASPIOS_INSTALL_LINK"
+        gc_dir_before_os_install="$PWD"
+        
+        GITCID_OS_INSTALL_TMP_DIR="$(mktemp -d)"
+
+        if [ ! -d "$GITCID_OS_INSTALL_TMP_DIR" ]; then
+          echo "error: Failed creating temporary directory for OS install. Not installing OS."
+          return 20
+        fi
         
         echo ""
+        echo "Created temp dir: $GITCID_OS_INSTALL_TMP_DIR"
+
+        cd "$GITCID_OS_INSTALL_TMP_DIR"
+
+        if [ $? -ne 0 ]; then
+          echo "error: Failed entering temporary directory for OS install. Not installing OS."
+          return 20
+        fi
+
+        echo "Entered temp dir: $GITCID_OS_INSTALL_TMP_DIR"
+        echo ""
+
+        echo "Retreiving the latest Raspberry Pi OS image from their official server if necessary..."
+        echo ""
+        
+        if [ -f "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" ]; then
+          echo "NOTICE: Using a previously downloaded OS file. If you'd prefer to fetch the"
+          echo "latest version online and use that instead, you should delete the previous"
+          echo "file first. You can delete the saved OS file if you want, by running this"
+          echo "command:"
+          echo ""
+          echo "  rm \"${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}\""
+          echo ""
+         
+          cp "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" .
+
+          if [ $? -ne 0 ]; then
+            echo "error: Copying OS install file failed. Not installing OS."
+            return 20
+          fi
+
+        else
+          echo ""
+          echo "info: Retreiving the OS we will be installing, from URL: $GITCID_OS_INSTALL_LINK"
+          echo ""
+          echo "It might take several minutes. Please wait..."
+          echo ""
+
+          curl -sL "$GITCID_OS_INSTALL_LINK" > "gc_install_os_file_${GITCID_OS_INSTALL_ARCH}"
+
+          if [ $? -ne 0 ]; then
+            echo "error: Downloading OS install file failed. Not installing OS."
+            return 20
+          fi
+        fi
+
+        7z x "gc_install_os_file_${GITCID_OS_INSTALL_ARCH}"
+
+        if [ $? -ne 0 ]; then
+          echo "error: Extracting OS install file using the 7z command failed. Not installing OS."
+          return 20
+        fi
+        
+        echo ""
+        echo ""
+        echo "$PWD"
+        echo ""
+        ls -al
+        echo ""
+
+        if [ ! -f "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" ]; then
+          echo ""
+          echo "info: Saving OS install file for next time, at path:"
+          echo ""
+          echo "  \"${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}\""
+          echo ""
+
+          cp -f "gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}"
+        fi
+
+        echo ""
+        echo "Leaving temp dir: $GITCID_OS_INSTALL_TMP_DIR"
+        echo ""
+        echo "Returning to previous directory: $gc_dir_before_os_install"
+        cd "$gc_dir_before_os_install"
+        echo ""
+
+        # These checks are overkill, but I'm working on this list 
+        # to use elsewhere later, so I put it here for now.
+        if [ -d "$GITCID_OS_INSTALL_TMP_DIR" ]; then
+          if [ ! -z "$GITCID_OS_INSTALL_TMP_DIR" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "/" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "/*" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "/home" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "$HOME" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "." ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "." ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "./" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "./*" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != ".*" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != ".." ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "../" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "../*" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "../.*" ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "../.." ] && \
+            [ "$GITCID_OS_INSTALL_TMP_DIR" != "*" ]; then
+
+            echo "Removing temp dir: $GITCID_OS_INSTALL_TMP_DIR"
+            rm -rf "$GITCID_OS_INSTALL_TMP_DIR"
+            echo ""
+            
+          else
+            echo ""
+            echo "WARNING: Something bad almost happened! We were instructed"
+            echo "to delete something we shouldn't, so we didn't do it."
+            echo ""
+            echo "THE PATH WE ALMOST DELETED: $GITCID_OS_INSTALL_TMP_DIR"
+            echo ""
+          fi
+        fi
+
       fi
       
       return 21
+
     else
       echo ""
       printf "error: invalid args supplied to command: $0 $@"

@@ -6,6 +6,13 @@
 # *~
 
 .gc/
+repo.git/
+repo/
+repo1.git/
+repo1/
+repo2.git/
+repo2/
+
 README-gitcid.md
-repo.git
-repo
+
+gc_install_os_file_*
