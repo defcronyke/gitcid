@@ -267,6 +267,17 @@ gc_new_git_server_install_os() {
         echo "WARNING:"
         echo "WARNING: ----- !! --- !! BIG WARNING !! --- !! -----"
         echo ""
+
+        if [ ! -f "$2" ]; then
+          echo ""
+          echo "error: Target device path not found on local system:"
+          echo ""
+          echo "  $2"
+          echo ""
+          echo "error: Not installing OS."
+          echo ""
+          return 20
+        fi
         
         if [[ ! "$1" =~ ^\-[Rr]F?f$ ]]; then
           echo "Are you sure you want to install a new git server at this local device path?: $2"
@@ -476,7 +487,7 @@ gc_new_git_server_install_os() {
         echo "info: Installing OS. Please wait.........."
         echo ""
 
-        
+
 
         if [ ! -f "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" ]; then
           echo ""
