@@ -877,7 +877,7 @@ gitcid_new_git_server_main() {
     
     echo ""
     echo "Activating ssh key config on host: ${gc_ssh_username}@${gc_ssh_host}"
-    { ssh -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -P "^Host '${gc_ssh_host}'$" >/dev/null || printf "%b\n" "\nHost '${gc_ssh_host}'\n\tHostName '${gc_ssh_host}'\n\tUser '${gc_ssh_username}'\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; }
+    { { ssh -o IdentitiesOnly=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; touch $HOME/.ssh/config; chmod 600 $HOME/.ssh/config; touch $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys; cat $HOME/.ssh/authorized_keys | grep "$(cat $HOME/.ssh/git-server.key.pub)" >/dev/null || cat $HOME/.ssh/git-server.key.pub | tee -a $HOME/.ssh/authorized_keys >/dev/null; cat $HOME/.ssh/config | grep -P "^Host '${gc_ssh_host}'$" >/dev/null || printf "%b\n" "\nHost '${gc_ssh_host}'\n\tHostName '${gc_ssh_host}'\n\tUser '${gc_ssh_username}'\n\tIdentityFile ~/.ssh/git-server.key\n\tIdentitiesOnly yes\n" | tee -a $HOME/.ssh/config >/dev/null; ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a $HOME/.ssh/known_hosts >/dev/null; exit 0;'; }; }
     echo ""
     echo "Finished installing ssh key on host: ${gc_ssh_username}@${gc_ssh_host}"
     echo ""
@@ -920,7 +920,7 @@ gitcid_new_git_server_main() {
       echo ""
       echo "NOTICE: Installing git server on host: ${gc_ssh_username}@${gc_ssh_host}"
       echo ""
-      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?'; }
+      { { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?;'; }; }
       loop_res=?
       # loop_res=$?
 
@@ -935,7 +935,7 @@ gitcid_new_git_server_main() {
       echo ""
       echo "info: You need to use sequential mode the first time, to set up passwordless sudo so that parallel mode can work properly."
       echo ""
-      { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; } & tasks+=( $! )
+      { { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?;'; }; } & tasks+=( $! )
       # { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; exit $?; } & tasks+=( $! )
     fi
   done
