@@ -121,15 +121,15 @@ gc_git_hook_pre_receive() {
 
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "Got ref name: ${GITCID_REF_NAME}"
 
-    source "${GITCID_DIR}run.sh" -d $@
+  source "${GITCID_DIR}run.sh" -d $@
   res_import_deps=$?
   if [ $res_import_deps -ne 0 ]; then
     gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed running GitCid pipeline. Exiting with error code:\n\
 ${res_import_deps}"
-        return ${res_import_deps}
+      
+      return $res_import_deps
   fi
 
-  gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "The git hook finished successfully: ${BASH_SOURCE[0]} $@"
   
   echo ""
   echo ""
@@ -137,24 +137,27 @@ ${res_import_deps}"
   echo ""
   echo "USER=$(whoami)"
   echo ""
-  ls -ald ${GITCID_DIR}..
+  ls -ald "${GITCID_DIR}../"
   echo ""
-  ls -al ${GITCID_DIR}..
+  ls -al "${GITCID_DIR}../"
   echo ""
 
-  ls -al ${GITCID_DIR}../.git/ 2>/dev/null
+  ls -al "${GITCID_DIR}../.git/" 2>/dev/null
   
   if [ $? -eq 0 ]; then
     echo ""
-    echo "NOTICE: Fixing permissions in and under dir: ${GITCID_DIR}../.git/"
+    echo "NOTICE: Fixing permissions in and under dir: \"${GITCID_DIR}../.git/\""
     echo ""
-    sudo chown -R $USER: ${GITCID_DIR}../.git/
+    sudo chown -R $USER: "${GITCID_DIR}../.git/"
     echo ""
   fi
 
   echo ""
   echo ""
 
+  gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "The git hook finished successfully: ${BASH_SOURCE[0]} $@"
+
+  return 0
 }
 
 gc_git_hook_pre_receive "$@"
