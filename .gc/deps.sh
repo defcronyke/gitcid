@@ -341,7 +341,7 @@ Logging out and back in should fix the issue."
 		return 0
 	fi
 
-	GITCID_YQ_CMD="${GITCID_YQ_CMD:-"yq"}"
+	GITCID_YQ_CMD=${GITCID_YQ_CMD:-"yq"}
 
 	which "${GITCID_YQ_CMD}" >/dev/null 2>&1
 	if [ $? -ne 0 ]; then
@@ -355,15 +355,15 @@ Logging out and back in should fix the issue."
 			GITCID_YQ_DOWNLOAD_BINARY=${GITCID_YQ_DOWNLOAD_BINARY:-"yq_linux_amd64"}
 		fi
 
-		GITCID_YQ_DOWNLOAD_URL="${GITCID_YQ_DOWNLOAD_URL:-"https://github.com/mikefarah/yq/releases/latest/download/${GITCID_YQ_DOWNLOAD_BINARY}"}"
-		GITCID_YQ_DOWNLOAD_CMD="${GITCID_YQ_DOWNLOAD_CMD:-"curl -sL $GITCID_YQ_DOWNLOAD_URL"}"
-		GITCID_YQ_CMD_INSTALL_PATH="${GITCID_YQ_CMD_INSTALL_PATH:-"/usr/local/bin/"}"
+		GITCID_YQ_DOWNLOAD_URL=${GITCID_YQ_DOWNLOAD_URL:-"https://github.com/mikefarah/yq/releases/latest/download/${GITCID_YQ_DOWNLOAD_BINARY}"}
+		GITCID_YQ_DOWNLOAD_CMD=${GITCID_YQ_DOWNLOAD_CMD:-"curl -sL $GITCID_YQ_DOWNLOAD_URL"}
+		GITCID_YQ_CMD_INSTALL_PATH=${GITCID_YQ_CMD_INSTALL_PATH:-"/usr/local/bin/"}
 		
 		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "The command \"${GITCID_YQ_CMD}\" wasn't found in your \$PATH. \
 Attempting to download it by running the following command:\n\
 ${GITCID_YQ_DOWNLOAD_CMD} > \"${GITCID_DIR}${GITCID_YQ_CMD}\""
 
-		eval $GITCID_YQ_DOWNLOAD_CMD > "${GITCID_DIR}${GITCID_YQ_CMD}"
+		$(eval $GITCID_YQ_DOWNLOAD_CMD) > "${GITCID_DIR}${GITCID_YQ_CMD}"
 
 		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Attempting to install \"${GITCID_YQ_CMD}\" by running the following command:\n\
 chmod 755 \"${GITCID_DIR}${GITCID_YQ_CMD}\" && ${SUDO_CMD} mv \"${GITCID_DIR}${GITCID_YQ_CMD}\" \"${GITCID_YQ_CMD_INSTALL_PATH}\""
