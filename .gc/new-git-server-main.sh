@@ -945,7 +945,8 @@ gitcid_new_git_server_main() {
   new_git_server_detect_other_git_servers $@ || \
     return $?
 
-  return 0
+  return $loop_res
+  # return 0
 }
 
 gitcid_new_git_server_main $@; res=$?
