@@ -832,6 +832,9 @@ gitcid_new_git_server_main() {
 
       echo ""
       echo "Verifying host: $gc_ssh_host"
+
+      sed "/^${gc_ssh_host}/d" "${HOME}/.ssh/known_hosts"
+
       ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
 
