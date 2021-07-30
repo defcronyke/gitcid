@@ -115,7 +115,7 @@ gc_new_git_server_interactive() {
 
 new_git_server_detect_other_git_servers() {
   echo ""
-  echo "GitWeb servers detected on your network:"
+  echo "GitWeb servers detected on your network with args: $@"
   echo ""
   if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
     .gc/git-servers-open.sh $@ 2>/dev/null
