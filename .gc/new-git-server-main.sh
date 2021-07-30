@@ -942,10 +942,23 @@ gitcid_new_git_server_main() {
     fi
   done
 
+  echo "Finished iterating over hosts."
   
   if [ $gc_new_git_server_setup_sudo -ne 0 ]; then
+    echo "Entering job wait loop..."
+
     for i in ${tasks[@]}; do
+      echo "Job wait loop iteration for task: $i"
+
       if [ -z "$(jobs -p)" ]; then
+        echo "No more jobs at beginning of loop for task: $i"
+        
+        echo ""
+        echo "Detecting git servers..."
+        echo ""
+
+        new_git_server_detect_other_git_servers $@
+
         return $loop_res2
       fi
 
@@ -953,17 +966,30 @@ gitcid_new_git_server_main() {
       loop_res2=$?
 
       if [ $loop_res2 -eq 255 ]; then
-        echo "error: Failed connecting with ssh to host."
+        echo "error: Failed connecting with ssh to host in job wait loop. Error code: $loop_res2"
         continue
 
       elif [ $loop_res2 -ne 0 ]; then
+        echo "error: Job wait loop ending with error code: $loop_res2"
         return $loop_res2
       fi
 
       if [ -z "$(jobs -p)" ]; then
+        echo "No more jobs at end of loop for task: $i"
+
+        echo ""
+        echo "Detecting git servers..."
+        echo ""
+
+        new_git_server_detect_other_git_servers $@
+
         return $loop_res2
       fi
     done
+
+    echo ""
+    echo "Detecting git servers after job wait loop..."
+    echo ""
 
     new_git_server_detect_other_git_servers $@
 
@@ -976,6 +1002,10 @@ gitcid_new_git_server_main() {
   # git pull
   # ./git-update-srv.sh $@
   # cd "$current_dir"
+
+  echo ""
+  echo "Detecting git servers..."
+  echo ""
 
   new_git_server_detect_other_git_servers $@
 
