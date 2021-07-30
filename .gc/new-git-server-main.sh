@@ -118,12 +118,12 @@ new_git_server_detect_other_git_servers() {
   echo "GitWeb servers detected on your network (with args: $@):"
   echo ""
   if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
-    ./git-servers-open.sh $@ 2>/dev/null
+    ./git-servers-open.sh $@
     echo ""
     echo "GitWeb pages launched in web browser. If any pages don't"
     echo "load on first attempt, try refreshing the page."
   else
-    ./git-servers.sh $@ 2>/dev/null
+    ./git-servers.sh $@
   fi
 
   echo ""
