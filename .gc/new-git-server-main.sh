@@ -815,7 +815,7 @@ gitcid_new_git_server_main() {
     fi
 
 
-    if [ $gc_ssh_host == "raspberrypi" ] || [ $rpi_auto_res -eq 1 ] && [ -z "$gc_ssh_username" ]; then
+    if [ $gc_ssh_host == "raspberrypi" ] || ( [ $rpi_auto_res -eq 1 ] && [ -z "$gc_ssh_username" ] ); then
       echo ""
       echo "INFO: No ssh config for user found. Trying Raspberry Pi auto-config..."
       echo ""
