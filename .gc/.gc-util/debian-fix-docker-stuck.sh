@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Fix docker getting stuck sometimes after install on Debian.
 #
 # TODO: Need to add a fix for Raspberry Pi Zero W, similar to:
@@ -29,7 +29,8 @@ gitcid_debian_fix_docker_stuck() {
     fi
 
 
-    curl https://get.docker.com | sh
+    { bash -c 'curl https://get.docker.com | sh' || bash -c 'curl https://get.docker.com | sh'; }    
+
 
     docker ps >/dev/null 2>&1
     if [ $? -eq 0 ]; then
