@@ -743,6 +743,8 @@ gitcid_new_git_server_main() {
     chmod 600 $HOME/.ssh/git-server.key*
   fi
 
+  cd "${start_dir}"
+
   if [ $# -eq 1 ] && [ "$1" == "-h" ]; then
     shift 1
     gitcid_new_git_server_usage
