@@ -666,7 +666,7 @@ gitcid_new_git_server_main() {
 
   unset gc_ssh_username
 
-  trap 'for i in ${tasks[@]}; do kill $i 2>/dev/null; done; for i in $(jobs -p); do kill $i 2>/dev/null; done; gc_new_git_server_install_cancel $@ || return $?' INT
+  trap 'for i in ${tasks[@]}; do kill $i 2>/dev/null; done; for i in $(jobs -p); do kill $i 2>/dev/null; done; gc_new_git_server_install_cancel $@ || exit $?;' INT
 
   GITCID_DIR=${GITCID_DIR:-"${PWD}/.gc/"}
 	GITCID_NEW_REPO_PERMISSIONS=${GITCID_NEW_REPO_PERMISSIONS:-"0640"}
