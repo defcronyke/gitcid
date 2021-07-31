@@ -19,7 +19,6 @@
 gitcid_retry_install_git_server=1
 gitcid_retry_install_git_server2=1
 gc_new_git_server_open_web_browser=1
-gc_new_git_server_setup_sudo=1
 
 gitcid_new_git_server_usage() {
   echo ""
@@ -744,6 +743,7 @@ gitcid_new_git_server_main() {
 
 
 
+  gc_new_git_server_setup_sudo=1
   
 
   # ----------
