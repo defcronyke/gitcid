@@ -24,6 +24,12 @@ gitcid_remove_bind_dns_config_files() {
 
   # ls -al "$PWD"
 
+  git init >/dev/null 2>&1
+
+  rm .gc/.gc-last-update-check.txt 2>/dev/null
+
+  .gc/bootstrap.sh -e
+
   cd .gc || return 1
 
   cd discover-git-server-dns 2>/dev/null
