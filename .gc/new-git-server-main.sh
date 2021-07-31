@@ -121,11 +121,13 @@ new_git_server_detect_other_git_servers() {
   echo ""
   if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
     .gc/git-servers-open.sh $@
+    gc_new_git_server_detect_other_git_servers=$?
     echo ""
     echo "GitWeb pages launched in web browser. If any pages don't"
     echo "load on first attempt, try refreshing the page."
   else
     .gc/git-servers.sh $@
+    gc_new_git_server_detect_other_git_servers=$?
   fi
 
   echo ""
@@ -135,6 +137,8 @@ new_git_server_detect_other_git_servers() {
   echo ""
   echo "  .gc/git-servers-open.sh [[git1] [git2] ...]"
   echo ""
+
+  return $gc_new_git_server_detect_other_git_servers
 }
 
 gitcid_new_git_server_post() {
@@ -1033,7 +1037,7 @@ gitcid_new_git_server_main() {
         echo ""
 
         new_git_server_detect_other_git_servers $@
-        if [ $? -ne 0 ] && [ $gitcid_retry_install_git_server2 -eq 1 ]; then
+        if [ $gitcid_retry_install_git_server2 -eq 1 ]; then
           echo ""
           echo "No git servers detected. Trying install one more time. It will probably work this time..."
           echo ""
