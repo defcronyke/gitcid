@@ -1,6 +1,0 @@
-Add desired hostname to new Raspberry Pi install's config, 
-so the correct hostname will end up in its bind config 
-automatically and then service discovery can work for it.
-For example, something like this could help:
-
-	echo "git1" | sudo tee /etc/hostname >/dev/null; sudo sed -i 's/raspberrypi/git1/g' /etc/hosts; previous_dir="$PWD"; cd /etc/bind; sudo sed -i 's/raspberrypi/git1/g' db.git; sudo git add .; sudo git commit -m "fix hostname"; sudo git push -u origin master; sudo systemctl restart bind9 || sudo systemctl restart named; cd "$previous_dir"; sudo reboot
