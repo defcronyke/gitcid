@@ -104,7 +104,7 @@ gitcid_new_remote() {
 
   gc_clone_attempt_count=1
   while [ $gc_clone_attempt_count -le 40 ]; do
-    git clone "$gc_remote_repo_clone"
+    git clone "$gc_remote_repo_clone" 2>/dev/null
     gc_clone_new_remote_res=$?
     
     if [ $gc_clone_new_remote_res -eq 0 ]; then
@@ -113,21 +113,21 @@ gitcid_new_remote() {
       # Install GitCid into freshly cloned git repo.
       source <(curl -sL https://tinyurl.com/gitcid) -e >/dev/null 2>&1
 
-        echo ""
-        echo "----------"
-        echo ""
-        echo "Created a new remote git repo, and cloned it."
-        echo "You are now inside your local copy. To push:"
-        echo ""
-        echo "  git push"
-        echo ""
-        echo ""
-        echo "(Optional) To commit and push using GitCid:"
-        echo ""
-        echo "  .gc/commit-push.sh A commit message."
-        echo ""
-        echo "----------"
-        echo ""
+      echo ""
+      echo "----------"
+      echo ""
+      echo "Created a new remote git repo, and cloned it."
+      echo "You are now inside your local copy. To push:"
+      echo ""
+      echo "  git push"
+      echo ""
+      echo ""
+      echo "(Optional) To commit and push using GitCid:"
+      echo ""
+      echo "  .gc/commit-push.sh A commit message."
+      echo ""
+      echo "----------"
+      echo ""
 
       break
     fi
