@@ -546,12 +546,12 @@ gc_new_git_server_install_os() {
           cp -f "gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}"
         fi
 
-        echo ""
-        echo "Leaving temp dir: $GITCID_OS_INSTALL_TMP_DIR"
-        echo ""
-        echo "Returning to previous directory: $gc_dir_before_os_install"
+        # echo ""
+        # echo "Leaving temp dir: $GITCID_OS_INSTALL_TMP_DIR"
+        # echo ""
+        # echo "Returning to previous directory: $gc_dir_before_os_install"
         cd "$gc_dir_before_os_install"
-        echo ""
+        # echo ""
 
         # These checks are overkill, but I'm working on this list 
         # to use elsewhere later, so I put it here for now.
@@ -573,9 +573,9 @@ gc_new_git_server_install_os() {
             [ "$GITCID_OS_INSTALL_TMP_DIR" != "../.." ] && \
             [ "$GITCID_OS_INSTALL_TMP_DIR" != "*" ]; then
 
-            echo "Removing temp dir: $GITCID_OS_INSTALL_TMP_DIR"
+            # echo "Removing temp dir: $GITCID_OS_INSTALL_TMP_DIR"
             rm -rf "$GITCID_OS_INSTALL_TMP_DIR"
-            echo ""
+            # echo ""
             
           else
             echo ""
@@ -586,6 +586,18 @@ gc_new_git_server_install_os() {
             echo ""
           fi
         fi
+
+        echo ""
+        echo "Finished installing and configuring a new OS on the target device: $2"
+        echo ""
+        echo "Next, if you want to install a git server onto the device,"
+        echo "put that disk in some system, boot up the system, and when"
+        echo "it comes online, run the following command to install the"
+        echo "git server software over ssh (Raspberry Pi OS example):"
+        echo ""
+        echo "  .gc/new-git-server.sh -o raspberrypi"
+        echo ""
+
       fi
       
       return $res
