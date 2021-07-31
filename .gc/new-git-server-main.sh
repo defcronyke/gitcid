@@ -832,6 +832,9 @@ gitcid_new_git_server_main() {
 
       gc_ssh_username="pi"
 
+      gc_ssh_host="raspberrypi"; \
+      sed -i "/^${gc_ssh_host}\s.*$/d" "${HOME}/.ssh/known_hosts"; \
+      sed -i '/^$/d' "${HOME}/.ssh/known_hosts"
 
       echo ""
       echo "Adding git-server key to local ssh config: \"${HOME}/.ssh/git-server.key\" >> \"${HOME}/.ssh/config\""
@@ -842,8 +845,7 @@ gitcid_new_git_server_main() {
 
       echo ""
       echo "Verifying host: $gc_ssh_host"
-
-      sed "/^${gc_ssh_host}/d" "${HOME}/.ssh/known_hosts"
+      echo ""
 
       ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
