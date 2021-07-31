@@ -84,6 +84,13 @@ gc_pre_receive_get_ref_name() {
 gc_git_hook_pre_receive() {
   GITCID_VERBOSE_OUTPUT="y"
 
+  echo "hostname=$(hostname)"
+  echo ""
+  echo "USER=$(whoami)"
+  echo ""
+
+  sudo chown -R $USER: ${GITCID_DIR}/../.git 2>/dev/null
+
   # echo ""
   # echo ""
   # echo "!!!!! DEBUG 1:  !!!!!"
