@@ -54,8 +54,8 @@ gitcid_debian_fix_docker_stuck() {
     sudo ip addr add dev docker0 172.17.0.1/16
 
 
-
-    { bash -c 'curl https://get.docker.com | sh' || bash -c 'curl https://get.docker.com | sh'; }    
+    { bash -c 'curl https://get.docker.com | sh'; }
+    # { bash -c 'curl https://get.docker.com | sh' || bash -c 'curl https://get.docker.com | sh'; }
 
 
     docker ps >/dev/null 2>&1
