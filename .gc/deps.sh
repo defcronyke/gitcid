@@ -368,11 +368,11 @@ ${GITCID_YQ_DOWNLOAD_CMD} > \"${GITCID_DIR}${GITCID_YQ_CMD}\""
 		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Attempting to install \"${GITCID_YQ_CMD}\" by running the following command:\n\
 chmod 755 \"${GITCID_DIR}${GITCID_YQ_CMD}\" && ${SUDO_CMD} mv \"${GITCID_DIR}${GITCID_YQ_CMD}\" \"${GITCID_YQ_CMD_INSTALL_PATH}\""
 		
-		chmod 755 "${GITCID_DIR}${GITCID_YQ_CMD}" && ${SUDO_CMD} mv "${GITCID_DIR}${GITCID_YQ_CMD}" "${GITCID_YQ_CMD_INSTALL_PATH}"
-		if [ $? -ne 0 ]; then
-			gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed installing the \"${GITCID_YQ_CMD}\" command. You'll need to install it manually then I guess."
-			return 81
-		fi
+		chmod 755 "${GITCID_DIR}${GITCID_YQ_CMD}" 2>/dev/null && ${SUDO_CMD} mv "${GITCID_DIR}${GITCID_YQ_CMD}" "${GITCID_YQ_CMD_INSTALL_PATH}" 2>/dev/null
+		# if [ $? -ne 0 ]; then
+		# 	gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "Failed installing the \"${GITCID_YQ_CMD}\" command. You'll need to install it manually then I guess."
+		# 	return 81
+		# fi
 	fi
 
 	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Setting \"$GITCID_GIT_HOOKS_CLIENT_DIR\" as this git repo's \"core.hooksPath\""
