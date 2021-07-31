@@ -866,9 +866,11 @@ gitcid_new_git_server_main() {
       echo "INFO: No ssh config for user found. Trying Raspberry Pi auto-config..."
       echo ""
 
-      gc_ssh_username="pi"
+      if [ $rpi_auto_res -eq 1 ] && [ -z "$gc_ssh_username" ]; then
+        gc_ssh_host="raspberrypi"
+        gc_ssh_username="pi"
+      fi
 
-      gc_ssh_host="raspberrypi"; \
       sed -i "/^${gc_ssh_host}\s.*$/d" "${HOME}/.ssh/known_hosts"; \
       sed -i '/^$/d' "${HOME}/.ssh/known_hosts"
 
