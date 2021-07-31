@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Run this to make a new git server.
 #
 # WARNING: The target is intended to be a freshly
@@ -661,8 +661,8 @@ gitcid_new_git_server_main() {
 
   tasks=( )
 
-  gc_new_git_server_open_web_browser=1
-  gc_new_git_server_setup_sudo=1
+  # gc_new_git_server_open_web_browser=1
+  # gc_new_git_server_setup_sudo=1
 
   unset gc_ssh_username
 
@@ -751,8 +751,8 @@ gitcid_new_git_server_main() {
   ####
 
 
-  # gc_new_git_server_open_web_browser=1
-  # gc_new_git_server_setup_sudo=1
+  gc_new_git_server_open_web_browser=1
+  gc_new_git_server_setup_sudo=1
   
 
   # ----------
