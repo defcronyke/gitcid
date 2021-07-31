@@ -980,7 +980,7 @@ gitcid_new_git_server_main() {
       echo ""
       echo "NOTICE: Installing git server on host: ${gc_ssh_username}@${gc_ssh_host}"
       echo ""
-      { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?;'; loop_res=22; exit $loop_res; }"; loop_res=$?; }
+      { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init) -s; exit 22;'; loop_res=22; }"; loop_res=$?; }
       loop_res=$?
       # loop_res=22
 
@@ -995,7 +995,8 @@ gitcid_new_git_server_main() {
       echo ""
       echo "info: You need to use sequential mode the first time, to set up passwordless sudo so that parallel mode can work properly."
       echo ""
-      { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo=\"sudo -n\"; echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init); exit $?;'; loop_res2=21; exit $loop_res2; }"; loop_res2=$?; } & tasks+=( $! )
+      { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo=\"sudo -n\"; echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init); exit 21;'; loop_res2=$?; }"; loop_res2=$?; } & tasks+=( $! )
+      # { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo=\"sudo -n\"; echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init); exit $?;'; loop_res2=21; exit $loop_res2; }"; loop_res2=$?; } & tasks+=( $! )
       # { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo=\"sudo -n\"; echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init); exit $?;'; loop_res2=$?; }"; loop_res2=$?; } & tasks+=( $! )
       # { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; exit $?; } & tasks+=( $! )
     fi
