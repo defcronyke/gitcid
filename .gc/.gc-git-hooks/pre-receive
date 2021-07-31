@@ -83,6 +83,8 @@ gc_pre_receive_get_ref_name() {
 
 gc_git_hook_pre_receive() {
   GITCID_VERBOSE_OUTPUT="y"
+  
+  GITCID_DIR=${GITCID_DIR:-".gc/"}
 
   echo "hostname=$(hostname)"
   echo ""
@@ -90,21 +92,13 @@ gc_git_hook_pre_receive() {
   echo ""
 
   sudo chown -R $USER: "${PWD}" 2>/dev/null
-
   sudo chown -R $USER: "${GITCID_DIR}.." 2>/dev/null
-
   sudo chown -R $USER: "${GITCID_DIR}../" 2>/dev/null
-
   sudo chown -R $USER: "${GITCID_DIR}" 2>/dev/null
-
   sudo chown -R $USER: "${GITCID_DIR}../.git" 2>/dev/null
-
   sudo chown -R $USER: * 2>/dev/null
-
   sudo chown -R $USER: ./* 2>/dev/null
-
   sudo chown -R $USER: ./ 2>/dev/null
-
   sudo chown -R $USER: . 2>/dev/null
 
 
@@ -125,9 +119,8 @@ gc_git_hook_pre_receive() {
   # TODO: Do we really need this next line?
   # Maybe it was needed because of some problem with our usage of GitWeb,
   # but it's not confirmed.
-  sudo chown -R $USER: ${GITCID_DIR}/../.git 2>/dev/null
+  # sudo chown -R $USER: ${GITCID_DIR}/../.git 2>/dev/null
 
-  GITCID_DIR=${GITCID_DIR:-".gc/"}
 
   source "${GITCID_DIR}deps.sh" $@
   res_import_deps=$?
@@ -181,6 +174,25 @@ ${res_import_deps}"
 
   # echo ""
   echo ""
+
+
+
+  echo "hostname=$(hostname)"
+  echo ""
+  echo "USER=$(whoami)"
+  echo ""
+
+  sudo chown -R $USER: "${PWD}" 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}.." 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}../" 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}" 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}../.git" 2>/dev/null
+  sudo chown -R $USER: * 2>/dev/null
+  sudo chown -R $USER: ./* 2>/dev/null
+  sudo chown -R $USER: ./ 2>/dev/null
+  sudo chown -R $USER: . 2>/dev/null
+
+
 
   gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "The git hook finished successfully: ${BASH_SOURCE[0]} $@"
 

@@ -4,6 +4,21 @@
 gc_git_hook_client_pre_commit() {
 	GITCID_DIR=${GITCID_DIR:-".gc/"}
 
+  echo "hostname=$(hostname)"
+  echo ""
+  echo "USER=$(whoami)"
+  echo ""
+
+  sudo chown -R $USER: "${PWD}" 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}.." 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}../" 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}" 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}../.git" 2>/dev/null
+  sudo chown -R $USER: * 2>/dev/null
+  sudo chown -R $USER: ./* 2>/dev/null
+  sudo chown -R $USER: ./ 2>/dev/null
+  sudo chown -R $USER: . 2>/dev/null
+
 	source "${GITCID_DIR}deps.sh" $@
 	res_import_deps=$?
 	if [ $res_import_deps -ne 0 ]; then
@@ -48,6 +63,21 @@ gc_git_hook_client_pre_commit() {
   else
     gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "We aren't the gitcid repository. Skipping some gitcid-specific tasks."
   fi
+
+  echo "hostname=$(hostname)"
+  echo ""
+  echo "USER=$(whoami)"
+  echo ""
+
+  sudo chown -R $USER: "${PWD}" 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}.." 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}../" 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}" 2>/dev/null
+  sudo chown -R $USER: "${GITCID_DIR}../.git" 2>/dev/null
+  sudo chown -R $USER: * 2>/dev/null
+  sudo chown -R $USER: ./* 2>/dev/null
+  sudo chown -R $USER: ./ 2>/dev/null
+  sudo chown -R $USER: . 2>/dev/null
 
 	gitcid_log_info "${BASH_SOURCE[0]}" $LINENO "The client git hook finished successfully: ${BASH_SOURCE[0]} $@"
 }
