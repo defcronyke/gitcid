@@ -1058,12 +1058,12 @@ if [ $res -ne 0 ]; then
     # exit $?
 fi
 
-if [ $res -ne 20 ]; then
-  # Run the install a second time to make sure each
-  # stage has succeeded. Only really needed because
-  # Docker isn't usable immediately after installing 
-  # it.
-  gitcid_new_git_server_main $@; res=$?
-fi
+# if [ $res -ne 20 ]; then
+#   # Run the install a second time to make sure each
+#   # stage has succeeded. Only really needed because
+#   # Docker isn't usable immediately after installing 
+#   # it.
+#   gitcid_new_git_server_main $@; res=$?
+# fi
 
 exit $res
