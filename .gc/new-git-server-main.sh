@@ -930,17 +930,17 @@ gitcid_new_git_server_main() {
     #   gc_ssh_username="$USER"
     # fi
 
-    loop_res=0
-    loop_res2=0
+    loop_res=22
+    loop_res2=21
     if [ $gc_new_git_server_setup_sudo -eq 0 ]; then
       echo ""
       echo "NOTICE: Sequential mode: $0 -s $@"
       echo ""
       echo "NOTICE: Installing git server on host: ${gc_ssh_username}@${gc_ssh_host}"
       echo ""
-      { { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; bash <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?;'; }; }
-      loop_res=?
-      # loop_res=$?
+      { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init) -s; exit $?;'; loop_res=22; exit $loop_res; }"; loop_res=$?; }
+      loop_res=$?
+      # loop_res=22
 
       echo ""
     else
@@ -953,7 +953,7 @@ gitcid_new_git_server_main() {
       echo ""
       echo "info: You need to use sequential mode the first time, to set up passwordless sudo so that parallel mode can work properly."
       echo ""
-      { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo=\"sudo -n\"; echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init)'; loop_res2=$?; }"; loop_res2=$?; } & tasks+=( $! )
+      { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo=\"sudo -n\"; echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init); exit $?;'; loop_res2=21; exit $loop_res2; }"; loop_res2=$?; } & tasks+=( $! )
       # { bash -c "{ ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo=\"sudo -n\"; echo \"\"; echo \"-----\"; echo \"  hostname: $(hostname)\"; echo \"  user: $USER\"; echo \"-----\"; bash <(curl -sL https://tinyurl.com/git-server-init); exit $?;'; loop_res2=$?; }"; loop_res2=$?; } & tasks+=( $! )
       # { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt ${gc_ssh_username}@${gc_ssh_host} 'alias sudo="sudo -n"; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); exit $?'; exit $?; } & tasks+=( $! )
     fi
@@ -1035,14 +1035,6 @@ gitcid_new_git_server_main() {
 
 gitcid_new_git_server_main $@; res=$?
 
-if [ $res -ne 20 ]; then
-  # Run the install a second time to make sure each
-  # stage has succeeded. Only really needed because
-  # Docker isn't usable immediately after installing 
-  # it.
-  gitcid_new_git_server_main $@; res=$?
-fi
-
 if [ $res -ne 0 ]; then
   # If cancelled.
   if [ $res -eq 20 ]; then
@@ -1058,6 +1050,14 @@ if [ $res -ne 0 ]; then
   exit $res2
   # || \
     # exit $?
+fi
+
+if [ $res -ne 20 ]; then
+  # Run the install a second time to make sure each
+  # stage has succeeded. Only really needed because
+  # Docker isn't usable immediately after installing 
+  # it.
+  gitcid_new_git_server_main $@; res=$?
 fi
 
 exit $res
