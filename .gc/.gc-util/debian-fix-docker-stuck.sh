@@ -11,8 +11,8 @@ gitcid_debian_fix_docker_stuck() {
   docker ps >/dev/null 2>&1
 
   if [ $? -ne 0 ]; then
-    sudo groupadd docker
-    sudo gpasswd -a $USER docker
+    sudo groupadd docker 2>/dev/null || true
+    sudo gpasswd -a $USER docker 2>/dev/null || true
 
     # Skip everything in here if we're in Windows WSL2
     # because Docker works differently on Windows.
@@ -43,7 +43,7 @@ gitcid_debian_fix_docker_stuck() {
 
     sudo reboot
 
-    exit 252
+    return 23
 
   #   echo ""
   #   echo ""
