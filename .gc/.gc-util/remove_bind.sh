@@ -28,7 +28,7 @@ gitcid_remove_bind_dns_config_files() {
 
   rm .gc/.gc-last-update-check.txt 2>/dev/null
 
-  .gc/bootstrap.sh -e >/dev/null 2&1
+  .gc/bootstrap.sh -e >/dev/null 2>&1
 
   cd .gc || return 1
 
