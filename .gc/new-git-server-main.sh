@@ -16,6 +16,9 @@
 # YOU HAVE BEEN WARNED!!
 #
 
+gitcid_retry_install_git_server=1
+gitcid_retry_install_git_server2=1
+
 gitcid_new_git_server_usage() {
   echo ""
   echo "Install git servers at ssh target locations."
@@ -101,6 +104,10 @@ gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url() {
 }
 
 gc_new_git_server_interactive() {
+  if [ $gitcid_retry_install_git_server -eq 0 ] || [ $gitcid_retry_install_git_server2 -eq 0 ]; then
+    return 0
+  fi
+
   echo ""
   echo "Are you sure you want to install git server(s) at the ssh path(s): $@ [ y / N ] ? "
 
@@ -642,8 +649,6 @@ gc_new_git_server_install_os() {
 #   echo ""
 # }
 
-gitcid_retry_install_git_server=1
-gitcid_retry_install_git_server2=1
 
 
 gitcid_new_git_server_main() {
