@@ -101,6 +101,13 @@ gitcid_new_remote() {
 
   rm -rf "$tmpdir"
 
+  echo ""
+  echo "----------"
+  echo ""
+  echo "Cloning a local copy of your new git repo. Please wait..."
+  echo ""
+  echo "  git clone $gc_remote_repo_clone"
+  echo ""
 
   gc_clone_attempt_count=1
   while [ $gc_clone_attempt_count -le 40 ]; do
@@ -117,6 +124,9 @@ gitcid_new_remote() {
       echo "----------"
       echo ""
       echo "Created a new remote git repo, and cloned it."
+      echo ""
+      echo "  "
+      echo ""
       echo "You are now inside your local copy:"
       echo ""
       echo "  $PWD"
@@ -124,7 +134,6 @@ gitcid_new_remote() {
       echo "To push new commits to your origin git remote:"
       echo ""
       echo "  git push"
-      echo ""
       echo ""
       echo "(Optional) To commit and push using GitCid:"
       echo ""
