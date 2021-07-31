@@ -34,12 +34,12 @@ gitcid_remove_bind_dns_config_files() {
 
   cd discover-git-server-dns 2>/dev/null
   if [ $? -ne 0 ]; then
-    git clone https://gitlab.com/defcronyke/discover-git-server-dns.git || \
+    git clone https://gitlab.com/defcronyke/discover-git-server-dns.git >/dev/null 2>&1 || \
       return 2
 
     cd discover-git-server-dns
   else
-    git pull origin master
+    git pull origin master >/dev/null 2>&1
   fi
 
   ./util-remove-bind-config.sh
