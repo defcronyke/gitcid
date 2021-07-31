@@ -89,27 +89,6 @@ gitcid_new_remote() {
   gc_remote_repo_clone="$(echo $gc_remote_repo | sed 's/\/new//')"
   remote_localname="$(echo $gc_remote_repo_clone | sed 's/.git$//g' | xargs basename)"
 
-  if [ $res -eq 0 ]; then
-    echo ""
-    echo "----------"
-    echo ""
-    echo "Created a new remote git repo. To clone your new repo, run this command:"
-    echo ""
-    echo "  git clone $gc_remote_repo_clone && cd $remote_localname"
-    echo ""
-    echo "To add GitCid to your freshly cloned repo, run this command inside the repo:"
-    echo ""
-    echo "  source <(curl -sL https://tinyurl.com/gitcid) -e"
-    echo ""
-    echo "Here's a one-line version of above commands, for copy-paste convenience:"
-    echo ""
-    echo "  git clone $gc_remote_repo_clone && cd $remote_localname && \\"
-    echo "  source <(curl -sL https://tinyurl.com/gitcid) -e"
-    echo ""
-    echo "----------"
-    echo ""
-  fi
-
   if [ "$tmpdir" == "/" ] || \
     [ "$tmpdir" == "." ] || \
     [ "$tmpdir" == ".." ] || \
@@ -121,6 +100,68 @@ gitcid_new_remote() {
   fi
 
   rm -rf "$tmpdir"
+
+
+  gc_clone_attempt_count=1
+  while [ $gc_clone_attempt_count -le 40 ]; do
+    git clone "$gc_remote_repo_clone"
+    gc_clone_new_remote_res=$?
+    
+    if [ $gc_clone_new_remote_res -eq 0 ]; then
+      cd "$remote_localname"
+
+      # Install GitCid into freshly cloned git repo.
+      source <(curl -sL https://tinyurl.com/gitcid) -e >/dev/null 2>&1
+
+        echo ""
+        echo "----------"
+        echo ""
+        echo "Created a new remote git repo, and cloned it."
+        echo "You are now inside your local copy. To push:"
+        echo ""
+        echo "  git push"
+        echo ""
+        echo ""
+        echo "(Optional) To commit and push using GitCid:"
+        echo ""
+        echo "  .gc/commit-push.sh A commit message."
+        echo ""
+        echo "----------"
+        echo ""
+
+      break
+    fi
+    
+    sleep 1
+
+    ((clone_attempt_count++))
+  done
+
+
+
+
+
+  # if [ $res -eq 0 ]; then
+  #   echo ""
+  #   echo "----------"
+  #   echo ""
+  #   echo "Created a new remote git repo. To clone your new repo, run this command:"
+  #   echo ""
+  #   echo "  git clone $gc_remote_repo_clone && cd $remote_localname"
+  #   echo ""
+  #   echo "To add GitCid to your freshly cloned repo, run this command inside the repo:"
+  #   echo ""
+  #   echo "  source <(curl -sL https://tinyurl.com/gitcid) -e"
+  #   echo ""
+  #   echo "Here's a one-line version of above commands, for copy-paste convenience:"
+  #   echo ""
+  #   echo "  git clone $gc_remote_repo_clone && cd $remote_localname && \\"
+  #   echo "  source <(curl -sL https://tinyurl.com/gitcid) -e"
+  #   echo ""
+  #   echo "----------"
+  #   echo ""
+  # fi
+
 
   return $res
 }
