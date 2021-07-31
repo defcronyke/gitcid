@@ -1037,7 +1037,7 @@ gitcid_new_git_server_main() {
         echo ""
 
         new_git_server_detect_other_git_servers $@
-        if [ $gitcid_retry_install_git_server2 -eq 1 ]; then
+        if [ $? -ne 0 ] && [ $gitcid_retry_install_git_server2 -eq 1 ]; then
           echo ""
           echo "No git servers detected. Trying install one more time. It will probably work this time..."
           echo ""
