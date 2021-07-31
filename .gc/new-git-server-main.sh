@@ -1025,6 +1025,12 @@ gitcid_new_git_server_main() {
 
 gitcid_new_git_server_main $@; res=$?
 
+# Run the install a second time to make sure each
+# stage has succeeded. Only really needed because
+# Docker isn't usable immediately after installing 
+# it.
+gitcid_new_git_server_main $@; res=$?
+
 if [ $res -ne 0 ]; then
   # If cancelled.
   if [ $res -eq 20 ]; then
