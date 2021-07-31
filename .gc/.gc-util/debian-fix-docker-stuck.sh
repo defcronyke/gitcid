@@ -37,11 +37,13 @@ gitcid_debian_fix_docker_stuck() {
       return 0
     fi
 
-    echo "NOTICE: Docker doesn't seem to be working. It's probably because Docker was newly installed on some system"
-    echo "which requries a reboot after Docker is first installed. We will reboot now. Please run the same command"
-    echo "again once we're back up."
+    echo "NOTICE: Docker doesn't seem to be working."
+    
+    # echo "It's probably because Docker was newly installed on some system"
+    # echo "which requries a reboot after Docker is first installed. We will reboot now. Please run the same command"
+    # echo "again once we're back up."
 
-    sudo reboot
+    # sudo reboot
 
     return 23
 
