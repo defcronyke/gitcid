@@ -1010,7 +1010,7 @@ gitcid_new_git_server_main() {
     echo "Entering job wait loop..."
 
     for i in ${tasks[@]}; do
-      # gitcid_retry_install_git_server2=1
+      gitcid_retry_install_git_server2=1
 
       echo "Job wait loop iteration for task: $i"
 
