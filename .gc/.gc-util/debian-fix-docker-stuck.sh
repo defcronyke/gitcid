@@ -29,6 +29,32 @@ gitcid_debian_fix_docker_stuck() {
     fi
 
 
+
+
+    sudo systemctl disable docker
+    sudo systemctl stop docker
+
+    for i in `ps aux | grep /usr/bin/dockerd | awk '{print $2}'`; do sudo kill $i; done
+    for i in `ps aux | grep /usr/bin/dockerd | awk '{print $2}'`; do sudo kill -9 $i; done
+
+    sudo rm /var/run/docker.pid
+    sudo rm /run/docker.pid
+
+    sudo mv /usr/bin/docker "${HOME}/docker.orig.broken"
+    sudo mv /bin/docker "${HOME}/docker.orig2.broken"
+    sudo mv /usr/local/bin/docker "${HOME}/docker.orig3.broken"
+
+
+    echo ""
+    echo "info: Poking docker in case maybe it's stuck. Starting dockerd..."
+    echo ""
+    echo "info: Add network interface \"docker0\", since maybe it's missing for some reason..."
+    echo ""
+    sudo ip link add name docker0 type bridge
+    sudo ip addr add dev docker0 172.17.0.1/16
+
+
+
     { bash -c 'curl https://get.docker.com | sh' || bash -c 'curl https://get.docker.com | sh'; }    
 
 
@@ -45,50 +71,62 @@ gitcid_debian_fix_docker_stuck() {
 
     # sudo reboot
 
-    return 23
+    # return 23
 
-  #   echo ""
-  #   echo ""
-  #   echo "info: Poking docker in case maybe it's stuck. Starting dockerd..."
-  #   echo ""
-  #   echo "info: Add network interface \"docker0\", since maybe it's missing for some reason..."
-  #   echo ""
-  #   sudo ip link add name docker0 type bridge
-  #   sudo ip addr add dev docker0 172.17.0.1/16
-  #   echo ""
-  #   echo "Removing docker pid..."
-  #   sudo systemctl stop docker
-  #   for i in `ps aux | grep /usr/bin/dockerd | awk '{print $2}'`; do sudo kill $i; done
-  #   sudo rm /var/run/docker.pid
-  #   echo ""
-  #   sudo /usr/bin/dockerd -H unix:// --containerd=/run/containerd/containerd.sock >/dev/null &
-  #   DOCKERD_TMP_PID=$!
-  #   echo "info: waiting 4 seconds..."
-  #   sleep 4
-  #   echo ""
-  #   echo "info: Stopping dockerd..."
-  #   echo ""
-  #   sudo kill $DOCKERD_TMP_PID
-  #   echo ""
-  #   echo "waiting again, 3 seconds..."
-  #   sleep 3
-  #   echo ""
-  #   echo "trying to restart docker..."
-  #   echo ""
-  #   sudo systemctl restart docker
-  #   if [ $? -ne 0 ]; then
-  #     echo "error: Docker is being mean. It still didn't start after that? Okay checking if maybe we are running on an older model of arm chip, such as armv6..."
-  #     uname -a | grep armv6
-  #     if [ $? -eq 0 ]; then
-  #       echo ""
-  #       echo "error: Yes, this is an armv6 type of chip. We should be able to get docker installed and running by another method then. Trying:"
-  #       echo ""
-  #       echo "sudo apt-get remove -y --purge docker-ce* container.io*; curl https://get.docker.com | sh"
-  #       echo ""
-  #       sudo apt-get remove -y --purge docker-ce* container.io*; curl https://get.docker.com | sh
-  #       echo ""
-  #     fi
-  #   fi
+    # echo ""
+    # echo "info: Poking docker in case maybe it's stuck. Starting dockerd..."
+    # echo ""
+    # echo "info: Add network interface \"docker0\", since maybe it's missing for some reason..."
+    # echo ""
+    # sudo ip link add name docker0 type bridge
+    # sudo ip addr add dev docker0 172.17.0.1/16
+    echo ""
+    echo "Removing docker pid..."
+    sudo systemctl stop docker
+    for i in `ps aux | grep /usr/bin/dockerd | awk '{print $2}'`; do sudo kill $i; done
+    sudo rm /var/run/docker.pid
+    echo ""
+    sudo /usr/bin/dockerd -H unix:// --containerd=/run/containerd/containerd.sock >/dev/null &
+    DOCKERD_TMP_PID=$!
+    echo "info: waiting 4 seconds..."
+    sleep 4
+    echo ""
+    echo "info: Stopping dockerd..."
+    echo ""
+    sudo kill $DOCKERD_TMP_PID
+    echo ""
+    echo "waiting again, 3 seconds..."
+    sleep 3
+    echo ""
+    echo "trying to restart docker..."
+    echo ""
+
+    sudo systemctl restart docker
+
+    if [ $? -ne 0 ]; then
+      echo ""
+      echo "NOTICE: Docker is being mean. Probably the only way to make it work now"
+      echo "is to reboot, since we tried lots of other things and nothing else worked so far. :("
+      echo ""
+      echo "Rebooting now. Please wait..."
+      echo ""
+
+      sudo reboot
+
+      return 24
+
+      # echo "error: Docker is being mean. It still didn't start after that? Okay checking if maybe we are running on an older model of arm chip, such as armv6..."
+      # uname -a | grep armv6
+      # if [ $? -eq 0 ]; then
+      #   echo ""
+      #   echo "error: Yes, this is an armv6 type of chip. We should be able to get docker installed and running by another method then. Trying:"
+      #   echo ""
+      #   echo "sudo apt-get remove -y --purge docker-ce* container.io*; curl https://get.docker.com | sh"
+      #   echo ""
+      #   sudo apt-get remove -y --purge docker-ce* container.io*; curl https://get.docker.com | sh
+      #   echo ""
+      # fi
+    fi
   #   echo ""
   #   docker ps >/dev/null 2>&1
   #   if [ $? -ne 0 ]; then
@@ -101,6 +139,8 @@ gitcid_debian_fix_docker_stuck() {
   #   echo ""
 
     
+    return 23
+
   fi
 
   return 0

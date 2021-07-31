@@ -1016,6 +1016,9 @@ gitcid_new_git_server_main() {
           echo "No git servers detected. Trying install one more time. It will probably work this time..."
           echo ""
 
+          echo "Please wait while setup is restarting..."
+          sleep 15
+
           gitcid_retry_install_git_server2=0
           
           gitcid_new_git_server_main $@; loop_res2=$?
@@ -1049,6 +1052,9 @@ gitcid_new_git_server_main() {
           echo "No git servers detected. Trying install one more time. It will probably work this time..."
           echo ""
 
+          echo "Please wait while setup is restarting..."
+          sleep 15
+
           gitcid_retry_install_git_server2=0
           
           gitcid_new_git_server_main $@; loop_res2=$?
@@ -1067,6 +1073,9 @@ gitcid_new_git_server_main() {
       echo ""
       echo "No git servers detected. Trying install one more time. It will probably work this time..."
       echo ""
+
+      echo "Please wait while setup is restarting..."
+      sleep 15
 
       gitcid_retry_install_git_server=0
       
@@ -1092,6 +1101,9 @@ gitcid_new_git_server_main() {
     echo ""
     echo "No git servers detected. Trying install one more time. It will probably work this time..."
     echo ""
+
+    echo "Please wait while setup is restarting..."
+    sleep 15
 
     gitcid_retry_install_git_server=0
     
