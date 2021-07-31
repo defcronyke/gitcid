@@ -786,8 +786,16 @@ gitcid_new_git_server_main() {
         gitcid_new_git_server_usage $@
         return 1
       else
-        gc_new_git_server_interactive $@ || \
-        return $?
+        if [ ! "$1" =~ ^/dev/ ]; then
+          gc_new_git_server_interactive $@ || \
+          return $?
+        else
+          echo ""
+          echo "error: Invalid arguments: $@"
+          echo ""
+          gitcid_new_git_server_usage $@
+          return 1
+        fi
       fi
     fi
   fi
