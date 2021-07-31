@@ -205,9 +205,11 @@ gitcid_new_git_server_post() {
   if [ $new_install_success -ne 0 ]; then
     gitcid_new_git_server_usage $@
     echo ""
+    return 20
   else
     new_git_server_detect_other_git_servers $@
     echo ""
+    return 20
   fi
 
   if [ $last_bad -ne 0 ]; then
@@ -784,7 +786,7 @@ gitcid_new_git_server_main() {
         echo "error: Invalid arguments: $@"
         echo ""
         gitcid_new_git_server_usage $@
-        return 1
+        return 20
       else
         if [ ! "$1" =~ ^/dev/ ]; then
           gc_new_git_server_interactive $@ || \
@@ -794,7 +796,7 @@ gitcid_new_git_server_main() {
           echo "error: Invalid arguments: $@"
           echo ""
           gitcid_new_git_server_usage $@
-          return 1
+          return 20
         fi
       fi
     fi
