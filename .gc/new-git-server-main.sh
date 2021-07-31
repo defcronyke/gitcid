@@ -18,7 +18,6 @@
 
 gitcid_retry_install_git_server=1
 gitcid_retry_install_git_server2=1
-gc_new_git_server_open_web_browser=1
 
 gitcid_new_git_server_usage() {
   echo ""
@@ -127,7 +126,13 @@ new_git_server_detect_other_git_servers() {
   echo ""
   echo "GitWeb servers detected on your network (with args: $@):"
   echo ""
-  if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
+
+  # TODO: New Raspberry Pi OS installs are currenly 
+  # always opening the browser on detect because 
+  # of this. We could handle this better.
+  if [ $gc_new_git_server_open_web_browser -eq 0 ] || \
+    [ $gitcid_retry_install_git_server -eq 0 ] || \
+    [ $gitcid_retry_install_git_server2 -eq 0 ]; then
     .gc/git-servers-open.sh $@
     gc_new_git_server_detect_other_git_servers=$?
     echo ""
@@ -742,7 +747,7 @@ gitcid_new_git_server_main() {
   ####
 
 
-
+  gc_new_git_server_open_web_browser=1
   gc_new_git_server_setup_sudo=1
   
 
