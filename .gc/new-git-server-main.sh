@@ -978,11 +978,15 @@ gitcid_new_git_server_main() {
   done
 
   echo "Finished iterating over hosts."
+
+  gitcid_retry_install_git_server=1
   
   if [ $gc_new_git_server_setup_sudo -ne 0 ]; then
     echo "Entering job wait loop..."
 
     for i in ${tasks[@]}; do
+      gitcid_retry_install_git_server2=1
+
       echo "Job wait loop iteration for task: $i"
 
       if [ -z "$(jobs -p)" ]; then
@@ -993,6 +997,15 @@ gitcid_new_git_server_main() {
         echo ""
 
         new_git_server_detect_other_git_servers $@
+        if [ $? -ne 0 ] && [ $gitcid_retry_install_git_server2 -eq 1 ]; then
+          echo ""
+          echo "No git servers detected. Trying install one more time. It will probably work this time..."
+          echo ""
+
+          gitcid_retry_install_git_server2=0
+          
+          gitcid_new_git_server_main $@; loop_res2=$?
+        fi
 
         return $loop_res2
       fi
@@ -1017,6 +1030,15 @@ gitcid_new_git_server_main() {
         echo ""
 
         new_git_server_detect_other_git_servers $@
+        if [ $? -ne 0 ] && [ $gitcid_retry_install_git_server2 -eq 1 ]; then
+          echo ""
+          echo "No git servers detected. Trying install one more time. It will probably work this time..."
+          echo ""
+
+          gitcid_retry_install_git_server2=0
+          
+          gitcid_new_git_server_main $@; loop_res2=$?
+        fi
 
         return $loop_res2
       fi
@@ -1027,6 +1049,15 @@ gitcid_new_git_server_main() {
     echo ""
 
     new_git_server_detect_other_git_servers $@
+    if [ $? -ne 0 ] && [ $gitcid_retry_install_git_server -eq 1 ]; then
+      echo ""
+      echo "No git servers detected. Trying install one more time. It will probably work this time..."
+      echo ""
+
+      gitcid_retry_install_git_server=0
+      
+      gitcid_new_git_server_main $@; loop_res2=$?
+    fi
 
     return $loop_res2
   fi
@@ -1043,6 +1074,15 @@ gitcid_new_git_server_main() {
   echo ""
 
   new_git_server_detect_other_git_servers $@
+  if [ $? -ne 0 ] && [ $gitcid_retry_install_git_server -eq 1 ]; then
+    echo ""
+    echo "No git servers detected. Trying install one more time. It will probably work this time..."
+    echo ""
+
+    gitcid_retry_install_git_server=0
+    
+    gitcid_new_git_server_main $@; loop_res=$?
+  fi
 
   # || \
   #   return $?
