@@ -20,13 +20,13 @@
 gitcid_remove_bind_dns_config_files() {
   current_gitcid_dir_before_util="$PWD"
 
-  echo "$PWD"
+  # echo "$PWD"
 
-  ls -al "$PWD"
+  # ls -al "$PWD"
 
   cd .gc || return 1
 
-  cd discover-git-server-dns
+  cd discover-git-server-dns 2>/dev/null
   if [ $? -ne 0 ]; then
     git clone https://gitlab.com/defcronyke/discover-git-server-dns.git || \
       return 2
