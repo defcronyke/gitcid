@@ -363,7 +363,7 @@ Logging out and back in should fix the issue."
 Attempting to download it by running the following command:\n\
 ${GITCID_YQ_DOWNLOAD_CMD} > \"${GITCID_DIR}${GITCID_YQ_CMD}\""
 
-		$(eval $GITCID_YQ_DOWNLOAD_CMD) > "${GITCID_DIR}${GITCID_YQ_CMD}"
+		$($GITCID_YQ_DOWNLOAD_CMD) > ${GITCID_DIR}${GITCID_YQ_CMD}
 
 		gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "Attempting to install \"${GITCID_YQ_CMD}\" by running the following command:\n\
 chmod 755 \"${GITCID_DIR}${GITCID_YQ_CMD}\" && ${SUDO_CMD} mv \"${GITCID_DIR}${GITCID_YQ_CMD}\" \"${GITCID_YQ_CMD_INSTALL_PATH}\""
