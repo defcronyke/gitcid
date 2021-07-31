@@ -867,7 +867,7 @@ gitcid_new_git_server_main() {
       echo ""
 
       if [ $rpi_auto_res -eq 1 ] && [ -z "$gc_ssh_username" ]; then
-        gc_ssh_host="raspberrypi"
+        # gc_ssh_host="raspberrypi"
         gc_ssh_username="pi"
       fi
 
