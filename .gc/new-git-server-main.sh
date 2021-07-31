@@ -807,7 +807,7 @@ gitcid_new_git_server_main() {
         gitcid_new_git_server_usage $@
         return 20
       else
-        if [ ! "$1" =~ ^/dev/ ]; then
+        if [[ ! "$1" =~ ^/dev/ ]]; then
           gc_new_git_server_interactive $@ || \
           return $?
         else
