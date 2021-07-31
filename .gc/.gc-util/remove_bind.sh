@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #-----------------------------
 #
@@ -19,6 +19,10 @@
 
 gitcid_remove_bind_dns_config_files() {
   current_gitcid_dir_before_util="$PWD"
+
+  echo "$PWD"
+
+  ls -al "$PWD"
 
   cd .gc || return 1
 
