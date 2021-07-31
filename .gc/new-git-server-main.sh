@@ -1013,29 +1013,29 @@ gitcid_new_git_server_main() {
 
       echo "Job wait loop iteration for task: $i"
 
-      if [ -z "$(jobs -p)" ]; then
-        echo "No more jobs at beginning of loop for task: $i"
+      # if [ -z "$(jobs -p)" ]; then
+      #   echo "No more jobs at beginning of loop for task: $i"
         
-        echo ""
-        echo "Detecting git servers..."
-        echo ""
+      #   echo ""
+      #   echo "Detecting git servers..."
+      #   echo ""
 
-        new_git_server_detect_other_git_servers $@
-        if [ $? -ne 0 ] && [ $gitcid_retry_install_git_server2 -eq 1 ]; then
-          echo ""
-          echo "No git servers detected. Trying install one more time. It will probably work this time..."
-          echo ""
+      #   new_git_server_detect_other_git_servers $@
+      #   if [ $? -ne 0 ] && [ $gitcid_retry_install_git_server2 -eq 1 ]; then
+      #     echo ""
+      #     echo "No git servers detected. Trying install one more time. It will probably work this time..."
+      #     echo ""
 
-          echo "Please wait while setup is restarting..."
-          sleep 15
+      #     echo "Please wait while setup is restarting..."
+      #     sleep 15
 
-          gitcid_retry_install_git_server2=0
+      #     gitcid_retry_install_git_server2=0
           
-          gitcid_new_git_server_main $@; loop_res2=$?
-        fi
+      #     gitcid_new_git_server_main $@; loop_res2=$?
+      #   fi
 
-        return $loop_res2
-      fi
+      #   return $loop_res2
+      # fi
 
       wait $i
       loop_res2=$?
