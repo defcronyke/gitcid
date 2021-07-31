@@ -1,14 +1,15 @@
-# [GitCid](https://gitc.id)
+# [GitCid](https://gitc.id/)
 
-[gitc.id](https://gitc.id) ⊙ _"power tools for [`git`](https://git-scm.com)"_ ⊙ [Copyright © 2021](https://defcronyke.gitlab.io/epaper-idf/jeremy-profile-paint-bw.png) [Jeremy Carter](https://eternalvoid.net) `<`[jeremy@jeremycarter.ca](mailto:Jeremy%20Carter%20<jeremy@jeremycarter.ca>?subject=gitcid)`>`
+[![pipeline status](https://gitlab.com/defcronyke/gitcid/badges/master/pipeline.svg)](https://gitlab.com/defcronyke/gitcid/-/commits/master) [![sponsor the project](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/defcronyke)](https://github.com/sponsors/defcronyke) [gitc.id](https://gitc.id) ⊙ _"power tools for [`git`](https://git-scm.com)"_ ⊙ [Copyright © 2021](https://defcronyke.gitlab.io/epaper-idf/jeremy-profile-paint-bw.png) [Jeremy Carter](https://eternalvoid.net) `<`[jeremy@jeremycarter.ca](mailto:Jeremy%20Carter%20<jeremy@jeremycarter.ca>?subject=gitcid)`>`
 
 ---
 
 [![gitcid logo](img/gitcid-logo-s.png)](img/gitcid-logo.png)
 
-[![pipeline status](https://gitlab.com/defcronyke/gitcid/badges/master/pipeline.svg)](https://gitlab.com/defcronyke/gitcid/-/commits/master) [![sponsor the project](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/defcronyke)](https://github.com/sponsors/defcronyke)
+## [Table of Contents](#table-of-contents)
 
 - [GitCid](#gitcid)
+  - [Table of Contents](#table-of-contents)
   - [Links](#links)
     - [Website](#website)
     - [Source Code](#source-code)
@@ -30,9 +31,9 @@
 
 ---
 
-## [Links](#links)
+## [Links](#table-of-contents)
 
-### [Website](#website)
+### [Website](#table-of-contents)
 
 - [https://gitc.id](https://gitc.id)
 - [https://gitcid.org](https://gitcid.org)
@@ -40,20 +41,20 @@
 - [https://defcronyke.gitlab.io/gitcid](https://defcronyke.gitlab.io/gitcid)
 - [https://defcronyke.github.io/gitcid](https://defcronyke.github.io/gitcid)
 
-### [Source Code](#source-code)
+### [Source Code](#table-of-contents)
 
 - [https://gitlab.com/defcronyke/gitcid](https://gitlab.com/defcronyke/gitcid)
 - [https://github.com/defcronyke/gitcid](https://github.com/defcronyke/gitcid)
 
 ---
 
-## [Terms of Use](#terms-of-use)
+## [Terms of Use](#table-of-contents)
 
 Use of this software is governed by the terms of [the included MIT License](https://gitlab.com/defcronyke/gitcid/-/raw/master/LICENSE) ([GitHub mirror](https://raw.githubusercontent.com/defcronyke/gitcid/master/LICENSE)).
 
 ---
 
-## [Features](#features)
+## [Features](#table-of-contents)
 
 - Quickly deploy new `git` remotes using `ssh` and `rsync` that you can push to, with `gitcid` tools activated inside them.
 - Quickly commit, push, or clone `git` repos, and add `gitcid` tools inside them.
@@ -66,7 +67,7 @@ Use of this software is governed by the terms of [the included MIT License](http
 
 ---
 
-## [Dependencies](#dependencies)
+## [Dependencies](#table-of-contents)
 
 GitCid will try to install these for you automatically if they're missing from your system, but if it fails, you might need to install them yourself:
 
@@ -81,11 +82,11 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ---
 
-## [Quickstart](#quickstart)
+## [Quickstart](#table-of-contents)
 
 ---
 
-### [Download GitCid](#download-gitcid)
+### [Download GitCid](#table-of-contents)
 
 1. Make sure you've installed [`git`](https://git-scm.com) and
    [`curl`](https://man7.org/linux/man-pages/man1/curl.1.html) first,
@@ -103,7 +104,7 @@ There are a few more dependencies needed depending on your OS, but they should b
    git clone https://gitlab.com/defcronyke/gitcid.git && cd gitcid && echo "" && .gc/init.sh -h
    ```
 
-### [Create a new git remote with GitCid features](#create-a-new-git-remote-with-gitcid-features)
+### [Create a new git remote with GitCid features](#table-of-contents)
 
 1. In the `gitcid` folder, run this command:
 
@@ -139,11 +140,11 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ---
 
-## [Usage Examples](#usage-examples)
+## [Usage Examples](#table-of-contents)
 
 ---
 
-### [Get Usage Help](#get-usage-help)
+### [Get Usage Help](#table-of-contents)
 
 - Run this command from the top-level directory of the GitCid repo, for usage info:
 
@@ -151,7 +152,7 @@ There are a few more dependencies needed depending on your OS, but they should b
   .gc/init.sh -h
   ```
 
-### [Install GitCid into an existing git repo](#install-gitcid-into-an-existing-git-repo)
+### [Install GitCid into an existing git repo](#table-of-contents)
 
 - Run this command from the top-level directory of your existing git repo that
   you'd like to install GitCid into (it works for both regular and bare repos):
@@ -160,7 +161,7 @@ There are a few more dependencies needed depending on your OS, but they should b
   source <(curl -sL https://tinyurl.com/gitcid) -e
   ```
 
-### [Make new git repositories](#make-new-git-repositories)
+### [Make new git repositories](#table-of-contents)
 
 - NOTE: The remote targets need to have `rsync` installed.
 
@@ -199,7 +200,7 @@ There are a few more dependencies needed depending on your OS, but they should b
 
 ---
 
-## [Install a Dedicated Git Server](#install-a-dedicated-git-server)
+## [Install a Dedicated Git Server](#table-of-contents)
 
 ---
 
@@ -224,7 +225,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 ---
 
-### [TLDR; Let's just install the git server](#tldr-lets-just-install-the-git-server)
+### [TLDR; Let's just install the git server](#table-of-contents)
 
 - Install a `git server` to a remote `ssh` location (or two as in this example), by running the following command in a `bash` terminal:
 
@@ -244,7 +245,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 ---
 
-### [Git Server Install Instructions](#git-server-install-instructions)
+### [Git Server Install Instructions](#table-of-contents)
 
 1. Install GitCid:
 
@@ -308,7 +309,7 @@ WARNING: USE AT YOUR OWN RISK! You should only run the commands in this section 
 
 ---
 
-### [Git Server Usage Examples](#git-server-usage-examples)
+### [Git Server Usage Examples](#table-of-contents)
 
 Here's some examples of how to use your git server for some common git-related tasks. The following commands should be run from inside your `gitcid/` folder, or inside any `gitcid`-enabled git repo.
 
@@ -350,7 +351,7 @@ Here's some examples of how to use your git server for some common git-related t
 
 ---
 
-### [Git Server Development](#git-server-development)
+### [Git Server Development](#table-of-contents)
 
 If you'd like to contribute to the development of the `git server`, you can run this command if you want, to help you set up your dev environment for this purpose:
 
