@@ -150,7 +150,7 @@ new_git_server_detect_other_git_servers() {
 
       .gc/git-servers-open.sh $@
       gc_new_git_server_detect_other_git_servers=$?
-      
+
       echo ""
       echo "GitWeb pages launched in web browser. If any pages don't"
       echo "load on first attempt, try refreshing the page."
@@ -543,7 +543,7 @@ gc_new_git_server_install_os() {
         echo "info: Installing OS. Please wait.........."
         echo ""
 
-        sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=256 status=progress
+        sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=4M status=progress
         res2=$?
 
         if [ $res2 -eq 0 ]; then
