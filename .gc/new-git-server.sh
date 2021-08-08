@@ -49,11 +49,11 @@ GITCID_DNS_SEED_SERVER1=""
 # If we didn't specify to install on the first DNS seed host, add it
 # to the list of hosts we'll try.
 if [[ ! "$@" =~ "$GITCID_DEFAULT_DNS_SEED_SERVER1" ]]; then
-  ${GITCID_DIR}git-servers.sh "$GITCID_DEFAULT_DNS_SEED_SERVER1"
+  .gc/git-servers.sh "$GITCID_DEFAULT_DNS_SEED_SERVER1"
 
   gc_starting_dir="$PWD"
 
-  cd ${GITCID_DIR}discover-git-server-dns
+  cd .gc/discover-git-server-dns
 
   # Only add the DNS seed server if it's reachable on the network.
   GITCID_DNS_SEED_SERVER1="$(./git-srv.sh "$GITCID_DEFAULT_DNS_SEED_SERVER1" | awk '{print $NF}' | sed 's/\.$//')"
