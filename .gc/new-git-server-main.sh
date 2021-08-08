@@ -197,6 +197,13 @@ gitcid_new_git_server_post() {
 
     if [ $res -eq 255 ]; then
       echo "error: Failed connecting with ssh to host: $i"
+
+      echo ""
+      echo "Please wait while setup is restarting..."
+      sleep 15
+      
+      gitcid_new_git_server_main $@; loop_res2=$?
+
       continue
 
     elif [ $res -eq 19 ]; then
@@ -1057,6 +1064,12 @@ gitcid_new_git_server_main() {
 
       if [ $loop_res2 -eq 255 ]; then
         echo "error: Failed connecting with ssh to host in job wait loop. Error code: $loop_res2"
+        echo ""
+        echo "Please wait while setup is restarting..."
+        sleep 15
+        
+        gitcid_new_git_server_main $@; loop_res2=$?
+
         continue
 
       elif [ $loop_res2 -ne 0 ]; then
