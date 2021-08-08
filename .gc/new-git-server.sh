@@ -100,14 +100,14 @@ if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS" ]; then
   if [[ "$@" =~ ^.*\-.*o.*\s+.*$ ]]; then
     echo "!!  $@  !!"
     GITCID_NEW_GIT_SERVER_ARGS="$(echo "$@" | sed 's/^\(.*\-.*\)\(o\)\(.*\s*.*\)$/\1\3/g')"
+    
+    echo "Filtered args:"
+    echo ""
+    echo "  ${GITCID_NEW_GIT_SERVER_ARGS[@]}"
+    echo ""
   fi
-
 fi
 
-echo "Filtered args:"
-echo ""
-echo "  ${GITCID_NEW_GIT_SERVER_ARGS[@]}"
-echo ""
 
 
 # Start installing new git servers.
