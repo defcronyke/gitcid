@@ -54,61 +54,66 @@ gitcid_new_git_server() {
 # Detect other git servers and update them, adding DNS 
 # records for the new servers's we're installing now.
 
-echo ""
-echo "Detecting other git servers on your network. Please wait..."
-echo ""
-echo "  args: ${@:2:$#}"
-echo ""
-
 GITCID_OTHER_DETECTED_GIT_SERVERS=""
-
-.gc/git-servers.sh ${@:2:$#}
-
-gc_starting_dir="$PWD"
-
-cd .gc/discover-git-server-dns
-
-# Add any detected git servers to the list of servers 
-# that we're going to update.
-GITCID_OTHER_DETECTED_GIT_SERVERS=( $(./git-srv.sh ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | tr '\n' ' ' | grep -v -e '^[[:space:]]*$') )
-
-cd "$gc_starting_dir"
-
-echo "Other reachable git servers found:"
-echo ""
-echo "${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
-echo ""
-
-echo "Installing and updating the following git servers:"
-echo ""
-echo "$@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
-echo ""
-
-
-# fi
-
 
 GITCID_NEW_GIT_SERVER_ARGS=$@
 
 GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=1
 
+if [[ ! "$@" =~ ^.*\-.*[R|r]F?f?.*[[:space:]]+.+$ ]]; then
 
-# Prevent browser from opening the first time if we're
-# running more than once.
-if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS" ]; then
+  echo ""
+  echo "Detecting other git servers on your network. Please wait..."
+  echo ""
+  echo "  args: ${@:2:$#}"
+  echo ""
 
-  if [[ "$@" =~ ^.*\-.*o.*[[:space:]]*.*$ ]]; then
-    GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=0
 
-    GITCID_NEW_GIT_SERVER_ARGS="$(echo "$@" | sed 's/^\(.*\-.*\)\(o\)\(.*\s*.*\)$/\1\3/g')"
-    
-    echo "Filtered args:"
-    echo ""
-    echo "  ${GITCID_NEW_GIT_SERVER_ARGS[@]}"
-    echo ""
+  .gc/git-servers.sh ${@:2:$#}
+
+  gc_starting_dir="$PWD"
+
+  cd .gc/discover-git-server-dns
+
+  # Add any detected git servers to the list of servers 
+  # that we're going to update.
+  GITCID_OTHER_DETECTED_GIT_SERVERS=( $(./git-srv.sh ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | tr '\n' ' ' | grep -v -e '^[[:space:]]*$') )
+
+  cd "$gc_starting_dir"
+
+  echo "Other reachable git servers found:"
+  echo ""
+  echo "${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
+  echo ""
+
+  echo "Installing and updating the following git servers:"
+  echo ""
+  echo "$@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
+  echo ""
+
+
+  # fi
+
+
+
+
+  # Prevent browser from opening the first time if we're
+  # running more than once.
+  if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS" ]; then
+
+    if [[ "$@" =~ ^.*\-.*o.*[[:space:]]*.*$ ]]; then
+      GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=0
+
+      GITCID_NEW_GIT_SERVER_ARGS="$(echo "$@" | sed 's/^\(.*\-.*\)\(o\)\(.*\s*.*\)$/\1\3/g')"
+      
+      echo "Filtered args:"
+      echo ""
+      echo "  ${GITCID_NEW_GIT_SERVER_ARGS[@]}"
+      echo ""
+    fi
   fi
-fi
 
+fi
 
 
 # Start installing new git servers.
