@@ -57,12 +57,12 @@ gitcid_new_git_server() {
 echo ""
 echo "Detecting other git servers on your network. Please wait..."
 echo ""
-echo "  args: ${@:1:$(($#-1))}"
+echo "  args: ${@:2:$#}"
 echo ""
 
 GITCID_OTHER_DETECTED_GIT_SERVERS=( )
 
-.gc/git-servers.sh ${@:1:$(($#-1))}
+.gc/git-servers.sh ${@:2:$#}
 
 gc_starting_dir="$PWD"
 
@@ -70,7 +70,7 @@ cd .gc/discover-git-server-dns
 
 # Add any detected git servers to the list of servers 
 # that we're going to update.
-GITCID_OTHER_DETECTED_GIT_SERVERS+=( $(./git-srv.sh ${@:1:$(($#-1))} | awk '{print $NF}' | sed 's/\.$//' | tr '\n' ' ') )
+GITCID_OTHER_DETECTED_GIT_SERVERS+=( $(./git-srv.sh ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | tr '\n' ' ') )
 
 echo "Other reachable git servers found:"
 echo ""
