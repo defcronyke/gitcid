@@ -201,6 +201,8 @@ gitcid_new_git_server_post() {
       echo ""
       echo "Please wait while setup is restarting..."
       sleep 15
+
+      gitcid_retry_install_git_server2=0
       
       gitcid_new_git_server_main $@; loop_res2=$?
 
@@ -1067,6 +1069,8 @@ gitcid_new_git_server_main() {
         echo ""
         echo "Please wait while setup is restarting..."
         sleep 15
+
+        gitcid_retry_install_git_server2=0
         
         gitcid_new_git_server_main $@; loop_res2=$?
 
