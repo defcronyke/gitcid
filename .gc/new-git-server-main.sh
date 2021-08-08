@@ -139,17 +139,22 @@ new_git_server_detect_other_git_servers() {
   # if [ $gc_new_git_server_open_web_browser -eq 0 ] && \
   #   [ $gitcid_git_servers_detected_browser_opened -eq 1 ]; then
 
-  if [ $gc_new_git_server_open_web_browser -eq 0 ] && \
-    [ $# -ge 1 ] && \
+  # if [ $gc_new_git_server_open_web_browser -eq 0 ] && \
+  #   [ $# -ge 1 ] && \
+  #   [[ "$1" =~ ^\-.*o.*$ ]]; then
+
+  if [ $# -ge 1 ] && \
     [[ "$1" =~ ^\-.*o.*$ ]]; then
 
       gitcid_git_servers_detected_browser_opened=0
 
       .gc/git-servers-open.sh $@
       gc_new_git_server_detect_other_git_servers=$?
+      
       echo ""
       echo "GitWeb pages launched in web browser. If any pages don't"
       echo "load on first attempt, try refreshing the page."
+
   else
     .gc/git-servers.sh $@
     gc_new_git_server_detect_other_git_servers=$?
