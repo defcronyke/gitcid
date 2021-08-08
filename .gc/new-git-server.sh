@@ -57,6 +57,8 @@ if [[ ! "$@" =~ "$GITCID_DEFAULT_DNS_SEED_SERVER1" ]]; then
 
   # Only add the DNS seed server if it's reachable on the network.
   GITCID_DNS_SEED_SERVER1="$(./git-srv.sh "$GITCID_DEFAULT_DNS_SEED_SERVER1" | awk '{print $NF}' | sed 's/\.$//')"
+
+  cd "$gc_starting_dir"
 fi
 
 # Start installing new git servers.
