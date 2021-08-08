@@ -98,6 +98,7 @@ GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=1
 if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS" ]; then
 
   if [[ "$@" =~ ^.*\-.*o.*\s+.*$ ]]; then
+    echo "!!  $@  !!"
     GITCID_NEW_GIT_SERVER_ARGS="$(echo "$@" | sed 's/^\(.*\-.*\)\(o\)\(.*\s*.*\)$/\1\3/g')"
   fi
 
