@@ -130,9 +130,12 @@ new_git_server_detect_other_git_servers() {
   # TODO: New Raspberry Pi OS installs are currenly 
   # always opening the browser on detect because 
   # of this. We could handle this better.
-  if [ $gc_new_git_server_open_web_browser -eq 0 ] || \
-    [ $gitcid_retry_install_git_server -eq 0 ] || \
-    [ $gitcid_retry_install_git_server2 -eq 0 ]; then
+
+  # if [ $gc_new_git_server_open_web_browser -eq 0 ] || \
+  #   [ $gitcid_retry_install_git_server -eq 0 ] || \
+  #   [ $gitcid_retry_install_git_server2 -eq 0 ]; then
+
+  if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
     .gc/git-servers-open.sh $@
     gc_new_git_server_detect_other_git_servers=$?
     echo ""
