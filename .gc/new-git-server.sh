@@ -87,8 +87,30 @@ echo ""
 
 # fi
 
+
+GITCID_NEW_GIT_SERVER_ARGS=$@
+
+GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=1
+
+
+# Prevent browser from opening the first time if we're
+# running more than once.
+if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS" ]; then
+
+  if [[ "$@" =~ ^.*\-.*o.*\s+.*$ ]]; then
+    GITCID_NEW_GIT_SERVER_ARGS="$(echo "$@" | sed 's/^\(.*\-.*\)\(o\)\(.*\s*.*\)$/\1\3/g')"
+  fi
+
+fi
+
+echo "Filtered args:"
+echo ""
+echo "  ${GITCID_NEW_GIT_SERVER_ARGS[@]}"
+echo ""
+
+
 # Start installing new git servers.
-gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
+gitcid_new_git_server ${GITCID_NEW_GIT_SERVER_ARGS[@]} ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
 
 # Run the installer one more time so DNS records can 
 # propagate to many peers.
