@@ -41,3 +41,6 @@ gitcid_new_git_server() {
 }
 
 gitcid_new_git_server $@
+
+# Run it twice so DNS records can propagate to peers.
+gitcid_new_git_server $@
