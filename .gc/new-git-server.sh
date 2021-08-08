@@ -92,7 +92,15 @@ gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
 
 # Run the installer one more time so DNS records can 
 # propagate to many peers.
-gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
+if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS" ]; then
+  echo "Updating the following git servers so they're all aware of each other:"
+  echo ""
+  echo "$@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
+  echo ""
+  gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
+fi
+
+# gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
 
 # # Run the installer one more time so DNS records can 
 # # propagate to many peers, only if we are installing
