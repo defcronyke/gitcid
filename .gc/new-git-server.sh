@@ -72,17 +72,26 @@ cd .gc/discover-git-server-dns
 # that we're going to update.
 GITCID_OTHER_DETECTED_GIT_SERVERS=( $(./git-srv.sh ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | tr '\n' ' ' | grep -v -e '^[[:space:]]*$') )
 
+cd "$gc_starting_dir"
+
 echo "Other reachable git servers found:"
 echo ""
 echo "${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
 echo ""
 
-cd "$gc_starting_dir"
+echo "Installing and updating the following git servers:"
+echo ""
+echo "$@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
+echo ""
 
 
 # fi
 
 # Start installing new git servers.
+gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
+
+# Run the installer one more time so DNS records can 
+# propagate to many peers.
 gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
 
 # # Run the installer one more time so DNS records can 
