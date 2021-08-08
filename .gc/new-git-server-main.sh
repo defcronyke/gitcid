@@ -200,7 +200,7 @@ gitcid_new_git_server_post() {
 
     echo "res=$res"
 
-    if [ $res -eq 255 ]; then
+    if [ $res -eq 255 ] && [ $gitcid_retry_install_git_server2 -eq 1 ]; then
       echo "error: Failed connecting with ssh to host: $i"
 
       echo ""
@@ -1069,7 +1069,7 @@ gitcid_new_git_server_main() {
       wait $i
       loop_res2=$?
 
-      if [ $loop_res2 -eq 255 ]; then
+      if [ $loop_res2 -eq 255 ] && [ $gitcid_retry_install_git_server2 -eq 1 ]; then
         echo "error: Failed connecting with ssh to host in job wait loop. Error code: $loop_res2"
         echo ""
         echo "Please wait while setup is restarting..."
