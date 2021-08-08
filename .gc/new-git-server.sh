@@ -41,7 +41,7 @@ gitcid_new_git_server() {
 }
 
 # Try also to update "git1" and "raspberrypi" hosts with latest DNS records.
-gitcid_new_git_server $@ raspberrypi git1
+gitcid_new_git_server $@ git1 raspberrypi
 
 # Run it one more time so DNS records can propagate to many peers.
-gitcid_new_git_server $@ raspberrypi git1
+gitcid_new_git_server $@ git1 raspberrypi
