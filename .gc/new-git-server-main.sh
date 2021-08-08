@@ -607,7 +607,7 @@ gc_new_git_server_install_os() {
         echo "info: Installing OS. Please wait.........."
         echo ""
 
-        sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=1M status=progress
+        sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=4M status=progress
         res2=$?
 
         if [ $res2 -eq 0 ]; then
