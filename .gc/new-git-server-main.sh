@@ -141,7 +141,7 @@ new_git_server_detect_other_git_servers() {
 
   if [ $gc_new_git_server_open_web_browser -eq 0 ] && \
     [ $# -ge 1 ] && \
-    [[ $1 =~ ^-.*o.*$ ]]; then
+    [[ "$1" =~ ^\-.*o.*$ ]]; then
 
       gitcid_git_servers_detected_browser_opened=0
 
