@@ -42,8 +42,5 @@ gitcid_new_git_server() {
 
 gitcid_new_git_server $@ "git1"
 
-# Make sure we update "git1" peer with latest DNS records.
-gitcid_new_git_server "git1"
-
 # Run it one more time so DNS records can propagate to many peers.
-gitcid_new_git_server "git1" $@
+gitcid_new_git_server $@ "git1"
