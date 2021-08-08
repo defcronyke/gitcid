@@ -443,7 +443,7 @@ gc_new_git_server_install_os() {
 
         gc_dir_before_os_install="$PWD"
         
-        GITCID_OS_INSTALL_TMP_DIR="$(mktemp -d)"
+        GITCID_OS_INSTALL_TMP_DIR="$(mktemp -p /var/tmp -d)"
 
         if [ ! -d "$GITCID_OS_INSTALL_TMP_DIR" ]; then
           echo "error: Failed creating temporary directory for OS install. Not installing OS."
