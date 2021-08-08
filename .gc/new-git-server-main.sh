@@ -278,7 +278,7 @@ gitcid_new_git_server_post() {
 
 gc_new_git_server_install_remove_tmp() {
   
-  cd "$gc_dir_before_os_install"
+  
 
   # These checks are overkill, but I'm working on this list 
   # to use elsewhere later, so I put it here for now.
@@ -458,7 +458,7 @@ gc_new_git_server_install_os() {
         if [ $? -ne 0 ]; then
           echo "error: Failed entering temporary directory for OS install. Not installing OS."
 
-          gc_new_git_server_install_remove_tmp
+          # gc_new_git_server_install_remove_tmp
 
           return 20
         fi
@@ -483,7 +483,7 @@ gc_new_git_server_install_os() {
           if [ $? -ne 0 ]; then
             echo "error: Copying OS install file failed. Not installing OS."
 
-            gc_new_git_server_install_remove_tmp
+            # gc_new_git_server_install_remove_tmp
 
             return 20
           fi
@@ -502,7 +502,7 @@ gc_new_git_server_install_os() {
           if [ $? -ne 0 ]; then
             echo "error: Downloading OS install file failed. Not installing OS."
 
-            gc_new_git_server_install_remove_tmp
+            # gc_new_git_server_install_remove_tmp
 
             return 20
           fi
@@ -513,7 +513,7 @@ gc_new_git_server_install_os() {
         if [ $? -ne 0 ]; then
           echo "error: Extracting OS install file using the 7z command failed. Not installing OS."
 
-          gc_new_git_server_install_remove_tmp
+          # gc_new_git_server_install_remove_tmp
           
           return 20
         fi
@@ -525,7 +525,7 @@ gc_new_git_server_install_os() {
           if [ $? -ne 0 ]; then
             echo "error: Failed unmounting partition \"$gc_os_install_target_device_mounted\" on disk we wanted to install the OS onto. Not installing OS."
 
-            gc_new_git_server_install_remove_tmp
+            # gc_new_git_server_install_remove_tmp
 
             return 20
           fi
@@ -537,7 +537,7 @@ gc_new_git_server_install_os() {
           echo "error: The disk we wanted to install the OS onto is still mounted. It needs to be" 
           echo "unmounted first and we seem to have failed at unmounting it. Not installing OS."
 
-          gc_new_git_server_install_remove_tmp
+          # gc_new_git_server_install_remove_tmp
 
           return 20
         fi
@@ -571,7 +571,7 @@ gc_new_git_server_install_os() {
           echo ""
           echo ""
 
-          gc_new_git_server_install_remove_tmp
+          # gc_new_git_server_install_remove_tmp
 
           return 20
         fi
@@ -607,7 +607,7 @@ gc_new_git_server_install_os() {
         echo "info: Installing OS. Please wait.........."
         echo ""
 
-        sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=2048K status=progress
+        sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=4096 status=progress
         res2=$?
 
         if [ $res2 -eq 0 ]; then
@@ -660,7 +660,7 @@ gc_new_git_server_install_os() {
         # echo "Leaving temp dir: $GITCID_OS_INSTALL_TMP_DIR"
         # echo ""
         # echo "Returning to previous directory: $gc_dir_before_os_install"
-        # cd "$gc_dir_before_os_install"
+        cd "$gc_dir_before_os_install"
         # echo ""
 
         
