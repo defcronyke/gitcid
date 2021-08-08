@@ -567,7 +567,7 @@ gc_new_git_server_install_os() {
           
           if [ $? -ne 0 ]; then
             echo ""
-            echo "error: Failed inital git server setup on newly installed OS."
+            echo "error: Failed initial git server setup on newly installed OS."
             echo ""
             return 20
           fi
