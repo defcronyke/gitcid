@@ -18,6 +18,7 @@
 
 gitcid_retry_install_git_server=1
 gitcid_retry_install_git_server2=1
+gitcid_git_servers_detected_browser_opened=1
 
 gitcid_new_git_server_usage() {
   echo ""
@@ -135,7 +136,11 @@ new_git_server_detect_other_git_servers() {
   #   [ $gitcid_retry_install_git_server -eq 0 ] || \
   #   [ $gitcid_retry_install_git_server2 -eq 0 ]; then
 
-  if [ $gc_new_git_server_open_web_browser -eq 0 ]; then
+  if [ $gc_new_git_server_open_web_browser -eq 0 ] && \
+    [ $gitcid_git_servers_detected_browser_opened -eq 1 ]; then
+    
+    gitcid_git_servers_detected_browser_opened=0
+
     .gc/git-servers-open.sh $@
     gc_new_git_server_detect_other_git_servers=$?
     echo ""
