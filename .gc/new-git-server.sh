@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Run this to make a new git server.
 #
 # WARNING: The target is intended to be a freshly
