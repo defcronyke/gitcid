@@ -64,5 +64,9 @@ fi
 # Start installing new git servers.
 gitcid_new_git_server $@ $GITCID_DNS_SEED_SERVER1
 
-# Run the installer one more time so DNS records can propagate to many peers.
-gitcid_new_git_server $@ $GITCID_DNS_SEED_SERVER1
+# Run the installer one more time so DNS records can 
+# propagate to many peers, only if we are installing
+# to more than one peer or updating a DNS seed server.
+if [ $# -ge 3 ] || [ ! -z "$GITCID_DNS_SEED_SERVER1" ]; then
+  gitcid_new_git_server $@ $GITCID_DNS_SEED_SERVER1
+fi
