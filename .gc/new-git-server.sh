@@ -60,7 +60,7 @@ echo ""
 echo "  args: ${@:2:$#}"
 echo ""
 
-GITCID_OTHER_DETECTED_GIT_SERVERS=( )
+GITCID_OTHER_DETECTED_GIT_SERVERS=""
 
 .gc/git-servers.sh ${@:2:$#}
 
@@ -70,7 +70,7 @@ cd .gc/discover-git-server-dns
 
 # Add any detected git servers to the list of servers 
 # that we're going to update.
-GITCID_OTHER_DETECTED_GIT_SERVERS+=( $(./git-srv.sh ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | tr '\n' ' ') )
+GITCID_OTHER_DETECTED_GIT_SERVERS=( $(./git-srv.sh ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | tr '\n' ' ' | grep -v -e '^[[:space:]]*$') )
 
 echo "Other reachable git servers found:"
 echo ""
