@@ -40,7 +40,7 @@ gitcid_new_git_server() {
   return $?
 }
 
-gitcid_new_git_server $@ "git1"
+gitcid_new_git_server $@
 
 # Run it one more time so DNS records can propagate to many peers.
-gitcid_new_git_server $@ "git1"
+gitcid_new_git_server $@
