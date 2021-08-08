@@ -276,6 +276,45 @@ gitcid_new_git_server_post() {
   return $last_bad
 }
 
+gc_new_git_server_install_remove_tmp() {
+  
+  cd "$gc_dir_before_os_install"
+
+  # These checks are overkill, but I'm working on this list 
+  # to use elsewhere later, so I put it here for now.
+  if [ -d "$GITCID_OS_INSTALL_TMP_DIR" ]; then
+    if [ ! -z "$GITCID_OS_INSTALL_TMP_DIR" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "/" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "/*" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "/home" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "$HOME" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "." ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "." ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "./" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "./*" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != ".*" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != ".." ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "../" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "../*" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "../.*" ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "../.." ] && \
+      [ "$GITCID_OS_INSTALL_TMP_DIR" != "*" ]; then
+
+      # echo "Removing temp dir: $GITCID_OS_INSTALL_TMP_DIR"
+      rm -rf "$GITCID_OS_INSTALL_TMP_DIR"
+      # echo ""
+      
+    else
+      echo ""
+      echo "WARNING: Something bad almost happened! We were instructed"
+      echo "to delete something we shouldn't, so we didn't do it."
+      echo ""
+      echo "THE PATH WE ALMOST DELETED: $GITCID_OS_INSTALL_TMP_DIR"
+      echo ""
+    fi
+  fi
+}
+
 # Install a new OS to a locally-connected disk.
 gc_new_git_server_install_os() {
   if [ $# -ge 1 ]; then
@@ -418,6 +457,9 @@ gc_new_git_server_install_os() {
 
         if [ $? -ne 0 ]; then
           echo "error: Failed entering temporary directory for OS install. Not installing OS."
+
+          gc_new_git_server_install_remove_tmp
+
           return 20
         fi
 
@@ -440,6 +482,9 @@ gc_new_git_server_install_os() {
 
           if [ $? -ne 0 ]; then
             echo "error: Copying OS install file failed. Not installing OS."
+
+            gc_new_git_server_install_remove_tmp
+
             return 20
           fi
 
@@ -456,6 +501,9 @@ gc_new_git_server_install_os() {
 
           if [ $? -ne 0 ]; then
             echo "error: Downloading OS install file failed. Not installing OS."
+
+            gc_new_git_server_install_remove_tmp
+
             return 20
           fi
         fi
@@ -464,6 +512,9 @@ gc_new_git_server_install_os() {
 
         if [ $? -ne 0 ]; then
           echo "error: Extracting OS install file using the 7z command failed. Not installing OS."
+
+          gc_new_git_server_install_remove_tmp
+          
           return 20
         fi
 
@@ -473,6 +524,9 @@ gc_new_git_server_install_os() {
         
           if [ $? -ne 0 ]; then
             echo "error: Failed unmounting partition \"$gc_os_install_target_device_mounted\" on disk we wanted to install the OS onto. Not installing OS."
+
+            gc_new_git_server_install_remove_tmp
+
             return 20
           fi
         done
@@ -482,6 +536,9 @@ gc_new_git_server_install_os() {
         if [ $? -eq 0 ]; then
           echo "error: The disk we wanted to install the OS onto is still mounted. It needs to be" 
           echo "unmounted first and we seem to have failed at unmounting it. Not installing OS."
+
+          gc_new_git_server_install_remove_tmp
+
           return 20
         fi
 
@@ -499,7 +556,9 @@ gc_new_git_server_install_os() {
           echo "Directory: $PWD"
           echo "---------"
           echo ""
+
           ls -al
+
           echo ""
           echo "---------"
           echo ""
@@ -511,6 +570,9 @@ gc_new_git_server_install_os() {
           echo "  https://gitlab.com/defcronyke/gitcid/-/issues/new"
           echo ""
           echo ""
+
+          gc_new_git_server_install_remove_tmp
+
           return 20
         fi
 
@@ -521,7 +583,9 @@ gc_new_git_server_install_os() {
         echo "Directory: $PWD"
         echo "---------"
         echo ""
+
         ls -al
+
         echo ""
         echo "---------"
         echo ""
@@ -569,6 +633,9 @@ gc_new_git_server_install_os() {
             echo ""
             echo "error: Failed initial git server setup on newly installed OS."
             echo ""
+
+            gc_new_git_server_install_remove_tmp
+
             return 20
           fi
 
@@ -593,42 +660,20 @@ gc_new_git_server_install_os() {
         # echo "Leaving temp dir: $GITCID_OS_INSTALL_TMP_DIR"
         # echo ""
         # echo "Returning to previous directory: $gc_dir_before_os_install"
-        cd "$gc_dir_before_os_install"
+        # cd "$gc_dir_before_os_install"
         # echo ""
 
-        # These checks are overkill, but I'm working on this list 
-        # to use elsewhere later, so I put it here for now.
-        if [ -d "$GITCID_OS_INSTALL_TMP_DIR" ]; then
-          if [ ! -z "$GITCID_OS_INSTALL_TMP_DIR" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "/" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "/*" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "/home" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "$HOME" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "." ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "." ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "./" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "./*" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != ".*" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != ".." ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "../" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "../*" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "../.*" ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "../.." ] && \
-            [ "$GITCID_OS_INSTALL_TMP_DIR" != "*" ]; then
+        
 
-            # echo "Removing temp dir: $GITCID_OS_INSTALL_TMP_DIR"
-            rm -rf "$GITCID_OS_INSTALL_TMP_DIR"
-            # echo ""
-            
-          else
-            echo ""
-            echo "WARNING: Something bad almost happened! We were instructed"
-            echo "to delete something we shouldn't, so we didn't do it."
-            echo ""
-            echo "THE PATH WE ALMOST DELETED: $GITCID_OS_INSTALL_TMP_DIR"
-            echo ""
-          fi
-        fi
+
+
+        gc_new_git_server_install_remove_tmp
+
+
+
+
+
+
 
         echo ""
         echo "Finished installing and configuring a new OS on the target device: $2"
