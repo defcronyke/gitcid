@@ -60,7 +60,7 @@ GITCID_NEW_GIT_SERVER_ARGS="$@"
 
 GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=1
 
-if [[ ! "$@" =~ ^.*\-.*[R|r]F?f?.*[[:space:]]+.+$ ]]; then
+if [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
 
   echo ""
   echo "Detecting other git servers on your network. Please wait..."
