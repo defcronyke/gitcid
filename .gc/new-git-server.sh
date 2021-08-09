@@ -79,16 +79,34 @@ if [[ ! "$@" =~ ^.*\-.*[R|r]F?f?.*[[:space:]]+.+$ ]]; then
   # that we're going to update.
   GITCID_OTHER_DETECTED_GIT_SERVERS=( $(./git-srv.sh ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | tr '\n' ' ' | grep -v -e '^[[:space:]]*$') )
 
+  GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED=( )
+
+  for i in ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}; do
+    echo "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" | grep "$i"
+
+    if [ $? -ne 0 ]; then
+      GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$i" )
+    fi
+  done
+
+  for i in ${@:2:$#}; do
+    echo "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" | grep "$i"
+
+    if [ $? -ne 0 ]; then
+      GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$i" )
+    fi
+  done
+
   cd "$gc_starting_dir"
 
   echo "Other reachable git servers found:"
   echo ""
-  echo "${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
+  echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
   echo ""
 
   echo "Installing and updating the following git servers:"
   echo ""
-  echo "$@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
+  echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
   echo ""
 
 
@@ -99,7 +117,7 @@ if [[ ! "$@" =~ ^.*\-.*[R|r]F?f?.*[[:space:]]+.+$ ]]; then
 
   # Prevent browser from opening the first time if we're
   # running more than once.
-  if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS" ]; then
+  if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
 
     if [[ "$@" =~ ^.*\-.*o.*[[:space:]]*.*$ ]]; then
       GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=0
@@ -108,7 +126,7 @@ if [[ ! "$@" =~ ^.*\-.*[R|r]F?f?.*[[:space:]]+.+$ ]]; then
       
       echo "Filtered args:"
       echo ""
-      echo "  ${GITCID_NEW_GIT_SERVER_ARGS[@]}"
+      echo "  ${GITCID_NEW_GIT_SERVER_ARGS[@:1:1]} ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
       echo ""
     fi
   fi
@@ -117,16 +135,16 @@ fi
 
 
 # Start installing new git servers.
-gitcid_new_git_server ${GITCID_NEW_GIT_SERVER_ARGS[@]} ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
+gitcid_new_git_server ${GITCID_NEW_GIT_SERVER_ARGS[@:1:1]} ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 
 # Run the installer one more time so DNS records can 
 # propagate to many peers.
-if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS" ]; then
+if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
   echo "Updating the following git servers so they're all aware of each other:"
   echo ""
-  echo "$@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}"
+  echo "${@:1:1} ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
   echo ""
-  gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
+  gitcid_new_git_server ${@:1:1} ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 fi
 
 # gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
