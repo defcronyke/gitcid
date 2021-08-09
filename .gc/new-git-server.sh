@@ -60,7 +60,7 @@ GITCID_NEW_GIT_SERVER_ARGS="$@"
 
 GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=1
 
-if [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
+if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
 
   echo ""
   echo "Detecting other git servers on your network. Please wait..."
@@ -141,12 +141,14 @@ gitcid_new_git_server $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
 
 # Run the installer one more time so DNS records can 
 # propagate to many peers.
-if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
-  echo "Updating the following git servers so they're all aware of each other:"
-  echo ""
-  echo "$1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
-  echo ""
-  gitcid_new_git_server $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
+if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
+  if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
+    echo "Updating the following git servers so they're all aware of each other:"
+    echo ""
+    echo "$1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
+    echo ""
+    gitcid_new_git_server $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
+  fi
 fi
 
 # gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
