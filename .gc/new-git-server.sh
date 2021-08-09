@@ -126,7 +126,7 @@ if [[ ! "$@" =~ ^.*\-.*[R|r]F?f?.*[[:space:]]+.+$ ]]; then
       
       echo "Filtered args:"
       echo ""
-      echo "  ${GITCID_NEW_GIT_SERVER_ARGS:1:1} $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
+      echo "  $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
       echo ""
     fi
   fi
@@ -137,16 +137,16 @@ fi
 
 
 # Start installing new git servers.
-gitcid_new_git_server ${GITCID_NEW_GIT_SERVER_ARGS:1:1} $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
+gitcid_new_git_server $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
 
 # Run the installer one more time so DNS records can 
 # propagate to many peers.
 if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
   echo "Updating the following git servers so they're all aware of each other:"
   echo ""
-  echo "${@:1:1} $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
+  echo "$1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
   echo ""
-  gitcid_new_git_server ${@:1:1} $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
+  gitcid_new_git_server $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
 fi
 
 # gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
