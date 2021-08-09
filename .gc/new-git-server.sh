@@ -132,7 +132,7 @@ if [[ ! "$@" =~ ^.*\-.*[R|r]F?f?.*[[:space:]]+.+$ ]]; then
   fi
 
 else
-  GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( ${@:2:$#} )
+  GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED="${@:2:$#}"
 fi
 
 
