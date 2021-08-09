@@ -607,9 +607,10 @@ gc_new_git_server_install_os() {
         echo "info: Installing OS. Please wait.........."
         echo ""
 
-        (pv -n "$GITCID_OS_INSTALL_IMAGE_FILE" | sudo dd of="$2" bs=2048 conv=notrunc,noerror) 2>&1 | dialog --gauge "Flashing OS to target device ($2). Please wait..." 10 70 0
+        pv -tpreb "$GITCID_OS_INSTALL_IMAGE_FILE" | dd of="$2" bs=2048 conv=notrunc,noerror
 
         # sudo dd if="$GITCID_OS_INSTALL_IMAGE_FILE" of="$2" bs=2048 status=progress
+        # (pv -n "$GITCID_OS_INSTALL_IMAGE_FILE" | sudo dd of="$2" bs=2048 conv=notrunc,noerror) 2>&1 | dialog --gauge "Flashing OS to target device ($2). Please wait..." 10 70 0
 
         res2=$?
 
