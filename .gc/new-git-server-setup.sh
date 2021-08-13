@@ -45,7 +45,7 @@ gc_new_git_server_setup() {
   echo ""
   echo "/etc/hosts"
   echo ""
-  cat tmp_os_mount_dir2/etc/hostname
+  cat tmp_os_mount_dir2/etc/hosts
   echo ""
 
   echo ""
