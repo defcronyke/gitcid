@@ -89,18 +89,18 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
     fi
   done
 
-  # for i in ${@:2:$(($# + 2))}; do
-  #   echo "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" | grep "$i"
+  for i in ${@:2:$#}; do
+    echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$i"
 
-  #   if [ $? -ne 0 ]; then
-  #     GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$i" )
-  #   fi
-  # done
+    if [ $? -ne 0 ]; then
+      GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$i" )
+    fi
+  done
 
-  echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$2" >/dev/null
-  if [ $? -ne 0 ]; then
-    GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$2" )
-  fi
+  # echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$2" >/dev/null
+  # if [ $? -ne 0 ]; then
+  #   GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$2" )
+  # fi
 
   cd "$gc_starting_dir"
 
