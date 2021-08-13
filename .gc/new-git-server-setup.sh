@@ -32,9 +32,21 @@ gc_new_git_server_setup() {
 
   echo "$GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME" | sudo tee tmp_os_mount_dir2/etc/hostname
 
+  echo ""
+  echo "/etc/hostname"
+  echo ""
+  cat tmp_os_mount_dir2/etc/hostname
+  echo ""
+
   sudo sed -i 's/^127\.0\.1\.1\s*.*$//g' tmp_os_mount_dir2/etc/hosts
 
   sudo sed -i "s/^\(127\.0\.0\.1\s*\)\(.*\)$/\1${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME} \2/g" tmp_os_mount_dir2/etc/hosts
+
+  echo ""
+  echo "/etc/hosts"
+  echo ""
+  cat tmp_os_mount_dir2/etc/hostname
+  echo ""
 
   echo ""
   echo "info: Unmounting the OS."
