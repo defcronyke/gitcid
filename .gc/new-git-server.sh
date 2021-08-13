@@ -122,7 +122,7 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
 
   # Prevent browser from opening the first time if we're
   # running more than once.
-  if [ $# -ge 3 ] || [ ! -z "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" ]; then
+  if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
 
     if [[ "$@" =~ ^.*\-.*o.*[[:space:]]*.*$ ]]; then
       GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=0
