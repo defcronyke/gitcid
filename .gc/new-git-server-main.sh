@@ -679,15 +679,21 @@ gc_new_git_server_install_os() {
         echo ""
         echo "Finished installing and configuring a new OS on the target device: $2"
         echo ""
-        echo "Next, if you want to install a git server onto the device,"
-        echo "put that disk in some system, boot up the system, and when"
-        echo "it comes online, run the following command to install the"
-        echo "git server software over ssh (Raspberry Pi OS example):"
-        echo ""
-        echo "  .gc/new-git-server.sh -y raspberrypi"
-        echo ""
+
+        # echo "Next, if you want to install a git server onto the device,"
+        # echo "put that disk in some system, boot up the system, and when"
+        # echo "it comes online, run the following command to install the"
+        # echo "git server software over ssh (Raspberry Pi OS example):"
+        # echo ""
+        # echo "  .gc/new-git-server.sh -y raspberrypi"
+        # echo ""
 
       fi
+
+      echo ""
+      echo "Finished installing a new git server. It should appear on your network soon,"
+      echo "with a default hostname such as: git1, git2, git3, ..., gitn"
+      echo ""
       
       return $res
 
