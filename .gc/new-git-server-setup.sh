@@ -70,7 +70,7 @@ gc_new_git_server_setup() {
 
   sudo rm -rf tmp_os_mount_dir2/home/pi/git-server/gitcid
 
-  sudo cp -r ../gitcid tmp_os_mount_dir2/home/pi/git-server/
+  sudo cp -r ../gitcid tmp_os_mount_dir2/home/pi/git-server/ 2>/dev/null
 
   sudo chown -R 1000:1000 tmp_os_mount_dir2/home/pi/git-server/gitcid
 
