@@ -21,7 +21,7 @@ gc_new_git_server_setup() {
   cd ..
 
   echo ""
-  echo "info: Setting hostname."
+  echo "info: Setting hostname..."
   echo ""
 
   GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME="$(.gc/new-git-server-hostname.sh $@)"
