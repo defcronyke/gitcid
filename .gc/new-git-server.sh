@@ -82,7 +82,7 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
   GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED=( )
 
   for i in ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}; do
-    echo "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" | grep "$i"
+    echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$i"
 
     if [ $? -ne 0 ]; then
       GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$i" )
@@ -97,7 +97,7 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
   #   fi
   # done
 
-  echo "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" | grep "$2" >/dev/null
+  echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$2" >/dev/null
   if [ $? -ne 0 ]; then
     GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$2" )
   fi
@@ -106,12 +106,12 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
 
   echo "Other reachable git servers found:"
   echo ""
-  echo "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
+  echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
   echo ""
 
   echo "Installing and updating the following git servers:"
   echo ""
-  echo "$1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
+  echo "$1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
   echo ""
 
 
@@ -122,7 +122,7 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
 
   # Prevent browser from opening the first time if we're
   # running more than once.
-  if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
+  if [ $# -ge 3 ] || [ ! -z "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" ]; then
 
     if [[ "$@" =~ ^.*\-.*o.*[[:space:]]*.*$ ]]; then
       GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=0
@@ -131,7 +131,7 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
       
       echo "Filtered args:"
       echo ""
-      echo "  $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
+      echo "  $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
       echo ""
     fi
   fi
@@ -142,7 +142,7 @@ fi
 
 
 # Start installing new git servers.
-gitcid_new_git_server $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
+gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 
 
 
