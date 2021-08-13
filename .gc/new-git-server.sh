@@ -149,23 +149,6 @@ fi
 gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 
 
-# Enable ufw firewall if not enabled.
-#
-# TODO: Support custom hostnames (with number on end)
-# instead of just: git1, git2, ..., gitn
-if [[ "$(hostname)" =~ ^git[0-9]*$ ]]; then
- 
-  sudo ufw status | grep "Status: inactive"
- 
-  if [ $? -eq 0 ]; then
-    echo ""
-    echo "info: Enabling ufw firewall..."
-    sudo ufw enable
-    echo ""
-  fi
-fi
-
-
 # Run the installer one more time so DNS records can 
 # propagate to many peers.
 if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
@@ -175,6 +158,22 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
     echo "$1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
     echo ""
     gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
+
+    # Enable ufw firewall if not enabled.
+    #
+    # TODO: Support custom hostnames (with number on end)
+    # instead of just: git1, git2, ..., gitn
+    if [[ "$(hostname)" =~ ^git[0-9]*$ ]]; then
+    
+      sudo ufw status | grep "Status: inactive"
+    
+      if [ $? -eq 0 ]; then
+        echo ""
+        echo "info: Enabling ufw firewall..."
+        sudo ufw enable
+        echo ""
+      fi
+    fi
   fi
 fi
 
