@@ -5,6 +5,12 @@ gc_new_git_server_hostname() {
   # Set up DNS discovery features.
   .gc/git-servers.sh >/dev/null 2>&1
 
+  GITCID_NEW_GIT_SERVER_HOSTNAME_DETECT_PING_TIMEOUT_DEFAULT=${GITCID_NEW_GIT_SERVER_HOSTNAME_DETECT_PING_TIMEOUT_DEFAULT:-1}
+
+  # You can increase the ping timeout if it's too short 
+  # for you. The default is 1 second.
+  GITCID_NEW_GIT_SERVER_HOSTNAME_DETECT_PING_TIMEOUT=${GITCID_NEW_GIT_SERVER_HOSTNAME_DETECT_PING_TIMEOUT:-$GITCID_NEW_GIT_SERVER_HOSTNAME_DETECT_PING_TIMEOUT_DEFAULT}
+
   # You can change the default git server hostname here.
   # A number starting from 1 will be appended to the end
   # to make the complete hostname, for example: git1
@@ -25,7 +31,7 @@ gc_new_git_server_hostname() {
   for i in $(./git-srv.sh | awk '{print $NF}' | sed 's/\.$//g'); do
     # echo "Checking if hostname taken: $GITCID_NEW_GIT_SERVER_TRY_HOSTNAME"
 
-    ping -c 1 -W 2 $GITCID_NEW_GIT_SERVER_TRY_HOSTNAME >/dev/null 2>&1
+    ping -c 1 -W $GITCID_NEW_GIT_SERVER_HOSTNAME_DETECT_PING_TIMEOUT $GITCID_NEW_GIT_SERVER_TRY_HOSTNAME >/dev/null 2>&1
     if [ $? -ne 0 ]; then
       break
     fi
