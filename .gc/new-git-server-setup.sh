@@ -61,6 +61,21 @@ gc_new_git_server_setup() {
 
   echo ""
   echo ""
+  echo "Installing GitCid by local copy..."
+  echo ""
+
+  sudo mkdir -p tmp_os_mount_dir2/home/pi/git-server
+
+  sudo chown -R 1000:1000 tmp_os_mount_dir2/home/pi/git-server
+
+  sudo rm -rf tmp_os_mount_dir2/home/pi/git-server/gitcid
+
+  sudo cp -r ../gitcid tmp_os_mount_dir2/home/pi/git-server/
+
+  sudo chown -R 1000:1000 tmp_os_mount_dir2/home/pi/git-server/gitcid
+
+  echo ""
+  echo ""
   echo "info: Unmounting the OS."
   echo ""
 
