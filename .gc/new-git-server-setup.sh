@@ -50,7 +50,20 @@ gc_new_git_server_setup() {
   echo ""
   cat tmp_os_mount_dir2/etc/hosts
   echo ""
+  echo ""
 
+  echo ""
+  echo "Installing systemd startup script:"
+  echo ""
+  echo "#   sudo cp .gc/.gc-util/git-server-startup.service /etc/systemd/system/"
+  echo ""
+  echo "#   sudo ln -s /etc/systemd/system/git-server-startup.service /etc/systemd/system/multi-user.target.wants/git-server-startup.service"
+  echo ""
+
+  sudo cp .gc/.gc-util/git-server-startup.service /etc/systemd/system/
+  sudo ln -s /etc/systemd/system/git-server-startup.service /etc/systemd/system/multi-user.target.wants/git-server-startup.service
+
+  echo ""
   echo ""
   echo "info: Unmounting the OS."
   echo ""

@@ -1,0 +1,14 @@
+[Unit]
+Description=Update and start a git server.
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/git-server/gitcid
+Type=oneshot
+ExecStart=/home/pi/git-server/gitcid/.gc/new-git-server.sh -y raspberrypi
+RemainAfterExit=true
+ExecStop=/home/pi/git-server/gitcid/.gc/new-git-server-stop.sh
+
+[Install]
+WantedBy=multi-user.target
