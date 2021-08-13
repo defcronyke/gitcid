@@ -6,9 +6,9 @@ After=network.target
 User=pi
 WorkingDirectory=/home/pi/git-server/gitcid
 Type=oneshot
-ExecStart=/home/pi/git-server/gitcid/.gc/new-git-server.sh -y git1
+ExecStart=/home/pi/git-server/gitcid/.gc/new-git-server.sh -y $(hostname) git1
 RemainAfterExit=true
-ExecStop=/home/pi/git-server/gitcid/.gc/new-git-server-stop.sh
+# ExecStop=/home/pi/git-server/gitcid/.gc/new-git-server-stop.sh
 
 [Install]
 WantedBy=multi-user.target
