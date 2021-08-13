@@ -31,6 +31,7 @@ gc_new_git_server_setup() {
   fi
 
   echo "$GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME" | sudo tee tmp_os_mount_dir2/etc/hostname
+  echo ""
 
   echo ""
   echo "/etc/hostname"
