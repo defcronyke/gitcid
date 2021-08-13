@@ -53,11 +53,7 @@ gc_new_git_server_setup() {
   echo ""
 
   echo ""
-  echo "Installing systemd startup script:"
-  echo ""
-  echo "#   sudo cp .gc/.gc-util/git-server-startup.service /etc/systemd/system/"
-  echo ""
-  echo "#   sudo ln -s /etc/systemd/system/git-server-startup.service /etc/systemd/system/multi-user.target.wants/git-server-startup.service"
+  echo "Installing systemd startup script."
   echo ""
 
   sudo cp -rf .gc/.gc-util/git-server-startup.service tmp_os_mount_dir2/etc/systemd/system/
