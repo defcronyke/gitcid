@@ -89,7 +89,7 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
     fi
   done
 
-  for i in ${@:2:$#}; do
+  for i in ${@:1:$#}; do
     echo "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" | grep "$i"
 
     if [ $? -ne 0 ]; then
