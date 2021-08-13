@@ -8,12 +8,15 @@ gc_new_git_server_setup() {
 
   mkdir -p tmp_os_mount_dir
   sudo mount "${2}1" tmp_os_mount_dir
-  cd tmp_os_mount_dir
+
+  mkdir -p tmp_os_mount_dir2
+  sudo mount "${2}2" tmp_os_mount_dir2
 
   echo ""
   echo "info: Enabling SSH server for remote access."
   echo ""
 
+  cd tmp_os_mount_dir
   sudo touch ssh
   cd ..
 
@@ -27,17 +30,18 @@ gc_new_git_server_setup() {
     GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME="git1"
   fi
 
-  echo "$GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME" | sudo tee tmp_os_mount_dir/etc/hostname
+  echo "$GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME" | sudo tee tmp_os_mount_dir2/etc/hostname
 
-  sudo sed -i 's/^127\.0\.1\.1\s*.*$//g' tmp_os_mount_dir/etc/hosts
+  sudo sed -i 's/^127\.0\.1\.1\s*.*$//g' tmp_os_mount_dir2/etc/hosts
 
-  sudo sed -i "s/^\(127\.0\.0\.1\s*\)\(.*\)$/\1${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME} \2/g" tmp_os_mount_dir/etc/hosts
+  sudo sed -i "s/^\(127\.0\.0\.1\s*\)\(.*\)$/\1${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME} \2/g" tmp_os_mount_dir2/etc/hosts
 
   echo ""
   echo "info: Unmounting the OS."
   echo ""
 
   sudo umount "${2}1"
+  sudo umount "${2}2"
 }
 
 gc_new_git_server_setup $@

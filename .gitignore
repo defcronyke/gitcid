@@ -12,5 +12,6 @@ repo2/
 experiments/
 
 tmp_os_mount_dir/
+tmp_os_mount_dir2/
 
 gc_install_os_file_*
