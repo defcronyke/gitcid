@@ -61,7 +61,7 @@ gc_new_git_server_setup() {
 
   echo ""
   echo ""
-  echo "Installing git server by local copy..."
+  echo "Installing git server onto mounted disk..."
   echo ""
 
   rm -rf tmp_os_mount_dir2/home/pi/git-server
@@ -74,13 +74,13 @@ gc_new_git_server_setup() {
 
   sudo rm -rf tmp_os_mount_dir2/home/pi/git-server/gitcid
 
-  sudo cp -r ../gitcid tmp_os_mount_dir2/home/pi/git-server/ 2>/dev/null
+  sudo git clone https://gitlab.com/defcronyke/gitcid.git tmp_os_mount_dir2/home/pi/git-server/gitcid
 
   sudo chown -R 1000:1000 tmp_os_mount_dir2/home/pi/git-server/gitcid
 
   echo ""
   echo ""
-  echo "info: Unmounting the OS. Please wait and don't remove the disk yet..."
+  echo "info: Unmounting the OS. Please wait and don't remove the disk yet. This might take a few minutes..."
   echo ""
 
   sudo umount "${2}1"
