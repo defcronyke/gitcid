@@ -73,7 +73,11 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
 
   gc_starting_dir="$PWD"
 
-  cd .gc/discover-git-server-dns
+  cd .gc/discover-git-server-dns 2>/dev/null
+  if [ $? -ne 0 ]; then
+    git clone https://gitlab.com/defcronyke/discover-git-server-dns.git .gc/discover-git-server-dns
+    cd .gc/discover-git-server-dns
+  fi
 
   # Add any detected git servers to the list of servers 
   # that we're going to update.
