@@ -625,15 +625,10 @@ gc_new_git_server_install_os() {
           echo ""
 
           echo ""
-          echo "info: Performing initial git server setup on newly installed OS..."
+          echo "info: Performing initial git server setup on the newly installed OS..."
           echo ""
 
-          mkdir -p tmp_os_mount_dir && \
-          sudo mount "${2}1" tmp_os_mount_dir && \
-          cd tmp_os_mount_dir && \
-          sudo touch ssh && \
-          cd .. && \
-          sudo umount "${2}1"
+          .gc/new-git-server-setup.sh $@
           
           if [ $? -ne 0 ]; then
             echo ""
