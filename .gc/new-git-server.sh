@@ -106,7 +106,7 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
 
   echo "Installing and updating the following git servers:"
   echo ""
-  echo "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
+  echo "$@ $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
   echo ""
 
 
@@ -126,7 +126,7 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
       
       echo "Filtered args:"
       echo ""
-      echo "  $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
+      echo "  $@ $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED"
       echo ""
     fi
   fi
@@ -137,7 +137,7 @@ fi
 
 
 # Start installing new git servers.
-gitcid_new_git_server $1 $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
+gitcid_new_git_server $@ $GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED
 
 
 
