@@ -616,6 +616,8 @@ gc_new_git_server_install_os() {
 
         res2=$?
 
+        cd "$gc_dir_before_os_install"
+
         if [ $res2 -eq 0 ]; then
           sync
           res=21
