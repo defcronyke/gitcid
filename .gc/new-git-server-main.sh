@@ -315,6 +315,8 @@ gc_new_git_server_install_remove_tmp() {
   fi
 }
 
+
+
 # Install a new OS to a locally-connected disk.
 gc_new_git_server_install_os() {
   if [ $# -ge 1 ]; then
