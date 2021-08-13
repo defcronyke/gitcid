@@ -687,7 +687,7 @@ gc_new_git_server_install_os() {
         echo "it comes online, run the following command to install the"
         echo "git server software over ssh (Raspberry Pi OS example):"
         echo ""
-        echo "  .gc/new-git-server.sh -o raspberrypi"
+        echo "  .gc/new-git-server.sh -y raspberrypi"
         echo ""
 
       fi
