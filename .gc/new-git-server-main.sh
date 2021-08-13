@@ -656,7 +656,7 @@ gc_new_git_server_install_os() {
           echo "  \"${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}\""
           echo ""
 
-          cp -f "gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}"
+          cp -f "${GITCID_OS_INSTALL_TMP_DIR}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}" "${gc_dir_before_os_install}/gc_install_os_file_${GITCID_OS_INSTALL_ARCH}"
         fi
 
         # echo ""
