@@ -40,7 +40,7 @@ gc_new_git_server_setup() {
 
   sudo sed -i 's/^127\.0\.1\.1\s*.*$//g' tmp_os_mount_dir2/etc/hosts
 
-  sudo sed -i "s/^\(127\.0\.0\.1\s*\)\(.*\s*\)*\(${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\s*\)*\(.*\)$/\1\2\4/g" tmp_os_mount_dir2/etc/hosts
+  sudo sed -i "s/^\(127\.0\.0\.1\s*\)\(${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\s*\)*\(.*\)$/\1\3/g" tmp_os_mount_dir2/etc/hosts
 
   sudo sed -i "s/^\(127\.0\.0\.1\s*\)\(.*\)$/\1${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME} \2/g" tmp_os_mount_dir2/etc/hosts
 
