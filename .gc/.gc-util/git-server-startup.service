@@ -6,7 +6,7 @@ After=network.target
 User=pi
 WorkingDirectory=/home/pi/git-server/gitcid
 Type=oneshot
-ExecStart=/home/pi/git-server/gitcid/.gc/new-git-server.sh -y $(hostname) git1
+ExecStart=/bin/bash -c '/home/pi/git-server/gitcid/.gc/new-git-server.sh -y $(hostname) git1'
 RemainAfterExit=true
 # ExecStop=/home/pi/git-server/gitcid/.gc/new-git-server-stop.sh
 
