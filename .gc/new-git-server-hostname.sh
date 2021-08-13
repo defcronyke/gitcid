@@ -23,7 +23,7 @@ gc_new_git_server_hostname() {
   GITCID_NEW_GIT_SERVER_TRY_HOSTNAME="${GITCID_NEW_GIT_SERVER_HOSTNAME_PREFIX}${GITCID_NEW_GIT_SERVER_HOSTNAME_N}"
 
   for i in "$(./git-srv.sh | awk '{print $NF}' | sed 's/\.$//g')"; do
-    # echo "Checking if hostname taken: $GITCID_NEW_GIT_SERVER_TRY_HOSTNAME"
+    echo "Checking if hostname taken: $GITCID_NEW_GIT_SERVER_TRY_HOSTNAME"
 
     ping -c 1 -W 2 $GITCID_NEW_GIT_SERVER_TRY_HOSTNAME >/dev/null 2>&1
     if [ $? -ne 0 ]; then
