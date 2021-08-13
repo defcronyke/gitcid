@@ -76,11 +76,14 @@ gc_new_git_server_setup() {
 
   echo ""
   echo ""
-  echo "info: Unmounting the OS."
+  echo "info: Unmounting the OS. Please wait and don't remove the disk yet..."
   echo ""
 
   sudo umount "${2}1"
   sudo umount "${2}2"
+
+  echo "info: Unmounted the OS. You can remove the disk now."
+  echo ""
 }
 
 gc_new_git_server_setup $@
