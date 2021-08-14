@@ -78,6 +78,117 @@ gc_new_git_server_setup() {
 
   sudo chown -R 1000:1000 tmp_os_mount_dir2/home/pi/git-server/gitcid
 
+
+  echo ""
+  echo ""
+  echo "Installing ssh key onto mounted disk..."
+  echo ""
+
+  new_git_server_setup_previous_dir="$PWD"
+
+  if [ ! -d "${HOME}/.ssh" ]; then
+    mkdir "${HOME}/.ssh"
+    chmod 700 "${HOME}/.ssh"
+  fi
+
+  if [ ! -f "${HOME}/.ssh/config" ]; then
+    touch "${HOME}/.ssh/config"
+    chmod 600 "${HOME}/.ssh/config"
+  fi
+
+  if [ ! -f "${HOME}/.ssh/known_hosts" ]; then
+    touch "${HOME}/.ssh/known_hosts"
+    chmod 600 "${HOME}/.ssh/known_hosts"
+  fi
+
+  if [ ! -f "${HOME}/.ssh/authorized_keys" ]; then
+    touch "${HOME}/.ssh/authorized_keys"
+    chmod 600 "${HOME}/.ssh/authorized_keys"
+  fi
+
+  if [ ! -f "${HOME}/.ssh/git-server.key" ]; then
+    cd "${HOME}/.ssh"
+    ssh-keygen -t rsa -b 4096 -q -f $HOME/.ssh/git-server.key -N "" -C git-server
+    chmod 600 ${HOME}/.ssh/git-server.key*
+    cd "$new_git_server_setup_previous_dir"
+  fi
+
+
+  cat "${HOME}/.ssh/config" | grep "Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}"
+  if [ $? -ne 0 ]; then
+    printf '%b\n' "\n\
+Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
+  HostName ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
+  User pi\n\
+  IdentityFile ~/.ssh/git-server.key\n\
+  IdentitiesOnly yes\n\
+  ConnectTimeout 5\n\
+  ConnectionAttempts 3\n\
+"   | tee -a "${HOME}/.ssh/config"
+  fi
+
+  ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
+
+
+
+
+
+  if [ ! -d "tmp_os_mount_dir2/home/pi/.ssh" ]; then
+    sudo mkdir "tmp_os_mount_dir2/home/pi/.ssh"
+    sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh"
+    sudo chmod 700 "tmp_os_mount_dir2/home/pi/.ssh"
+  fi
+
+  if [ ! -f "tmp_os_mount_dir2/home/pi/.ssh/config" ]; then
+    sudo touch "tmp_os_mount_dir2/home/pi/.ssh/config"
+    sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/config"
+    sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/config"
+  fi
+
+  if [ ! -f "tmp_os_mount_dir2/home/pi/.ssh/known_hosts" ]; then
+    sudo touch "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+    sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+    sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+  fi
+
+  if [ ! -f "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys" ]; then
+    sudo touch "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
+    sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
+    sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
+  fi
+
+
+  sudo cp ${HOME}/.ssh/git-server.key* "tmp_os_mount_dir2/home/pi/.ssh/"
+  sudo chown 1000:1000 tmp_os_mount_dir2/home/pi/.ssh/git-server.key*
+  sudo chmod 600 tmp_os_mount_dir2/home/pi/.ssh/git-server.key*
+
+
+
+  cat "tmp_os_mount_dir2/home/pi/.ssh/config" | grep "Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}"
+  if [ $? -ne 0 ]; then
+    printf '%b\n' "\n\
+Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
+  HostName ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
+  User pi\n\
+  IdentityFile ~/.ssh/git-server.key\n\
+  IdentitiesOnly yes\n\
+  ConnectTimeout 5\n\
+  ConnectionAttempts 3\n\
+"   | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/config"
+  fi
+
+  sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/config"
+  sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/config"
+
+
+  ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/known_hosts" >/dev/null
+
+  sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+  sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+
+
+
+
   echo ""
   echo ""
   echo "info: Unmounting the OS. Please wait and don't remove the disk yet. This might take a few minutes..."
