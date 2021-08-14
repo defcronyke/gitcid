@@ -127,6 +127,13 @@ Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
 "   | tee -a "${HOME}/.ssh/config"
   fi
 
+  
+  cat "${HOME}/.ssh/known_hosts" | grep "^${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME} " >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    sed -i "/^${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\s*.*$/d" "${HOME}/.ssh/known_hosts"
+  fi
+
+
   ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
 
@@ -181,11 +188,18 @@ Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
   sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/config"
 
 
-  ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/known_hosts" >/dev/null
 
   sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
   sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+  
 
+  cat "tmp_os_mount_dir2/home/pi/.ssh/known_hosts" | grep "^${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME} " >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    sudo sed -i "/^${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\s*.*$/d" "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+  fi
+
+
+  ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/known_hosts" >/dev/null
 
 
 
