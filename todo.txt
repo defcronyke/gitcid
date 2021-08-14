@@ -73,6 +73,15 @@ Install git server:
 	IdentitiesOnly yes\n\
 "	| tee -a ~/.ssh/config; \
 	fi; \
+	cat ~/.ssh/config | grep "^Host\s*git3"; \
+	if [ $? -ne 0 ]; then \
+	printf '%b\n' "Host git3\n\
+	HostName git3\n\
+	User pi\n\
+	IdentityFile ~/.ssh/git-server.key\n\
+	IdentitiesOnly yes\n\
+"	| tee -a ~/.ssh/config; \
+	fi; \
 	.gc/new-git-server-setup.sh -RFf /dev/sde
 
 5. Remove the second microSD card and place it into the second server, and
@@ -100,7 +109,33 @@ Install git server:
 	ssh-keygen -F "git2" || ssh-keyscan "git2" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null; \
 	.gc/git-servers-open.sh
 
+
+	GITCID_NEW_GIT_SERVER_WAIT_ASSIGN_HOSTNAME="git3"
+	while [ true ]; do .gc/git-servers.sh | grep "$GITCID_NEW_GIT_SERVER_WAIT_ASSIGN_HOSTNAME"; \
+	if [ $? -eq 0 ]; then break; fi; \
+	sleep 10; echo "..."; done; \
+	ssh-keygen -F "$GITCID_NEW_GIT_SERVER_WAIT_ASSIGN_HOSTNAME" || ssh-keyscan "$GITCID_NEW_GIT_SERVER_WAIT_ASSIGN_HOSTNAME" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null; \
+	.gc/git-servers-open.sh
+
+
 7. Click those links in the terminal to open the web UI for each server, or
    run this command to open them in your default web browser automatically:
 
 	.gc/git-servers-open.sh
+
+
+------------------------------
+
+
+TODO:
+----
+
+handle ssh key config for git3 server hostname and higher:
+	
+	- copy key from git1
+
+	- add to authorized_keys
+
+	- add ~/.ssh/config entry on local computer
+
+	- add to ~/.ssh/known_hosts
