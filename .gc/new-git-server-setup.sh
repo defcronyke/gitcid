@@ -108,8 +108,11 @@ gc_new_git_server_setup() {
 
   if [ ! -f "${HOME}/.ssh/git-server.key" ]; then
     cd "${HOME}/.ssh"
+
     ssh-keygen -t rsa -b 4096 -q -f $HOME/.ssh/git-server.key -N "" -C git-server
+
     chmod 600 ${HOME}/.ssh/git-server.key*
+    
     cd "$new_git_server_setup_previous_dir"
   fi
 
@@ -134,10 +137,7 @@ Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
   fi
 
 
-  ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
-
-
-
+  ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" 2>/dev/null || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" 2>/dev/null | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
 
   if [ ! -d "tmp_os_mount_dir2/home/pi/.ssh" ]; then
@@ -203,7 +203,7 @@ Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
   sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
 
 
-  ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/known_hosts" >/dev/null
+  ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" 2>/dev/null || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" 2>/dev/null | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/known_hosts" >/dev/null
 
 
   sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
