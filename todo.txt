@@ -22,6 +22,7 @@ Install git server:
 
 	sed -i '/^git1\s*.*$/d' ~/.ssh/known_hosts; \
 	sed -i '/^git2\s*.*$/d' ~/.ssh/known_hosts; \
+	ssh-keygen -F "git1" || ssh-keyscan "git1" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null; \
 	scp git1:~/.ssh/git-server.key* ~/.ssh/; \
 	cat ~/.ssh/config | grep "^Host\s*git1"; \
 	if [ $? -ne 0 ]; then \
@@ -52,6 +53,7 @@ Install git server:
 	while [ true ]; do .gc/git-servers.sh; if [ $? -eq 0 ]; then break; fi; sleep 10; echo "."; done; \
 	sed -i '/^git1\s*.*$/d' ~/.ssh/known_hosts; \
 	sed -i '/^git2\s*.*$/d' ~/.ssh/known_hosts; \
+	ssh-keygen -F "git1" || ssh-keyscan "git1" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null; \
 	scp git1:~/.ssh/git-server.key* ~/.ssh/; \
 	cat ~/.ssh/config | grep "^Host\s*git1"; \
 	if [ $? -ne 0 ]; then \
@@ -92,7 +94,11 @@ Install git server:
 
    Automatic version example:
 
-	while [ true ]; do .gc/git-servers.sh | grep "git2"; if [ $? -eq 0 ]; then break; fi; sleep 10; echo ".."; done; .gc/git-servers-open.sh
+	while [ true ]; do .gc/git-servers.sh | grep "git2"; \
+	if [ $? -eq 0 ]; then break; fi; \
+	sleep 10; echo ".."; done; \
+	ssh-keygen -F "git2" || ssh-keyscan "git2" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null; \
+	.gc/git-servers-open.sh
 
 7. Click those links in the terminal to open the web UI for each server, or
    run this command to open them in your default web browser automatically:
