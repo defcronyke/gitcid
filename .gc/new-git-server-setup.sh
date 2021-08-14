@@ -191,7 +191,7 @@ Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
 
   sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
   sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
-  
+
 
   cat "tmp_os_mount_dir2/home/pi/.ssh/known_hosts" | grep "^${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME} " >/dev/null 2>&1
   if [ $? -eq 0 ]; then
@@ -199,8 +199,33 @@ Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
   fi
 
 
+  sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+  sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+
+
   ssh-keygen -F "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" || ssh-keyscan "${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}" | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/known_hosts" >/dev/null
 
+
+  sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+  sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/known_hosts"
+
+
+
+  sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
+  sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
+
+
+  cat "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys" | grep ".* git-server$"
+  if [ $? -eq 0 ]; then
+    sudo sed -i "/^.*\s*git-server$/d" "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
+  fi
+
+
+  cat "tmp_os_mount_dir2/home/pi/.ssh/git-server.key.pub" | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
+  
+
+  sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
+  sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
 
 
   echo ""
