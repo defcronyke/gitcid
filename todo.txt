@@ -17,14 +17,61 @@ Install git server:
 	while [ true ]; do .gc/git-servers.sh; sleep 10; echo ""; done
 
 4. Wait for the above command to output "http://git1:1234", then run the 
-   following to assign the next available hostname to the next server's
-   microSD card:
+   following to download the ssh key from the first server for remote access, 
+   and assign the next available hostname to the next server's microSD card:
 
+	sed -i '/^git1\s*.*$/d' ~/.ssh/known_hosts; \
+	sed -i '/^git2\s*.*$/d' ~/.ssh/known_hosts; \
+	scp git1:~/.ssh/git-server.key* ~/.ssh/; \
+	cat ~/.ssh/config | grep "^Host\s*git1"; \
+	if [ $? -ne 0 ]; then \
+	printf '%b\n' "Host git1\n\
+	HostName git1\n\
+	User pi\n\
+	IdentityFile ~/.ssh/git-server.key\n\
+	IdentitiesOnly yes\n\
+"	| tee -a ~/.ssh/config; \
+	fi; \
+	cat ~/.ssh/config | grep "^Host\s*git2"; \
+	if [ $? -ne 0 ]; then \
+	printf '%b\n' "Host git2\n\
+	HostName git2\n\
+	User pi\n\
+	IdentityFile ~/.ssh/git-server.key\n\
+	IdentitiesOnly yes\n\
+"	| tee -a ~/.ssh/config; \
+	fi; \
 	.gc/new-git-server-setup.sh -RFf /dev/sde
 
    The output should say this server has been assigned the hostname "git2".
    If it says "git1" instead, wait a bit longer and try running the above
    command again until it outputs "git2".
+
+   Automatic version example:
+
+	while [ true ]; do .gc/git-servers.sh; if [ $? -eq 0 ]; then break; fi; sleep 10; echo "."; done; \
+	sed -i '/^git1\s*.*$/d' ~/.ssh/known_hosts; \
+	sed -i '/^git2\s*.*$/d' ~/.ssh/known_hosts; \
+	scp git1:~/.ssh/git-server.key* ~/.ssh/; \
+	cat ~/.ssh/config | grep "^Host\s*git1"; \
+	if [ $? -ne 0 ]; then \
+	printf '%b\n' "Host git1\n\
+	HostName git1\n\
+	User pi\n\
+	IdentityFile ~/.ssh/git-server.key\n\
+	IdentitiesOnly yes\n\
+"	| tee -a ~/.ssh/config; \
+	fi; \
+	cat ~/.ssh/config | grep "^Host\s*git2"; \
+	if [ $? -ne 0 ]; then \
+	printf '%b\n' "Host git2\n\
+	HostName git2\n\
+	User pi\n\
+	IdentityFile ~/.ssh/git-server.key\n\
+	IdentitiesOnly yes\n\
+"	| tee -a ~/.ssh/config; \
+	fi; \
+	.gc/new-git-server-setup.sh -RFf /dev/sde
 
 5. Remove the second microSD card and place it into the second server, and
    turn it on.
@@ -38,6 +85,14 @@ Install git server:
 
 	http://git1:1234
 	http://git2:1234
+
+   Then open a web UI for each server:
+
+	.gc/git-servers-open.sh
+
+   Automatic version example:
+
+	while [ true ]; do .gc/git-servers.sh | grep "git2"; if [ $? -eq 0 ]; then break; fi; sleep 10; echo ".."; done; .gc/git-servers-open.sh
 
 7. Click those links in the terminal to open the web UI for each server, or
    run this command to open them in your default web browser automatically:
