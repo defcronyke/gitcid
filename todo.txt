@@ -1,0 +1,45 @@
+Install git server:
+------------------
+
+1. Plug in two microSD cards and get correct device names:
+
+	lsblk
+
+2. Install the OS and some configuration onto both microSD cards:
+
+	.gc/new-git-server.sh -RFf /dev/sdd
+
+	.gc/new-git-server.sh -RFf /dev/sde
+
+3. Remove one of the microSD cards, place it into a server, and turn it on. 
+   Wait for the server to bootstrap and start running (~16 minutes):
+
+	while [ true ]; do .gc/git-servers.sh; sleep 10; echo ""; done
+
+4. Wait for the above command to output "http://git1:1234", then run the 
+   following to assign the next available hostname to the next server's
+   microSD card:
+
+	.gc/new-git-server-setup.sh -RFf /dev/sde
+
+   The output should say this server has been assigned the hostname "git2".
+   If it says "git1" instead, wait a bit longer and try running the above
+   command again until it outputs "git2".
+
+5. Remove the second microSD card and place it into the second server, and
+   turn it on.
+
+6. Wait for the second server to bootstrap and start running (~16 minutes):
+   
+	while [ true ]; do .gc/git-servers.sh; sleep 10; echo ""; done
+
+   Once the above command starts outputting both servers, your new git servers
+   are ready to use. It should look like this:
+
+	http://git1:1234
+	http://git2:1234
+
+7. Click those links in the terminal to open the web UI for each server, or
+   run this command to open them in your default web browser automatically:
+
+	.gc/git-servers-open.sh
