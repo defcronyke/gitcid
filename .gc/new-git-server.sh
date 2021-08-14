@@ -170,7 +170,7 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
       if [ $? -eq 0 ]; then
         echo ""
         echo "info: Enabling ufw firewall..."
-        sudo ufw enable
+        sudo ufw --force enable
         echo ""
       fi
     fi
