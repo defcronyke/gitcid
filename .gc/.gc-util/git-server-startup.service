@@ -1,14 +1,18 @@
 [Unit]
 Description=Update and start a git server.
 After=network.target
+StartLimitIntervalSec=400
+StartLimitBurst=2
 
 [Service]
 User=pi
 WorkingDirectory=/home/pi/git-server/gitcid
 Type=oneshot
 ExecStart=/bin/bash -c '/home/pi/git-server/gitcid/.gc/new-git-server.sh -y $(hostname) git1'
-RemainAfterExit=true
 # ExecStop=/home/pi/git-server/gitcid/.gc/new-git-server-stop.sh
+RemainAfterExit=true
+Restart=always
+RestartSec=20
 
 [Install]
 WantedBy=multi-user.target
