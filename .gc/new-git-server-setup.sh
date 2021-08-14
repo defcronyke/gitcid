@@ -221,8 +221,8 @@ Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
   fi
 
 
-  cat "tmp_os_mount_dir2/home/pi/.ssh/git-server.key.pub" | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
-  
+  cat "tmp_os_mount_dir2/home/pi/.ssh/git-server.key.pub" | sudo tee -a "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys" >/dev/null
+
 
   sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
   sudo chmod 600 "tmp_os_mount_dir2/home/pi/.ssh/authorized_keys"
