@@ -114,7 +114,7 @@ gc_new_git_server_setup() {
   fi
 
 
-  cat "${HOME}/.ssh/config" | grep "Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}"
+  cat "${HOME}/.ssh/config" | grep "^Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}"
   if [ $? -ne 0 ]; then
     printf '%b\n' "\n\
 Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
@@ -164,7 +164,7 @@ Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
 
 
 
-  cat "tmp_os_mount_dir2/home/pi/.ssh/config" | grep "Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}"
+  cat "tmp_os_mount_dir2/home/pi/.ssh/config" | grep "^Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}"
   if [ $? -ne 0 ]; then
     printf '%b\n' "\n\
 Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
