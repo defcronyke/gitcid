@@ -25,8 +25,10 @@ gitcid_install_new_git_server_rpi_auto_provision() {
   echo "Verifying host: $gc_ssh_host"
   echo ""
 
-  ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
+  ssh-keygen -f "${HOME}/.ssh/known_hosts" -R "$gc_ssh_host"
+
+  ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
 
   echo ""

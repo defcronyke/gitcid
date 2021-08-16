@@ -192,7 +192,10 @@ gitcid_new_git_server_post() {
   for i in $@; do
     mkdir -p $HOME/.ssh
     chmod 700 $HOME/.ssh
-    # ssh-keygen -F "$i" || ssh-keyscan "$i" >>$HOME/.ssh/known_hosts
+
+    ssh-keygen -f "${HOME}/.ssh/known_hosts" -R "$i"
+
+    ssh-keygen -F "$i" || ssh-keyscan "$i" >>$HOME/.ssh/known_hosts
 
     { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $i 'sudo -n cat /dev/null; res=$?; if [ $res -ne 0 ]; then echo ""; echo "ERROR: [ HOST: $USER@$(hostname) ]: Host failed running sudo non-interactively, so they cannot be used in parallel mode. Trying again in sequential mode..."; echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init) -s; res=$?; fi; exit $res'; }
     res=$?
@@ -217,6 +220,11 @@ gitcid_new_git_server_post() {
       echo ""
       echo "Succeeded at enabling passwordless sudo. Trying parallel mode install..."
       echo ""
+
+      ssh-keygen -f "${HOME}/.ssh/known_hosts" -R "$i"
+
+      ssh-keygen -F "$i" || ssh-keyscan "$i" >>$HOME/.ssh/known_hosts
+
       { ssh -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=5 -o ConnectionAttempts=2 -tt $i 'echo ""; echo "-----"; echo "  hostname: $(hostname)"; echo "  user: $USER"; echo "-----"; source <(curl -sL https://tinyurl.com/git-server-init); res2=$?; exit $res2'; }
       res2=$?
       # res2=$?
@@ -999,6 +1007,9 @@ gitcid_new_git_server_main() {
       
       echo ""
       echo "Verifying host: $gc_ssh_host"
+
+      ssh-keygen -f "${HOME}/.ssh/known_hosts" -R "$gc_ssh_host"
+
       ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
       
       # echo ""
@@ -1053,6 +1064,10 @@ gitcid_new_git_server_main() {
     # if [ -z "$gc_ssh_username" ]; then
     #   gc_ssh_username="$USER"
     # fi
+
+    ssh-keygen -f "${HOME}/.ssh/known_hosts" -R "$gc_ssh_host"
+
+    ssh-keygen -F "$gc_ssh_host" || ssh-keyscan "$gc_ssh_host" | tee -a "${HOME}/.ssh/known_hosts" >/dev/null
 
     loop_res=22
     loop_res2=21
