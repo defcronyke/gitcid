@@ -51,7 +51,7 @@ gc_git_hook_client_pre_commit() {
     cp -f img/favicon* public/img/
     cp -f img/favicon.ico public/
 
-    pandoc -s --no-check-certificate -f markdown -t html5 -c index.css --shift-heading-level-by=-1 --highlight-style=breezeDark -o public/index.html README.md
+    pandoc -s --no-check-certificate -f markdown -t html5 -c index.css --shift-heading-level-by=-1 --highlight-style=breezeDark -H public/head.tmpl.html -o public/index.html README.md
     
     cp -rf public/* docs/
 
