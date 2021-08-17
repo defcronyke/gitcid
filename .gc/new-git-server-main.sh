@@ -1107,6 +1107,34 @@ gitcid_new_git_server_main() {
 
   echo "Finished iterating over hosts."
 
+
+  current_dir="$PWD"
+
+
+  echo ""
+  echo "----------"
+  echo ""
+  echo "Updating peer DNS..."
+  echo ""
+  echo "start_dir=${start_dir}"
+  echo ""
+  echo "----------"
+  echo ""
+
+
+  cd "${start_dir}/../discover-git-server-dns"
+
+  # cd ../discover-git-server-dns
+  # git fetch --all
+
+  git reset --hard HEAD
+
+  git pull --no-edit origin master
+
+  ./git-update-srv.sh $@
+
+  cd "$current_dir"
+
   
   
   if [ $gc_new_git_server_setup_sudo -ne 0 ]; then
