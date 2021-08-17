@@ -168,7 +168,13 @@ new_git_server_detect_other_git_servers() {
   echo "  .gc/git-servers-open.sh [[git1] [git2] ...]"
   echo ""
 
-  return $gc_new_git_server_detect_other_git_servers
+
+  # An empty result isn't an error here, otherwise our 
+  # systemd service will sometimes fail with this potential 
+  # error, and it's better if that won't happen.
+  return 0
+  
+  # return $gc_new_git_server_detect_other_git_servers
 }
 
 gitcid_new_git_server_post() {

@@ -234,6 +234,21 @@ Host ${GITCID_NEW_GIT_SERVER_INSTALL_NEW_SELECTED_HOSTNAME}\n\
 
   echo ""
   echo ""
+  echo "info: Adding things to ~/.bashrc so they happen when you log in on the server..."
+  echo ""
+
+  cat "tmp_os_mount_dir2/home/pi/.bashrc" | grep "journalctl -u git-server-startup -f" >/dev/null
+
+  if [ $? -ne 0 ]; then
+    printf '%b\n' "echo \"\"\necho \" ---------- Git Server Startup Logs (type ctrl-c to close this)  ---------- \"\necho \"\"\n" | sudo tee -a "tmp_os_mount_dir2/home/pi/.bashrc"
+    echo "journalctl -u git-server-startup -f" | sudo tee -a "tmp_os_mount_dir2/home/pi/.bashrc"
+  fi
+
+  sudo chown 1000:1000 "tmp_os_mount_dir2/home/pi/.bashrc"
+  sudo chmod 644 "tmp_os_mount_dir2/home/pi/.bashrc"
+
+  echo ""
+  echo ""
   echo "info: Unmounting the OS. Please wait and don't remove the disk yet. This might take a few minutes..."
   echo ""
 
