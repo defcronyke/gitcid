@@ -181,7 +181,7 @@ sudo systemctl enable --now atd
 # Run this again every 10 minutes to keep DNS list of git servers 
 # up-to-date, as well as all the dependencies and software.
 # TODO: Choose the best timing for this.
-echo '/bin/bash -c "'$0 $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}'"' | at now +2 minutes 2>/dev/null
+echo 'sudo systemctl restart git-server-startup' | at now +2 minutes 2>/dev/null
 
 
 
