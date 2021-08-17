@@ -150,45 +150,45 @@ gitcid_new_git_server() {
   return $?
 }
 
-# Start installing new git servers. First run.
+# Start installing new git servers.
 gitcid_new_git_server_detect_servers $@
 gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 
 
-# Run the installer two more times so DNS records can 
-# propagate to many peers.
-if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
-  if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
-    echo "Updating the following git servers so they're all aware of each other:"
-    echo ""
-    echo "$1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
-    echo ""
+# # Run the installer two more times so DNS records can 
+# # propagate to many peers.
+# if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
+#   if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
+#     echo "Updating the following git servers so they're all aware of each other:"
+#     echo ""
+#     echo "$1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
+#     echo ""
 
-    # Second run.
-    gitcid_new_git_server_detect_servers $@
-    gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
+#     # Second run.
+#     gitcid_new_git_server_detect_servers $@
+#     gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 
-    # Third run.
-    gitcid_new_git_server_detect_servers $@
-    gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
+#     # Third run.
+#     gitcid_new_git_server_detect_servers $@
+#     gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 
-    # # Enable ufw firewall if not enabled.
-    # #
-    # # TODO: Support custom hostnames (with number on end)
-    # # instead of just: git1, git2, ..., gitn
-    # if [[ "$(hostname)" =~ ^git[0-9]*$ ]]; then
+#     # # Enable ufw firewall if not enabled.
+#     # #
+#     # # TODO: Support custom hostnames (with number on end)
+#     # # instead of just: git1, git2, ..., gitn
+#     # if [[ "$(hostname)" =~ ^git[0-9]*$ ]]; then
     
-    #   sudo ufw status | grep "Status: inactive"
+#     #   sudo ufw status | grep "Status: inactive"
     
-    #   if [ $? -eq 0 ]; then
-    #     echo ""
-    #     echo "info: Enabling ufw firewall..."
-    #     sudo ufw --force enable
-    #     echo ""
-    #   fi
-    # fi
-  fi
-fi
+#     #   if [ $? -eq 0 ]; then
+#     #     echo ""
+#     #     echo "info: Enabling ufw firewall..."
+#     #     sudo ufw --force enable
+#     #     echo ""
+#     #   fi
+#     # fi
+#   fi
+# fi
 
 
 
