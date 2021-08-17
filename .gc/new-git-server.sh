@@ -178,10 +178,14 @@ gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 # Enable the "at" command, to launch things at some later time.
 sudo systemctl enable --now atd
 
-# Run this again every 10 minutes to keep DNS list of git servers 
+# Run this again every so often to keep DNS list of git servers 
 # up-to-date, as well as all the dependencies and software.
-# TODO: Choose the best timing for this.
-echo 'sudo systemctl restart git-server-startup' | at now +2 minutes 2>/dev/null
+# Chooses the last digit for the time delay somewhat randomly
+# to avoid all servers potentially trying to update at the same 
+# instant.
+GITCID_NEW_GIT_SERVER_SYSTEMCTL_RESTART_RANDOM_MINUTES_DIGIT=$(echo "$(( $(head -256 /dev/urandom | cksum | awk '{print $1}' | sed "s/\(.\)/\1$(date +%s%N)/g" | sed 's/\(.\)/\1 \+ /g' | sed "s/ + $//") ))" | tail -c 2 | head -c 1)
+
+echo 'sudo systemctl restart git-server-startup' | at now +2${GITCID_NEW_GIT_SERVER_SYSTEMCTL_RESTART_RANDOM_MINUTES_DIGIT} minutes 2>/dev/null
 
 
 
