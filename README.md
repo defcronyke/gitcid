@@ -356,7 +356,7 @@ Here's some examples of how to use your git server for some common git-related t
 If you'd like to contribute to the development of the `git server`, you can run this command if you want, to help you set up your dev environment for this purpose:
 
 ```bash
-source <(curl -sL https://tinyurl.com/gitcid) -e
+source <(curl -sL https://tinyurl.com/gitcid) -d
 ```
 
 It will clone all related project git repositories, and it will install `gitcid` into them for convenience.
