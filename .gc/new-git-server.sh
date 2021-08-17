@@ -174,6 +174,13 @@ gitcid_new_git_server() {
 gitcid_new_git_server_detect_servers $@
 gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 
+# Run this again every 10 minutes to keep DNS list of git servers 
+# up-to-date, as well as all the dependencies and software.
+# TODO: Choose the best timing for this.
+echo '/bin/bash -c "'$0 $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}'"' | at now +2 minutes 2>/dev/null
+
+
+
 
 # # Run the installer two more times so DNS records can 
 # # propagate to many peers.

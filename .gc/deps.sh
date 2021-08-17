@@ -384,6 +384,9 @@ chmod 755 \"${GITCID_DIR}${GITCID_YQ_CMD}\" && ${SUDO_CMD} mv \"${GITCID_DIR}${G
 		return $git_config_res
 	fi
 
+  # Enable the "at" command, to launch things at some later time.
+  sudo systemctl enable --now atd
+
 	gitcid_log_info_verbose "${BASH_SOURCE[0]}" $LINENO "All GitCid dependencies are installed.\n\
 ----------\n"
 }
