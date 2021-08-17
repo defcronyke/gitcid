@@ -64,7 +64,7 @@ gitcid_new_git_server_detect_servers() {
     echo ""
 
 
-    .gc/git-servers.sh $(hostname) git1 ${@:2:$#}
+    .gc/git-servers.sh ${@:2:$#} $(hostname)
 
     gc_starting_dir="$PWD"
 
@@ -78,7 +78,7 @@ gitcid_new_git_server_detect_servers() {
     # that we're going to update.
     GITCID_OTHER_DETECTED_GIT_SERVERS=( )
 
-    for i in $(./git-srv.sh $(hostname) git1 ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | grep -v -e '^[[:space:]]*$'); do
+    for i in $(./git-srv.sh ${@:2:$#} $(hostname) | awk '{print $NF}' | sed 's/\.$//' | grep -v -e '^[[:space:]]*$'); do
       GITCID_OTHER_DETECTED_GIT_SERVERS+=( "$i" )
     done
 
@@ -190,4 +190,6 @@ gitcid_new_git_server() {
 # Start installing new git servers.
 gitcid_new_git_server_detect_servers $@
 
-gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
+gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
+
+# gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
