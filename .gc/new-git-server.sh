@@ -167,73 +167,27 @@ gitcid_new_git_server() {
 
   ${GITCID_DIR}new-git-server-main.sh $@
 
-  return $?
+  gitcid_new_git_server_res=$?
+
+
+  if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
+    # Enable the "at" command, to launch things at some later time.
+    sudo systemctl enable --now atd
+
+    # Run this again every so often to keep DNS list of git servers 
+    # up-to-date, as well as all the dependencies and software.
+    # Chooses the last digit for the time delay somewhat randomly
+    # to avoid all servers potentially trying to update at the same 
+    # instant. Currently set to a range of 20 - 29 minutes.
+    GITCID_NEW_GIT_SERVER_SYSTEMCTL_RESTART_RANDOM_MINUTES_DIGIT=$(echo "$(( $(head -256 /dev/urandom | cksum | awk '{print $1}' | sed "s/\(.\)/\1$(date +%s%N)/g" | sed 's/\(.\)/\1 \+ /g' | sed "s/ + $//") ))" | tail -c 2 | head -c 1)
+
+    echo 'sudo systemctl restart git-server-startup' | at -v now +2${GITCID_NEW_GIT_SERVER_SYSTEMCTL_RESTART_RANDOM_MINUTES_DIGIT} minutes
+  fi
+
+  return $gitcid_new_git_server_res
 }
 
 # Start installing new git servers.
 gitcid_new_git_server_detect_servers $@
+
 gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
-
-
-# Enable the "at" command, to launch things at some later time.
-sudo systemctl enable --now atd
-
-# Run this again every so often to keep DNS list of git servers 
-# up-to-date, as well as all the dependencies and software.
-# Chooses the last digit for the time delay somewhat randomly
-# to avoid all servers potentially trying to update at the same 
-# instant. Currently set to a range of 20 - 29 minutes.
-GITCID_NEW_GIT_SERVER_SYSTEMCTL_RESTART_RANDOM_MINUTES_DIGIT=$(echo "$(( $(head -256 /dev/urandom | cksum | awk '{print $1}' | sed "s/\(.\)/\1$(date +%s%N)/g" | sed 's/\(.\)/\1 \+ /g' | sed "s/ + $//") ))" | tail -c 2 | head -c 1)
-
-echo 'sudo systemctl restart git-server-startup' | at -v now +2${GITCID_NEW_GIT_SERVER_SYSTEMCTL_RESTART_RANDOM_MINUTES_DIGIT} minutes
-
-
-
-
-# # Run the installer two more times so DNS records can 
-# # propagate to many peers.
-# if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
-#   if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
-#     echo "Updating the following git servers so they're all aware of each other:"
-#     echo ""
-#     echo "$1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
-#     echo ""
-
-#     # Second run.
-#     gitcid_new_git_server_detect_servers $@
-#     gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
-
-#     # Third run.
-#     gitcid_new_git_server_detect_servers $@
-#     gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
-
-#     # # Enable ufw firewall if not enabled.
-#     # #
-#     # # TODO: Support custom hostnames (with number on end)
-#     # # instead of just: git1, git2, ..., gitn
-#     # if [[ "$(hostname)" =~ ^git[0-9]*$ ]]; then
-    
-#     #   sudo ufw status | grep "Status: inactive"
-    
-#     #   if [ $? -eq 0 ]; then
-#     #     echo ""
-#     #     echo "info: Enabling ufw firewall..."
-#     #     sudo ufw --force enable
-#     #     echo ""
-#     #   fi
-#     # fi
-#   fi
-# fi
-
-
-
-
-
-# gitcid_new_git_server $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}
-
-# # Run the installer one more time so DNS records can 
-# # propagate to many peers, only if we are installing
-# # to more than one peer or updating a DNS seed server.
-# if [ $# -ge 3 ] || [ ! -z "$GITCID_DNS_SEED_SERVER1" ]; then
-#   gitcid_new_git_server $@ $GITCID_DNS_SEED_SERVER1
-# fi
