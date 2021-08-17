@@ -17,6 +17,22 @@
 #
 
 gitcid_new_git_server_detect_servers() {
+  gitcid_new_git_server_detect_servers_start_dir="$PWD"
+
+  cd "${HOME}"
+
+  if [ ! -d "${HOME}/git-server" ]; then
+    curl -sL https://tinyurl.com/git-server-init | bash
+  fi
+  
+  cd "${HOME}/git-server"
+
+  if [ ! -d "${HOME}/git-server/gitcid" ]; then
+    source <(curl -sL https://tinyurl.com/gitcid)
+  else
+    cd "${HOME}/git-server/gitcid"
+  fi
+
   # # You can change the desired DNS seed server hostname by setting this 
   # # environment variable before running this script if you want.
   # GITCID_DEFAULT_DNS_SEED_SERVER1=${GITCID_DEFAULT_DNS_SEED_SERVER1:-"git1"}
@@ -31,7 +47,7 @@ gitcid_new_git_server_detect_servers() {
   # Detect other git servers and update them, adding DNS 
   # records for the new servers's we're installing now.
 
-  GITCID_OTHER_DETECTED_GIT_SERVERS=""
+  # GITCID_OTHER_DETECTED_GIT_SERVERS=""
 
   # GITCID_NEW_GIT_SERVER_ARGS="$@"
 
