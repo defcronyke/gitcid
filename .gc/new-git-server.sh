@@ -17,21 +17,9 @@
 #
 
 gitcid_new_git_server_detect_servers() {
-  gitcid_new_git_server_detect_servers_start_dir="$PWD"
+  # gitcid_new_git_server_detect_servers_start_dir="$PWD"
 
-  cd "${HOME}"
-
-  if [ ! -d "${HOME}/git-server" ]; then
-    curl -sL https://tinyurl.com/git-server-init | bash
-  fi
   
-  cd "${HOME}/git-server"
-
-  if [ ! -d "${HOME}/git-server/gitcid" ]; then
-    source <(curl -sL https://tinyurl.com/gitcid)
-  else
-    cd "${HOME}/git-server/gitcid"
-  fi
 
   # # You can change the desired DNS seed server hostname by setting this 
   # # environment variable before running this script if you want.
@@ -54,6 +42,20 @@ gitcid_new_git_server_detect_servers() {
   GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=1
 
   if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
+
+    cd "${HOME}"
+
+    if [ ! -d "${HOME}/git-server" ]; then
+      curl -sL https://tinyurl.com/git-server-init | bash
+    fi
+    
+    cd "${HOME}/git-server"
+
+    if [ ! -d "${HOME}/git-server/gitcid" ]; then
+      source <(curl -sL https://tinyurl.com/gitcid)
+    else
+      cd "${HOME}/git-server/gitcid"
+    fi
 
     echo ""
     echo "Detecting other git servers on your network. Please wait..."
@@ -141,7 +143,7 @@ gitcid_new_git_server_detect_servers() {
     GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED="${@:2:$#}"
   fi
 
-  cd "${gitcid_new_git_server_detect_servers_start_dir}"
+  # cd "${gitcid_new_git_server_detect_servers_start_dir}"
 }
 
 gitcid_new_git_server() {
