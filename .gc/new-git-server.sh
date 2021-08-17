@@ -16,6 +16,116 @@
 # YOU HAVE BEEN WARNED!!
 #
 
+gitcid_new_git_server_detect_servers() {
+  # # You can change the desired DNS seed server hostname by setting this 
+  # # environment variable before running this script if you want.
+  # GITCID_DEFAULT_DNS_SEED_SERVER1=${GITCID_DEFAULT_DNS_SEED_SERVER1:-"git1"}
+
+  # GITCID_DNS_SEED_SERVER1=""
+
+
+  # # If we didn't specify to install on the first DNS seed host, add it
+  # # to the list of hosts we'll try.
+  # if [[ ! "$@" =~ "$GITCID_DEFAULT_DNS_SEED_SERVER1" ]]; then
+
+  # Detect other git servers and update them, adding DNS 
+  # records for the new servers's we're installing now.
+
+  GITCID_OTHER_DETECTED_GIT_SERVERS=""
+
+  # GITCID_NEW_GIT_SERVER_ARGS="$@"
+
+  GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=1
+
+  if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
+
+    echo ""
+    echo "Detecting other git servers on your network. Please wait..."
+    echo ""
+    echo "  args: ${@:2:$#}"
+    echo ""
+
+
+    .gc/git-servers.sh $(hostname) git1 ${@:2:$#}
+
+    gc_starting_dir="$PWD"
+
+    cd .gc/discover-git-server-dns 2>/dev/null
+    if [ $? -ne 0 ]; then
+      git clone https://gitlab.com/defcronyke/discover-git-server-dns.git .gc/discover-git-server-dns
+      cd .gc/discover-git-server-dns
+    fi
+
+    # Add any detected git servers to the list of servers 
+    # that we're going to update.
+    GITCID_OTHER_DETECTED_GIT_SERVERS=( )
+
+    for i in $(./git-srv.sh $(hostname) git1 ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | grep -v -e '^[[:space:]]*$'); do
+      GITCID_OTHER_DETECTED_GIT_SERVERS+=( "$i" )
+    done
+
+    GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED=( )
+
+    for i in ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}; do
+      echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$i"
+
+      if [ $? -ne 0 ]; then
+        GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$i" )
+      fi
+    done
+
+    for i in ${@:2:$#}; do
+      echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$i"
+
+      if [ $? -ne 0 ]; then
+        GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$i" )
+      fi
+    done
+
+    # echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$2" >/dev/null
+    # if [ $? -ne 0 ]; then
+    #   GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$2" )
+    # fi
+
+    cd "$gc_starting_dir"
+
+    echo "Reachable git servers found:"
+    echo ""
+    echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
+    echo ""
+
+    echo "Installing and updating the following git servers:"
+    echo ""
+    echo "$1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
+    echo ""
+
+
+    # fi
+
+
+
+
+    # Prevent browser from opening the first time if we're
+    # running more than once.
+    if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
+
+      if [[ "$@" =~ ^.*\-.*o.*[[:space:]]*.*$ ]]; then
+        GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=0
+
+        # GITCID_NEW_GIT_SERVER_ARGS="$(echo "$@" | sed 's/^\(.*\-.*\)\(o\)\(.*\s*.*\)$/\1\3/g')"
+        
+        echo "Filtered args:"
+        echo ""
+        echo "  $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
+        echo ""
+      fi
+    fi
+
+  else
+    GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED="${@:2:$#}"
+  fi
+}
+
 gitcid_new_git_server() {
   GITCID_DIR=${GITCID_DIR:-".gc/"}
 	GITCID_NEW_REPO_PERMISSIONS=${GITCID_NEW_REPO_PERMISSIONS:-"0640"}
@@ -40,116 +150,12 @@ gitcid_new_git_server() {
   return $?
 }
 
-# # You can change the desired DNS seed server hostname by setting this 
-# # environment variable before running this script if you want.
-# GITCID_DEFAULT_DNS_SEED_SERVER1=${GITCID_DEFAULT_DNS_SEED_SERVER1:-"git1"}
-
-# GITCID_DNS_SEED_SERVER1=""
-
-
-# # If we didn't specify to install on the first DNS seed host, add it
-# # to the list of hosts we'll try.
-# if [[ ! "$@" =~ "$GITCID_DEFAULT_DNS_SEED_SERVER1" ]]; then
-
-# Detect other git servers and update them, adding DNS 
-# records for the new servers's we're installing now.
-
-GITCID_OTHER_DETECTED_GIT_SERVERS=""
-
-GITCID_NEW_GIT_SERVER_ARGS="$@"
-
-GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=1
-
-if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
-
-  echo ""
-  echo "Detecting other git servers on your network. Please wait..."
-  echo ""
-  echo "  args: ${@:2:$#}"
-  echo ""
-
-
-  .gc/git-servers.sh ${@:2:$#}
-
-  gc_starting_dir="$PWD"
-
-  cd .gc/discover-git-server-dns 2>/dev/null
-  if [ $? -ne 0 ]; then
-    git clone https://gitlab.com/defcronyke/discover-git-server-dns.git .gc/discover-git-server-dns
-    cd .gc/discover-git-server-dns
-  fi
-
-  # Add any detected git servers to the list of servers 
-  # that we're going to update.
-  GITCID_OTHER_DETECTED_GIT_SERVERS=( $(./git-srv.sh ${@:2:$#} | awk '{print $NF}' | sed 's/\.$//' | tr '\n' ' ' | grep -v -e '^[[:space:]]*$') )
-
-  GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED=( )
-
-  for i in ${GITCID_OTHER_DETECTED_GIT_SERVERS[@]}; do
-    echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$i"
-
-    if [ $? -ne 0 ]; then
-      GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$i" )
-    fi
-  done
-
-  for i in ${@:2:$#}; do
-    echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$i"
-
-    if [ $? -ne 0 ]; then
-      GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$i" )
-    fi
-  done
-
-  # echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}" | grep "$2" >/dev/null
-  # if [ $? -ne 0 ]; then
-  #   GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$2" )
-  # fi
-
-  cd "$gc_starting_dir"
-
-  echo "Other reachable git servers found:"
-  echo ""
-  echo "${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
-  echo ""
-
-  echo "Installing and updating the following git servers:"
-  echo ""
-  echo "$1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
-  echo ""
-
-
-  # fi
-
-
-
-
-  # Prevent browser from opening the first time if we're
-  # running more than once.
-  if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
-
-    if [[ "$@" =~ ^.*\-.*o.*[[:space:]]*.*$ ]]; then
-      GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=0
-
-      GITCID_NEW_GIT_SERVER_ARGS="$(echo "$@" | sed 's/^\(.*\-.*\)\(o\)\(.*\s*.*\)$/\1\3/g')"
-      
-      echo "Filtered args:"
-      echo ""
-      echo "  $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
-      echo ""
-    fi
-  fi
-
-else
-  GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED="${@:2:$#}"
-fi
-
-
-# Start installing new git servers.
+# Start installing new git servers. First run.
+gitcid_new_git_server_detect_servers $@
 gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 
 
-# Run the installer one more time so DNS records can 
+# Run the installer two more times so DNS records can 
 # propagate to many peers.
 if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
   if [ $# -ge 3 ] || [ ! -z "$GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED" ]; then
@@ -157,6 +163,13 @@ if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
     echo ""
     echo "$1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
     echo ""
+
+    # Second run.
+    gitcid_new_git_server_detect_servers $@
+    gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
+
+    # Third run.
+    gitcid_new_git_server_detect_servers $@
     gitcid_new_git_server $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}
 
     # # Enable ufw firewall if not enabled.
