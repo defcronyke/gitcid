@@ -51,6 +51,8 @@ gitcid_new_git_server_detect_servers() {
 
   # GITCID_NEW_GIT_SERVER_ARGS="$@"
 
+  gc_starting_dir="$PWD"
+
   GITCID_NEW_GIT_SERVER_REQUESTED_BROWSER_OPEN=1
 
   if [ $# -ge 1 ] && [[ ! "$1" =~ ^\-.*[R|r]F?f?.*$ ]]; then
@@ -64,7 +66,6 @@ gitcid_new_git_server_detect_servers() {
 
     .gc/git-servers.sh $(hostname) git1 ${@:2:$#}
 
-    gc_starting_dir="$PWD"
 
     cd .gc/discover-git-server-dns 2>/dev/null
     if [ $? -ne 0 ]; then
@@ -103,7 +104,7 @@ gitcid_new_git_server_detect_servers() {
     #   GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED+=( "$2" )
     # fi
 
-    cd "$gc_starting_dir"
+    # cd "$gc_starting_dir"
 
     echo "Reachable git servers found:"
     echo ""
@@ -140,6 +141,8 @@ gitcid_new_git_server_detect_servers() {
   else
     GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED="${@:2:$#}"
   fi
+
+  cd "$gc_starting_dir"
 }
 
 gitcid_new_git_server() {
