@@ -9,6 +9,10 @@ gc_new_git_server_setup() {
   mkdir -p tmp_os_mount_dir
   sudo mount "${2}1" tmp_os_mount_dir
 
+  if [ $? -ne 0 ]; then
+    return 9
+  fi
+
   mkdir -p tmp_os_mount_dir2
   sudo mount "${2}2" tmp_os_mount_dir2
 
