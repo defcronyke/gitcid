@@ -182,7 +182,7 @@ sudo systemctl enable --now atd
 # up-to-date, as well as all the dependencies and software.
 # Chooses the last digit for the time delay somewhat randomly
 # to avoid all servers potentially trying to update at the same 
-# instant.
+# instant. Currently set to a range of 20 - 29 minutes.
 GITCID_NEW_GIT_SERVER_SYSTEMCTL_RESTART_RANDOM_MINUTES_DIGIT=$(echo "$(( $(head -256 /dev/urandom | cksum | awk '{print $1}' | sed "s/\(.\)/\1$(date +%s%N)/g" | sed 's/\(.\)/\1 \+ /g' | sed "s/ + $//") ))" | tail -c 2 | head -c 1)
 
 echo 'sudo systemctl restart git-server-startup' | at now +2${GITCID_NEW_GIT_SERVER_SYSTEMCTL_RESTART_RANDOM_MINUTES_DIGIT} minutes 2>/dev/null
