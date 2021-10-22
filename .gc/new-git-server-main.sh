@@ -218,7 +218,7 @@ gitcid_new_git_server_post() {
 
       gitcid_retry_install_git_server2=0
       
-      gitcid_new_git_server_main $@; loop_res2=$?
+      # gitcid_new_git_server_main $@; loop_res2=$?
 
       continue
 
@@ -1163,7 +1163,7 @@ gitcid_new_git_server_main() {
 
           gitcid_retry_install_git_server2=0
           
-          gitcid_new_git_server_main $@; loop_res2=$?
+          # gitcid_new_git_server_main $@; loop_res2=$?
         fi
 
         return $loop_res2
@@ -1180,7 +1180,7 @@ gitcid_new_git_server_main() {
 
         gitcid_retry_install_git_server2=0
         
-        gitcid_new_git_server_main $@; loop_res2=$?
+        # gitcid_new_git_server_main $@; loop_res2=$?
 
         continue
 
@@ -1207,7 +1207,7 @@ gitcid_new_git_server_main() {
 
           gitcid_retry_install_git_server2=0
           
-          gitcid_new_git_server_main $@; loop_res2=$?
+          # gitcid_new_git_server_main $@; loop_res2=$?
         fi
 
         return $loop_res2
@@ -1229,7 +1229,7 @@ gitcid_new_git_server_main() {
 
       gitcid_retry_install_git_server=0
       
-      gitcid_new_git_server_main $@; loop_res2=$?
+      # gitcid_new_git_server_main $@; loop_res2=$?
     fi
 
     return $loop_res2
@@ -1257,7 +1257,7 @@ gitcid_new_git_server_main() {
 
     gitcid_retry_install_git_server=0
     
-    gitcid_new_git_server_main $@; loop_res=$?
+    # gitcid_new_git_server_main $@; loop_res=$?
   fi
 
   # || \
