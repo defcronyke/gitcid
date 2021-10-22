@@ -143,7 +143,7 @@ gitcid_debian_fix_docker_stuck() {
 
   fi
 
-  return 0
+  return 23
 }
 
 gitcid_debian_fix_docker_stuck
