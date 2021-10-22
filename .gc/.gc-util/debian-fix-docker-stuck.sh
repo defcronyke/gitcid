@@ -40,9 +40,9 @@ gitcid_debian_fix_docker_stuck() {
     sudo rm /var/run/docker.pid
     sudo rm /run/docker.pid
 
-    sudo mv /usr/bin/docker "${HOME}/docker.orig.broken"
-    sudo mv /bin/docker "${HOME}/docker.orig2.broken"
-    sudo mv /usr/local/bin/docker "${HOME}/docker.orig3.broken"
+    sudo cp /usr/bin/docker "${HOME}/docker.orig.broken"
+    sudo cp /bin/docker "${HOME}/docker.orig2.broken"
+    sudo cp /usr/local/bin/docker "${HOME}/docker.orig3.broken"
 
 
     echo ""
@@ -54,7 +54,9 @@ gitcid_debian_fix_docker_stuck() {
     sudo ip addr add dev docker0 172.17.0.1/16
 
 
-    { bash -c 'curl https://get.docker.com | sh'; }
+    curl https://get.docker.com | sh
+
+    # { bash -c 'curl https://get.docker.com | sh'; }
     # { bash -c 'curl https://get.docker.com | sh' || bash -c 'curl https://get.docker.com | sh'; }
 
 
@@ -111,6 +113,8 @@ gitcid_debian_fix_docker_stuck() {
       echo "Rebooting now. Please wait..."
       echo ""
 
+      curl https://get.docker.com | sh
+
       sudo reboot
 
       return 24
@@ -143,7 +147,7 @@ gitcid_debian_fix_docker_stuck() {
 
   fi
 
-  return 23
+  return 0
 }
 
 gitcid_debian_fix_docker_stuck
