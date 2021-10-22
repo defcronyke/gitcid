@@ -155,7 +155,7 @@ gitcid_deps() {
   # ----------
 
   # Try to fix Docker if maybe it got stuck (sometimes happens on Debian, maybe other places too).
-  .gc/.gc-util/debian-fix-docker-stuck.sh
+  # .gc/.gc-util/debian-fix-docker-stuck.sh
 
 	gitcid_update
 
@@ -231,41 +231,46 @@ please our system, if you know the correct values for your unsupported OS:"
 		fi
 
 
+    # IF DOCKER ISN'T INSTALLED
 		if [ $HAS_DOCKER -ne 0 ]; then
-      # $SUDO_CMD groupadd docker 2>/dev/null || true
-      # $SUDO_CMD gpasswd -a $USER docker 2>/dev/null || true
 
-			if [ $IS_DEBIAN -eq 0 ]; then
-				#curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO_CMD gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      # INSTALL DOCKER
+      curl https://get.docker.com | sh
 
-        # Install docker-ce official gpg keyring.
-        curl -fsSL https://download.docker.com/linux/debian/gpg > tmp-key.txt && \
-        cat tmp-key.txt | \
-        sudo gpg --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg; \
-        rm tmp-key.txt
+#       # $SUDO_CMD groupadd docker 2>/dev/null || true
+#       # $SUDO_CMD gpasswd -a $USER docker 2>/dev/null || true
+
+# 			if [ $IS_DEBIAN -eq 0 ]; then
+# 				#curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO_CMD gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+#         # Install docker-ce official gpg keyring.
+#         curl -fsSL https://download.docker.com/linux/debian/gpg > tmp-key.txt && \
+#         cat tmp-key.txt | \
+#         sudo gpg --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg; \
+#         rm tmp-key.txt
 				
-# 				if [ $IS_X64 -eq 0 ]; then
-# 					echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-# $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-# 				elif [ $IS_ARM64 -eq 0 ]; then
-# 					echo "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-# $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-# 				elif [ $IS_ARMHF -eq 0 ]; then
-# 					echo "deb [arch=armhf signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-# $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-# 				else
-# 					gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "You don't have Docker installed, and you're running on a CPU architecture which \
-# doesn't have official Docker builds for it. You will have to try installing Docker from source yourself if you want this to work."
-# 					return 82
-# 				fi
+# # 				if [ $IS_X64 -eq 0 ]; then
+# # 					echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+# # $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# # 				elif [ $IS_ARM64 -eq 0 ]; then
+# # 					echo "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+# # $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# # 				elif [ $IS_ARMHF -eq 0 ]; then
+# # 					echo "deb [arch=armhf signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+# # $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# # 				else
+# # 					gitcid_log_err "${BASH_SOURCE[0]}" $LINENO "You don't have Docker installed, and you're running on a CPU architecture which \
+# # doesn't have official Docker builds for it. You will have to try installing Docker from source yourself if you want this to work."
+# # 					return 82
+# # 				fi
 				
-				# eval "${GITCID_DEPS_INSTALL_CMD[@]} docker-ce docker-ce-cli containerd.io"
+# 				# eval "${GITCID_DEPS_INSTALL_CMD[@]} docker-ce docker-ce-cli containerd.io"
 
-			# elif [ $IS_ARCH -eq 0 ]; then
-			# 	eval "${GITCID_DEPS_INSTALL_CMD[@]} docker"
-			# 	$SUDO_CMD systemctl enable docker
-			# 	$SUDO_CMD systemctl start docker
-			fi
+# 			# elif [ $IS_ARCH -eq 0 ]; then
+# 			# 	eval "${GITCID_DEPS_INSTALL_CMD[@]} docker"
+# 			# 	$SUDO_CMD systemctl enable docker
+# 			# 	$SUDO_CMD systemctl start docker
+# 			fi
 		fi
 
 		if [ $HAS_DOCKER_COMPOSE -ne 0 ]; then

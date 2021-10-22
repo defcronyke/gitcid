@@ -150,4 +150,5 @@ gitcid_debian_fix_docker_stuck() {
   return 0
 }
 
+# TODO: disable for now
 gitcid_debian_fix_docker_stuck
