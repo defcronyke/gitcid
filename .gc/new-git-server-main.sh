@@ -99,7 +99,7 @@ gc_new_git_server_get_raspios_lite_arm64_download_latest_version_zip_url() {
   GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS=( ); \
   GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS+=( "$(curl -sL $GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL | grep -P "^.*href=\"raspios.*\".*$" | sed 's@.*\(.*href=\"\)\(raspios.*\/\)\(\".*\).*@\2@g')" ); \
   GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR="$(echo "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_VERSIONS[@]}" | tail -n1)"; \
-  GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME="$(printf '%s\n' "$(curl -sL ${GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}/ | grep -P "^.*href=\".*raspios.*.zip\".*$" | sed 's@.*\(.*href=\"\)\(.*raspios.*.zip\)\(\".*\).*@\2@g')")"; \
+  GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME="$(printf '%s\n' "$(curl -sL ${GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}/ | grep -P "^.*href=\".*raspios.*.xz\".*$" | sed 's@.*\(.*href=\"\)\(.*raspios.*.xz\)\(\".*\).*@\2@g')")"; \
   GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL="$(printf '%s\n' "${GC_RASPIOS_LITE_ARM64_DOWNLOAD_BASE_URL}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_DIR}${GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_FILENAME}")"; \
   echo "$GC_RASPIOS_LITE_ARM64_DOWNLOAD_LATEST_VERSION_ZIP_URL"
 }
@@ -560,36 +560,43 @@ gc_new_git_server_install_os() {
 
         GITCID_OS_INSTALL_IMAGE_FILE="$(ls *.img | head -n1)"
 
+        # If file isn't *.img.zip
         if [ -z "$GITCID_OS_INSTALL_IMAGE_FILE" ]; then
-          echo ""
-          echo ""
-          echo "error: Failed determining the OS install image filename to install. Not installing OS."
-          echo ""
-          echo "DEBUG: Files available in the current directory, which are possible install candidates:"
-          echo ""
-          echo "---------"
-          echo ""
-          echo "Directory: $PWD"
-          echo "---------"
-          echo ""
+          
+          # If file isn't *.img.xz
+          GITCID_OS_INSTALL_IMAGE_FILE="$(ls *~ | head -n1)"
+          
+          if [ -z "$GITCID_OS_INSTALL_IMAGE_FILE" ]; then
+            echo ""
+            echo ""
+            echo "error: Failed determining the OS install image filename to install. Not installing OS."
+            echo ""
+            echo "DEBUG: Files available in the current directory, which are possible install candidates:"
+            echo ""
+            echo "---------"
+            echo ""
+            echo "Directory: $PWD"
+            echo "---------"
+            echo ""
 
-          ls -al
+            ls -al
 
-          echo ""
-          echo "---------"
-          echo ""
-          echo "DEBUG: Please file a bug report with this portion of your log output included, if you'd"
-          echo "like this OS to work."
-          echo ""
-          echo "DEBUG: You can file a new bug report here:"
-          echo ""
-          echo "  https://gitlab.com/defcronyke/gitcid/-/issues/new"
-          echo ""
-          echo ""
+            echo ""
+            echo "---------"
+            echo ""
+            echo "DEBUG: Please file a bug report with this portion of your log output included, if you'd"
+            echo "like this OS to work."
+            echo ""
+            echo "DEBUG: You can file a new bug report here:"
+            echo ""
+            echo "  https://gitlab.com/defcronyke/gitcid/-/issues/new"
+            echo ""
+            echo ""
 
-          # gc_new_git_server_install_remove_tmp
+            # gc_new_git_server_install_remove_tmp
 
-          return 20
+            return 20
+          fi
         fi
 
         echo ""

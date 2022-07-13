@@ -60,7 +60,7 @@ gitcid_new_git_server_detect_servers() {
     echo ""
     echo "Detecting other git servers on your network. Please wait..."
     echo ""
-    echo "  args: ${@:2:$#}"
+    echo "  args: ${@:1:$#}"
     echo ""
 
 
@@ -114,7 +114,7 @@ gitcid_new_git_server_detect_servers() {
 
     echo "Installing and updating the following git servers:"
     echo ""
-    echo "$1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
+    echo "$@ ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
     echo ""
 
 
@@ -134,7 +134,7 @@ gitcid_new_git_server_detect_servers() {
         
         echo "Filtered args:"
         echo ""
-        echo "  $1 ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
+        echo "  $@ ${GITCID_OTHER_DETECTED_GIT_SERVERS_FILTERED[@]}"
         echo ""
       fi
     fi
